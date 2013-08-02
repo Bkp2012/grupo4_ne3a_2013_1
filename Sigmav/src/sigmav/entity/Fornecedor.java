@@ -17,15 +17,15 @@ public class Fornecedor implements Serializable{
 
     private long id;
     private String nome;
-    private String cnjp;
-    private String endereço;
+    private String cnpj;
+    private String endereco;
     private Contato contato;
-    private List <String> grupoArea = new ArrayList<>();
+    private String grupos;
+    //Esperar hibernate, trabalhar com enums?
+    //private List <String> grupoArea = new ArrayList<>();
     private String comentario;
 
-//------------------------------------------------------------------------------
-
-    
+    //------------------------------------------------------------------------------
     public long getId() {
         return id;
     }
@@ -34,27 +34,26 @@ public class Fornecedor implements Serializable{
         return nome;
     }
 
-    public String getCnjp() {
-        return cnjp;
+    public String getCnpj() {
+        return cnpj;
     }
 
-    public String getEndereço() {
-        return endereço;
+    public String getEndereco() {
+        return endereco;
     }
 
     public Contato getContato() {
         return contato;
     }
 
-    public List getGrupoArea() {
-        return grupoArea;
+    public String getGrupos() {
+        return grupos;
     }
 
     public String getComentario() {
         return comentario;
     }
 
-    //------------------------------------------------------------------------------
     public void setId(long id) {
         this.id = id;
     }
@@ -63,38 +62,36 @@ public class Fornecedor implements Serializable{
         this.nome = nome;
     }
 
-    public void setCnjp(String cnjp) {
-        this.cnjp = cnjp;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
-    public void setEndereço(String endereço) {
-        this.endereço = endereço;
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
     public void setContato(Contato contato) {
         this.contato = contato;
     }
 
-    public void setGrupoArea(List grupoArea) {
-        this.grupoArea = grupoArea;
+    public void setGrupos(String grupos) {
+        this.grupos = grupos;
     }
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
     }
-    
-    //--------------------------------------------------------------------------
-    
+
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 29 * hash + Objects.hashCode(this.nome);
-        hash = 29 * hash + Objects.hashCode(this.cnjp);
-        hash = 29 * hash + Objects.hashCode(this.endereço);
-        hash = 29 * hash + Objects.hashCode(this.contato);
-        hash = 29 * hash + Objects.hashCode(this.grupoArea);
-        hash = 29 * hash + Objects.hashCode(this.comentario);
+        int hash = 3;
+        hash = 89 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 89 * hash + Objects.hashCode(this.nome);
+        hash = 89 * hash + Objects.hashCode(this.cnpj);
+        hash = 89 * hash + Objects.hashCode(this.endereco);
+        hash = 89 * hash + Objects.hashCode(this.contato);
+        hash = 89 * hash + Objects.hashCode(this.grupos);
+        hash = 89 * hash + Objects.hashCode(this.comentario);
         return hash;
     }
 
@@ -113,16 +110,16 @@ public class Fornecedor implements Serializable{
         if (!Objects.equals(this.nome, other.nome)) {
             return false;
         }
-        if (!Objects.equals(this.cnjp, other.cnjp)) {
+        if (!Objects.equals(this.cnpj, other.cnpj)) {
             return false;
         }
-        if (!Objects.equals(this.endereço, other.endereço)) {
+        if (!Objects.equals(this.endereco, other.endereco)) {
             return false;
         }
         if (!Objects.equals(this.contato, other.contato)) {
             return false;
         }
-        if (!Objects.equals(this.grupoArea, other.grupoArea)) {
+        if (!Objects.equals(this.grupos, other.grupos)) {
             return false;
         }
         if (!Objects.equals(this.comentario, other.comentario)) {
@@ -133,8 +130,8 @@ public class Fornecedor implements Serializable{
 
     @Override
     public String toString() {
-        return "Fornecedor{" + "id=" + id + ", nome=" + nome + ", cnjp=" + cnjp + ", endere\u00e7o=" + endereço + ", contato=" + contato + ", grupoArea=" + grupoArea + ", comentario=" + comentario + '}';
+        return "Fornecedor{" + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", endereco=" + endereco + ", contato=" + contato + ", grupos=" + grupos + ", comentario=" + comentario + '}';
     }
-    
+
     
 }

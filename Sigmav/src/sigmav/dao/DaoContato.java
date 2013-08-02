@@ -4,6 +4,7 @@
  */
 package sigmav.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -54,8 +55,19 @@ public class DaoContato implements DaoInterface<Contato>{
         }
     }
     
+    //##########################################################################
+
     private void insert(Contato cTemp) throws SQLException{
-        PreparedStatement pst = ConnectionFactory.preparedConnection().prepareStatement
+        
+        Connection conGer = ConnectionFactory.preparedConnectionTransaction();
+        insert(cTemp, conGer);
+        
+        conGer.commit();
+    
+    }
+    
+    private void insert(Contato cTemp, Connection con) throws SQLException{
+        PreparedStatement pst = con.prepareStatement
                 ("INSERT INTO Contato (telefoneA, telefoneB, telefoneC, eMail, responsavel) VALUES (?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
         
@@ -73,8 +85,19 @@ public class DaoContato implements DaoInterface<Contato>{
         cTemp.setId(key.getLong(1));        
     }
     
+    //##########################################################################
+    
     private void update(Contato cTemp) throws SQLException{
-        PreparedStatement pst = ConnectionFactory.preparedConnection().prepareStatement
+        
+        Connection conGer = ConnectionFactory.preparedConnectionTransaction();
+        update(cTemp, conGer);
+        
+        conGer.commit();
+    
+    }
+    
+    private void update(Contato cTemp, Connection con) throws SQLException{
+        PreparedStatement pst = con.prepareStatement
                 ("UPDATE Contato SET telefoneA = ?, telefoneB = ?, telefoneC = ?, eMail = ?, responsavel = ? WHERE id = ?");
         
         pst.setString(1, cTemp.getTelefoneA());
@@ -85,13 +108,28 @@ public class DaoContato implements DaoInterface<Contato>{
         
         pst.execute();
     }
+    
     //##########################################################################
+    
     @Override
     public void delete(Contato cTemp) throws SQLException {
-        Statement st = ConnectionFactory.preparedConnection().createStatement();
-        st.execute("DELETE FROM Contato WHERE id = "+ cTemp.getId());
+    
+        Connection conGer = ConnectionFactory.preparedConnectionTransaction();
+        delete(cTemp, conGer);
+        
+        conGer.commit();
+        
     }
+    
+    public void delete(Contato cTemp, Connection con) throws SQLException {
+        
+        Statement st = con.createStatement();
+        st.execute("DELETE FROM Contato WHERE id = "+ cTemp.getId());
+    
+    }
+    
     //##########################################################################
+    
     @Override
     public Contato retrieve(long id) throws SQLException {
         Statement st = ConnectionFactory.preparedConnection().createStatement();
