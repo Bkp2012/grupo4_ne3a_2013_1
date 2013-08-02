@@ -63,8 +63,8 @@ public class Sigmav {
         mt.setDataManutencao(dia);
         mt.setDescriçao("Teste do teste para testar");
         mt.setQuilometragem(20);
-        
-        //dM.persist(mt);
+       // dM.delete(dM.retrieve(6));
+        dM.persist(mt);
         System.out.println(mt.getId());
         List<Manutencao> manLista = new ArrayList<>();
         manLista = dM.list();
@@ -86,13 +86,15 @@ public class Sigmav {
         
         
         //dC.persist(ct);
-        dC.delete(dC.retrieve(5));
+        //dC.delete(dC.retrieve(5));
         List<Contato> cLista = new ArrayList<>();
         cLista = dC.list();
         for(Contato mAxus: cLista){
             System.out.println(mAxus.toString());
         }
         System.out.println("");
+        
+        
         
         
     }

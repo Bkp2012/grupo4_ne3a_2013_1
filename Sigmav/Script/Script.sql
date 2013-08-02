@@ -28,5 +28,15 @@ CREATE TABLE Contato(
     responsavel VARCHAR(100)
 );
 
+CREATE TABLE Fornecedor(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(100), 
+    cnpj VARCHAR(13),
+    endereco VARCHAR(300),
+    grupos VARCHAR(400),
+    contatoID INT,
+    comentario VARCHAR(300)
+);
+
 DESCRIBE Peca;
 SELECT * FROM Peca;

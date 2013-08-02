@@ -4,6 +4,7 @@
  */
 package sigmav.dao;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -51,9 +52,20 @@ public class DaoManutencao implements DaoInterface<Manutencao>{
             update(mTemp);
         }
     }
+
     
     private void insert(Manutencao mTemp) throws SQLException{
-        PreparedStatement pst = ConnectionFactory.preparedConnection().prepareStatement
+        
+        Connection conGer = ConnectionFactory.preparedConnectionTransaction();
+        insert(mTemp, conGer);
+        
+        conGer.commit();
+                
+    }
+    
+    //INSERE NA TRANSACTION, DEPENDE DE COMMIT
+    private void insert(Manutencao mTemp, Connection con) throws SQLException{
+        PreparedStatement pst = con.prepareStatement
                 ("INSERT INTO Manutencao (quilometragem, dataManutencao, descricao, custoManutencao) VALUES (?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
         
@@ -70,9 +82,22 @@ public class DaoManutencao implements DaoInterface<Manutencao>{
         key.next();
         mTemp.setId(key.getLong(1));        
     }
+
+    
+    //##########################################################################
     
     private void update(Manutencao mTemp) throws SQLException{
-        PreparedStatement pst = ConnectionFactory.preparedConnection().prepareStatement
+     
+        Connection conGer = ConnectionFactory.preparedConnectionTransaction();
+        update(mTemp, conGer);
+        
+        conGer.commit();
+     
+    }
+    
+    private void update(Manutencao mTemp, Connection con) throws SQLException{
+        
+        PreparedStatement pst = con.prepareStatement
                 ("UPDATE Manutencao SET quilometragem = ?, dataMantutencao = ?, descricao = ?, custoManutencao = ? WHERE id = ?");
         
         pst.setInt(1, mTemp.getQuilometragem());
@@ -83,13 +108,26 @@ public class DaoManutencao implements DaoInterface<Manutencao>{
         
         pst.execute();
     }
+    
     //##########################################################################
+    
     @Override
     public void delete(Manutencao mTemp) throws SQLException {
-        Statement st = ConnectionFactory.preparedConnection().createStatement();
+        
+        Connection conGer = ConnectionFactory.preparedConnectionTransaction();
+        delete(mTemp, conGer);
+        
+        conGer.commit();
+     
+    }
+    
+    public void delete(Manutencao mTemp, Connection con) throws SQLException {
+        Statement st = con.createStatement();
         st.execute("DELETE FROM Manutencao WHERE id = "+ mTemp.getId());
     }
+    
     //##########################################################################
+    
     @Override
     public Manutencao retrieve(long id) throws SQLException {
         Statement st = ConnectionFactory.preparedConnection().createStatement();
