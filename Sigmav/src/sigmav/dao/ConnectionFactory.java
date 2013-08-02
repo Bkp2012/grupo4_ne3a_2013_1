@@ -24,4 +24,13 @@ public class ConnectionFactory {
         
         return con;        
     }
+    
+    public static  Connection preparedConnectionTransaction() throws SQLException {
+
+        DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+        Connection con = DriverManager.getConnection(JDBC_URL);
+        con.setAutoCommit(false);
+        return con;
+    }
+
 }
