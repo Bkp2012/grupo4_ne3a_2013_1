@@ -11,12 +11,26 @@ CREATE TABLE Peca(
     grupo varchar (50) NOT NULL
 );
 
+
+DROP Table Manutencao;
 CREATE TABLE Manutencao(
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     quilometragem INT NOT NULL,
     dataManutencao DATE NOT NULL,
     descricao VARCHAR(200) NOT NULL,
-    custoManutencao FLOAT NOT NULL
+    custoManutencao FLOAT NOT NULL,
+    idVeiculo INT NOT NULL
+);
+
+CREATE TABLE Consumo(
+    id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    dataAbastecimento DATE NOT NULL,
+    quilometragem INT NOT NULL,
+    litros FLOAT,
+    preco FLOAT,
+    combustivel VARCHAR(30),
+    local INT,
+    idVeiculo INT
 );
 
 CREATE TABLE Contato(
@@ -38,5 +52,5 @@ CREATE TABLE Fornecedor(
     comentario VARCHAR(300)
 );
 
-DESCRIBE Peca;
-SELECT * FROM Peca;
+DESCRIBE Manutencao;
+SELECT * FROM Manutencao;

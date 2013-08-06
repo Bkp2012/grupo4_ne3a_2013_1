@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import sigmav.entity.Consumo;
+import sigmav.entity.Manutencao;
 import sigmav.entity.Veiculo;
 
 /**
@@ -21,18 +23,36 @@ public class DaoVeiculo implements DaoInterface<Veiculo>{
     
     private static Veiculo converteRsParaVeiculo(ResultSet rs) throws SQLException{
         
+        //private long id;
+        //private List<Manutencao> manutencoes = new ArrayList<>();
+        //private List<Consumo> consumo = new ArrayList<>();
+        //private float mediaConsumo;
+        //private String marca;
+        //private String modelo;
+        //private String versao;
+        //private String combustivel;
+        //private String anoModelo;
+        //private String responsavel;
+
         Veiculo vTemp = new Veiculo();
-        DaoContato dContato = new DaoContato();
+        DaoManutencao dManutencao = new DaoManutencao();
+        DaoConsumo dConsumo = new DaoConsumo();
         
-        fTemp.setId(rs.getLong("id"));
-        fTemp.setNome(rs.getString("nome"));
-        fTemp.setCnpj(rs.getString("cnpj"));
-        fTemp.setEndereco(rs.getString("endereco"));
-        fTemp.setContato(dContato.retrieve(rs.getLong("contatoId")));
-        fTemp.setGrupos(rs.getString("grupos"));
-        fTemp.setComentario(rs.getString("comentario"));        
+        vTemp.setId(rs.getLong("id"));
+        vTemp.setMediaConsumo(rs.getFloat("mediaConsumo"));
+        vTemp.setMarca(rs.getString("marca"));
+        vTemp.setModelo(rs.getString("modelo"));
+        vTemp.setVersao(rs.getString("versao"));
+        vTemp.setCombustivel(rs.getString("combustivel"));
+        vTemp.setAnoModelo(rs.getString("anoModelo"));
+        vTemp.setResponsavel(rs.getString("responsavel"));
         
-        return fTemp;
+        //Chama o DManutencao e manda ele buscar uma lista delas por id do veiculo
+        //Joga esta lista na lista de manutencoes do veiculo
+        vTemp.setManutencoes(dManutencao.retrieveHistorico(rs.getLong("id")));
+        vTemp.setConsumo(dConsumo.retrieveHistorico(rs.getLong("id")));
+                
+        return vTemp;
     }
 
     public DaoVeiculo() {
@@ -41,28 +61,28 @@ public class DaoVeiculo implements DaoInterface<Veiculo>{
     
     //##########################################################################
     @Override
-    public void persist(Veiculo fTemp) throws SQLException {
+    public void persist(Veiculo vTemp) throws SQLException {
         
-        if(fTemp.getId() == 0){
-            insert(fTemp);
+        if(vTemp.getId() == 0){
+            insert(vTemp);
         }
         else{
-            update(fTemp);
+            update(vTemp);
         }
     }
     
     //##########################################################################
     
-    private void insert(Veiculo fTemp) throws SQLException{
+    private void insert(Veiculo vTemp) throws SQLException{
             
         Connection conGer = ConnectionFactory.preparedConnectionTransaction();
-        insert(fTemp, conGer);
+        insert(vTemp, conGer);
         
         conGer.commit();
      
     }
     
-    private void insert(Veiculo fTemp, Connection con) throws SQLException{
+    private void insert(Veiculo vTemp, Connection con) throws SQLException{
                 
         PreparedStatement pst = con.prepareStatement
                 ("INSERT INTO Veiculo (nome, cnpj, endereco, grupos, contatoId, comentario) VALUES (?,?,?,?,?,?)",
