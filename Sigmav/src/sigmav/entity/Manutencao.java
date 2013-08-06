@@ -19,35 +19,8 @@ public class Manutencao implements Serializable{
     private Date dataManutencao;
     private String descriçao;
     private float custoManutencao;
+    private long idVeiculo;
 
-    
-//------------------------------------------------------------------------------
-
-    
-    public long getId() {
-        return id;
-    }
-
-    public int getQuilometragem() {
-        return quilometragem;
-    }
-
-    public Date getDataManutencao() {
-        return dataManutencao;
-    }
-
-    public String getDescriçao() {
-        return descriçao;
-    }
-
-    public float getCustoManutencao() {
-        return custoManutencao;
-    }
-
-    
-//------------------------------------------------------------------------------
-
-    
     public void setId(long id) {
         this.id = id;
     }
@@ -68,18 +41,44 @@ public class Manutencao implements Serializable{
         this.custoManutencao = custoManutencao;
     }
 
-    
-    //------------------------------------------------------------------------------
-    
-    
+    public void setIdVeiculo(long idVeiculo) {
+        this.idVeiculo = idVeiculo;
+    }
+
+
+    public long getId() {
+        return id;
+    }
+
+    public int getQuilometragem() {
+        return quilometragem;
+    }
+
+    public Date getDataManutencao() {
+        return dataManutencao;
+    }
+
+    public String getDescriçao() {
+        return descriçao;
+    }
+
+    public float getCustoManutencao() {
+        return custoManutencao;
+    }
+
+    public long getIdVeiculo() {
+        return idVeiculo;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 59 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 59 * hash + this.quilometragem;
-        hash = 59 * hash + Objects.hashCode(this.dataManutencao);
-        hash = 59 * hash + Objects.hashCode(this.descriçao);
-        hash = 59 * hash + Float.floatToIntBits(this.custoManutencao);
+        hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 67 * hash + this.quilometragem;
+        hash = 67 * hash + Objects.hashCode(this.dataManutencao);
+        hash = 67 * hash + Objects.hashCode(this.descriçao);
+        hash = 67 * hash + Float.floatToIntBits(this.custoManutencao);
+        hash = 67 * hash + (int) (this.idVeiculo ^ (this.idVeiculo >>> 32));
         return hash;
     }
 
@@ -107,15 +106,16 @@ public class Manutencao implements Serializable{
         if (Float.floatToIntBits(this.custoManutencao) != Float.floatToIntBits(other.custoManutencao)) {
             return false;
         }
+        if (this.idVeiculo != other.idVeiculo) {
+            return false;
+        }
         return true;
     }
-    
-    
+
     @Override
     public String toString() {
-        return "Manutencao{" + "id=" + id + ", quilometragem=" + quilometragem + ", dataManutencao=" + dataManutencao + ", descri\u00e7ao=" + descriçao + ", custoManutencao=" + custoManutencao + '}';
+        return "Manutencao{" + "id=" + id + ", quilometragem=" + quilometragem + ", dataManutencao=" + dataManutencao + ", descri\u00e7ao=" + descriçao + ", custoManutencao=" + custoManutencao + ", idVeiculo=" + idVeiculo + '}';
     }
     
     
-//------------------------------------------------------------------------------
 }
