@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import sigmav.entity.Consumo;
+import sigmav.entity.Manutencao;
 
 
 /**
@@ -20,6 +21,7 @@ import sigmav.entity.Consumo;
  * @author fernando
  */
 public class DaoConsumo implements DaoInterface<Consumo>{
+    
     
     //private long id;
     //private Date dataAbastecimento;
@@ -41,6 +43,7 @@ public class DaoConsumo implements DaoInterface<Consumo>{
         cTemp.setPreco(rs.getFloat("preco"));
         cTemp.setCombustivel(rs.getString("combustivel"));
         cTemp.setLocal(dFornecedor.retrieve(rs.getLong("fornecedorId")));
+        cTemp.setIdVeiculo(rs.getLong("idVeiculo"));
                   
         return cTemp;
     }
@@ -75,7 +78,7 @@ public class DaoConsumo implements DaoInterface<Consumo>{
     private void insert(Consumo cTemp, Connection con) throws SQLException{
         
         PreparedStatement pst = con.prepareStatement
-                ("INSERT INTO Consumo (dataAbastecimento, quilometragem, litros, preco, combustivel, localId) VALUES (?,?,?,?,?,?)",
+                ("INSERT INTO Consumo (dataAbastecimento, quilometragem, litros, preco, combustivel, localId, idVeiculo) VALUES (?,?,?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
         // id, dataAbastecimento, quilometragem, litros, preco, combustivel, local    
         pst.setDate(1, (Date)cTemp.getDataAbastecimento());
@@ -83,14 +86,15 @@ public class DaoConsumo implements DaoInterface<Consumo>{
         pst.setFloat(3, cTemp.getLitros());
         pst.setFloat(4, cTemp.getPreco());
         pst.setString(5, cTemp.getCombustivel());
+        pst.setLong(6, cTemp.getIdVeiculo());
         
         if(cTemp.getLocal()!= null){
             DaoFornecedor dFornecedor = new DaoFornecedor();
             dFornecedor.persist(cTemp.getLocal());
                
-            pst.setLong(6, cTemp.getLocal().getId());
+            pst.setLong(7, cTemp.getLocal().getId());
         }else{
-            pst.setObject(6, null);
+            pst.setObject(7, null);
             /* ou */
             //pst.setNull(4, Types.INTEGER);
         }
@@ -117,21 +121,22 @@ public class DaoConsumo implements DaoInterface<Consumo>{
     private void update(Consumo cTemp, Connection con) throws SQLException{
         
         PreparedStatement pst = con.prepareStatement
-                ("UPDATE Consumo SET dataAbastecimento =?, quilometragem = ?, litros = ?, preco = ?, combustivel = ?, localId = ? WHERE id = ?");
+                ("UPDATE Consumo SET dataAbastecimento =?, quilometragem = ?, litros = ?, preco = ?, combustivel = ?, localId = ? , idVeiculo = ? WHERE id = ?");
         // id, dataAbastecimento, quilometragem, litros, preco, combustivel, local    
         pst.setDate(1, (Date)cTemp.getDataAbastecimento());
         pst.setInt(2, cTemp.getQuilometragem());
         pst.setFloat(3, cTemp.getLitros());
         pst.setFloat(4, cTemp.getPreco());
         pst.setString(5, cTemp.getCombustivel());
+        pst.setLong(6, cTemp.getIdVeiculo());
         
         if(cTemp.getLocal()!= null){
             DaoFornecedor dFornecedor = new DaoFornecedor();
             dFornecedor.persist(cTemp.getLocal());
                
-            pst.setLong(6, cTemp.getLocal().getId());
+            pst.setLong(7, cTemp.getLocal().getId());
         }else{
-            pst.setObject(6, null);
+            pst.setObject(7, null);
             /* ou */
             //pst.setNull(4, Types.INTEGER);
         }
@@ -158,6 +163,13 @@ public class DaoConsumo implements DaoInterface<Consumo>{
     
     }
     
+    public void deletePorVeiculo(long idVeiculo) throws SQLException {
+        List<Consumo> cLista = retrieveHistorico(idVeiculo);
+        
+        for(Consumo auxs:cLista){
+            delete(auxs);
+        }     
+    }
     //##########################################################################
     
     @Override
@@ -187,4 +199,21 @@ public class DaoConsumo implements DaoInterface<Consumo>{
         return contatoLista;        
     }
     
+    
+    public List<Consumo> retrieveHistorico(long idVeiculo) throws SQLException {
+        
+        List<Consumo> cLista = new ArrayList<>();
+        
+        Statement st = ConnectionFactory.preparedConnection().createStatement();
+        st.execute("SELECT * FROM Consumo WHERE IdVeiculo = "+ idVeiculo );
+        
+        ResultSet rs =  st.getResultSet();
+        rs.next();
+        
+        while(rs.next()){
+            Consumo aux = converteRsParaConsumo(rs);
+            cLista.add(aux);
+        }
+        return cLista;
+    }    
 }

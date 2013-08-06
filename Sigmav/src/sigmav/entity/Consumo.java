@@ -20,6 +20,7 @@ public class Consumo {
     private float preco;
     private String combustivel;
     private Fornecedor local;
+    private long idVeiculo;
 
     public long getId() {
         return id;
@@ -49,6 +50,10 @@ public class Consumo {
         return local;
     }
 
+    public long getIdVeiculo() {
+        return idVeiculo;
+    }
+
     public void setId(long id) {
         this.id = id;
     }
@@ -61,7 +66,7 @@ public class Consumo {
         this.quilometragem = quilometragem;
     }
 
-    public void setLitros(int litros) {
+    public void setLitros(float litros) {
         this.litros = litros;
     }
 
@@ -77,25 +82,23 @@ public class Consumo {
         this.local = local;
     }
 
-    @Override
-    public String toString() {
-        return "Consumo{" + "id=" + id + ", dataAbastecimento=" + dataAbastecimento + ", quilometragem=" + quilometragem + ", litros=" + litros + ", preco=" + preco + ", combustivel=" + combustivel + ", local=" + local + '}';
+    public void setIdVeiculo(long idVeiculo) {
+        this.idVeiculo = idVeiculo;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 61 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 61 * hash + Objects.hashCode(this.dataAbastecimento);
-        hash = 61 * hash + this.quilometragem;
-        hash = 61 * hash + Float.floatToIntBits(this.litros);
-        hash = 61 * hash + Float.floatToIntBits(this.preco);
-        hash = 61 * hash + Objects.hashCode(this.combustivel);
-        hash = 61 * hash + Objects.hashCode(this.local);
+        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 29 * hash + Objects.hashCode(this.dataAbastecimento);
+        hash = 29 * hash + this.quilometragem;
+        hash = 29 * hash + Float.floatToIntBits(this.litros);
+        hash = 29 * hash + Float.floatToIntBits(this.preco);
+        hash = 29 * hash + Objects.hashCode(this.combustivel);
+        hash = 29 * hash + Objects.hashCode(this.local);
+        hash = 29 * hash + (int) (this.idVeiculo ^ (this.idVeiculo >>> 32));
         return hash;
     }
-
-    
 
     @Override
     public boolean equals(Object obj) {
@@ -115,7 +118,7 @@ public class Consumo {
         if (this.quilometragem != other.quilometragem) {
             return false;
         }
-        if (this.litros != other.litros) {
+        if (Float.floatToIntBits(this.litros) != Float.floatToIntBits(other.litros)) {
             return false;
         }
         if (Float.floatToIntBits(this.preco) != Float.floatToIntBits(other.preco)) {
@@ -127,7 +130,15 @@ public class Consumo {
         if (!Objects.equals(this.local, other.local)) {
             return false;
         }
+        if (this.idVeiculo != other.idVeiculo) {
+            return false;
+        }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Consumo{" + "id=" + id + ", dataAbastecimento=" + dataAbastecimento + ", quilometragem=" + quilometragem + ", litros=" + litros + ", preco=" + preco + ", combustivel=" + combustivel + ", local=" + local + ", idVeiculo=" + idVeiculo + '}';
     }
 
     
