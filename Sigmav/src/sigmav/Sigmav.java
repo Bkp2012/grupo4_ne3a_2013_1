@@ -12,7 +12,7 @@ import java.util.List;
 import sigmav.dao.DaoManutencao;
 import sigmav.dao.DaoPeca;
 import sigmav.entity.Peca;
-import model.GrupoENUM;
+import sigmav.entity.GrupoENUM;
 import sigmav.dao.DaoContato;
 import sigmav.entity.Contato;
 import sigmav.entity.Manutencao;

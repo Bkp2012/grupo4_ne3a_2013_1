@@ -4,27 +4,54 @@
  */
 package sigmav.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.*;
 
 /**
  *
  * @author fernando
  */
-public class Veiculo {
+@Entity
+@Table(name = "Veiculo")
+public class Veiculo implements Serializable {
     
-    private long id;
-    private List<Manutencao> manutencoes = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private long id;        
+    
+    @OneToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Manutencao> manutencoes = new ArrayList<>();    
+    
+    @OneToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Consumo> consumo = new ArrayList<>();
+    
+    @Column(name = "mediaConsumo", nullable = true)
     private float mediaConsumo;
+    
+    @Column(name = "marca", length = 40, nullable = false)
     private String marca;
+    
+    @Column(name = "modelo", length = 40, nullable = false)
     private String modelo;
+    
+    @Column(name = "versao", length = 30, nullable = true)
     private String versao;
+    
+    @Column(name = "combustivel", length = 20, nullable = false)
     private String combustivel;
+    
+    @Column(name = "anoModelo", length = 4, nullable = false)
     private String anoModelo;
+    
+    @Column(name = "responsavel", length = 30, nullable = false)
     private String responsavel;
 
+    
+    //##########################################################################
     public long getId() {
         return id;
     }

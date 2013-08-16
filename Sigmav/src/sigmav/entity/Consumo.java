@@ -4,24 +4,44 @@
  */
 package sigmav.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import javax.persistence.*;
 
 /**
  *
  * @author fernando
  */
-public class Consumo {
+@Entity
+@Table(name = "Cosumo")
+public class Consumo implements Serializable {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "dataAbastecimento", length = 8, nullable = false)
     private Date dataAbastecimento;
+    
+    @Column(name = "quilometragem", nullable = false)
     private int quilometragem;
+    
+    @Column(name = "litros", nullable = false)
     private float litros;
+    
+    @Column(name = "preco", nullable = false)
     private float preco;
+    
+    @Column(name = "combustivel", nullable = false)
     private String combustivel;
+    
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Fornecedor local;
-    private long idVeiculo;
 
+    //##########################################################################
     public long getId() {
         return id;
     }
@@ -48,10 +68,6 @@ public class Consumo {
 
     public Fornecedor getLocal() {
         return local;
-    }
-
-    public long getIdVeiculo() {
-        return idVeiculo;
     }
 
     public void setId(long id) {
@@ -82,21 +98,16 @@ public class Consumo {
         this.local = local;
     }
 
-    public void setIdVeiculo(long idVeiculo) {
-        this.idVeiculo = idVeiculo;
-    }
-
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 29 * hash + Objects.hashCode(this.dataAbastecimento);
-        hash = 29 * hash + this.quilometragem;
-        hash = 29 * hash + Float.floatToIntBits(this.litros);
-        hash = 29 * hash + Float.floatToIntBits(this.preco);
-        hash = 29 * hash + Objects.hashCode(this.combustivel);
-        hash = 29 * hash + Objects.hashCode(this.local);
-        hash = 29 * hash + (int) (this.idVeiculo ^ (this.idVeiculo >>> 32));
+        int hash = 7;
+        hash = 31 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 31 * hash + Objects.hashCode(this.dataAbastecimento);
+        hash = 31 * hash + this.quilometragem;
+        hash = 31 * hash + Float.floatToIntBits(this.litros);
+        hash = 31 * hash + Float.floatToIntBits(this.preco);
+        hash = 31 * hash + Objects.hashCode(this.combustivel);
+        hash = 31 * hash + Objects.hashCode(this.local);
         return hash;
     }
 
@@ -130,16 +141,13 @@ public class Consumo {
         if (!Objects.equals(this.local, other.local)) {
             return false;
         }
-        if (this.idVeiculo != other.idVeiculo) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Consumo{" + "id=" + id + ", dataAbastecimento=" + dataAbastecimento + ", quilometragem=" + quilometragem + ", litros=" + litros + ", preco=" + preco + ", combustivel=" + combustivel + ", local=" + local + ", idVeiculo=" + idVeiculo + '}';
+        return "Consumo{" + "id=" + id + ", dataAbastecimento=" + dataAbastecimento + ", quilometragem=" + quilometragem + ", litros=" + litros + ", preco=" + preco + ", combustivel=" + combustivel + ", local=" + local + '}';
     }
-
     
+
 }

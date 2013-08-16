@@ -8,24 +8,42 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.*;
 
 /**
  *import java.sql.Date;
  * @author fernando
  */
+@Entity
+@Table(name = "Fornecedor")
 public class Fornecedor implements Serializable{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
+    
+    @Column(name = "nome", length = 200, nullable = false)
     private String nome;
+    
+    @Column(name = "cnpj", length = 13, nullable = false)
     private String cnpj;
+    
+    @Column(name = "cnpj", length = 200, nullable = false)
     private String endereco;
-    private Contato contato;
-    private String grupos;
-    //Esperar hibernate, trabalhar com enums?
-    //private List <String> grupoArea = new ArrayList<>();
+    
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Contato contato;    
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "grupo", length = 20, nullable = false)
+    @OneToMany(cascade= CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<GrupoENUM> grupos = new ArrayList<>();    
+    
+    @Column(name = "cnpj", length = 500, nullable = false)
     private String comentario;
 
-    //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
     public long getId() {
         return id;
     }
@@ -46,7 +64,7 @@ public class Fornecedor implements Serializable{
         return contato;
     }
 
-    public String getGrupos() {
+    public List<GrupoENUM> getGrupos() {
         return grupos;
     }
 
@@ -74,7 +92,7 @@ public class Fornecedor implements Serializable{
         this.contato = contato;
     }
 
-    public void setGrupos(String grupos) {
+    public void setGrupos(List<GrupoENUM> grupos) {
         this.grupos = grupos;
     }
 
@@ -84,14 +102,14 @@ public class Fornecedor implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 89 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 89 * hash + Objects.hashCode(this.nome);
-        hash = 89 * hash + Objects.hashCode(this.cnpj);
-        hash = 89 * hash + Objects.hashCode(this.endereco);
-        hash = 89 * hash + Objects.hashCode(this.contato);
-        hash = 89 * hash + Objects.hashCode(this.grupos);
-        hash = 89 * hash + Objects.hashCode(this.comentario);
+        int hash = 5;
+        hash = 37 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 37 * hash + Objects.hashCode(this.nome);
+        hash = 37 * hash + Objects.hashCode(this.cnpj);
+        hash = 37 * hash + Objects.hashCode(this.endereco);
+        hash = 37 * hash + Objects.hashCode(this.contato);
+        hash = 37 * hash + Objects.hashCode(this.grupos);
+        hash = 37 * hash + Objects.hashCode(this.comentario);
         return hash;
     }
 
@@ -132,6 +150,6 @@ public class Fornecedor implements Serializable{
     public String toString() {
         return "Fornecedor{" + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", endereco=" + endereco + ", contato=" + contato + ", grupos=" + grupos + ", comentario=" + comentario + '}';
     }
-
+    
     
 }

@@ -6,18 +6,34 @@ package sigmav.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.*;
 
 /**
  *
  * @author fernando
  */
+@Entity
+@Table(name = "Contato")
 public class Contato implements Serializable{
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
+    
+    @Column(name = "telefoneA", length = 20, nullable = true)
     private String telefoneA;
+    
+    @Column(name = "telefoneB", length = 20, nullable = true)
     private String telefoneB;
+    
+    @Column(name = "telefoneC", length = 20, nullable = true)
     private String telefoneC;
+    
+    @Column(name = "eMail", length = 200, nullable = true)
     private String eMail;
+    
+    @Column(name = "reponsavel", length = 30, nullable = true)
     private String responsavel;
 
 //------------------------------------------------------------------------------

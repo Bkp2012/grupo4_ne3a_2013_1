@@ -12,15 +12,17 @@ CREATE TABLE Peca(
 );
 
 
+
 DROP Table Manutencao;
 CREATE TABLE Manutencao(
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     quilometragem INT NOT NULL,
-    dataManutencao DATE NOT NULL,
+    dataManutencao DATE,
     descricao VARCHAR(200) NOT NULL,
-    custoManutencao FLOAT NOT NULL,
-    idVeiculo INT NOT NULL
+    custoManutencao FLOAT NOT NULL    
 );
+
+select * from Manutencao;
 
 CREATE TABLE Consumo(
     id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,

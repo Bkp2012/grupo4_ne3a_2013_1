@@ -6,21 +6,32 @@ package sigmav.entity;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.*;
 
 /**
  *
  * @author fernando
  */
+@Entity
+@Table(name = "Peca")
 public class Peca implements Serializable{
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
-    private String descricao;
-    private String codigoReferencia;
-    private String grupo;
-
-//------------------------------------------------------------------------------
-
     
+    @Column(name = "descricao", length = 50, nullable = false)
+    private String descricao;
+    
+    @Column(name = "codigoReferencia", length = 70, nullable = true)
+    private String codigoReferencia;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "grupo", length = 20, nullable = false)    
+    private GrupoENUM grupo;
+
+    //------------------------------------------------------------------------------
     public long getId() {
         return id;
     }
@@ -33,13 +44,10 @@ public class Peca implements Serializable{
         return codigoReferencia;
     }
 
-    public String getGrupo() {
+    public GrupoENUM getGrupo() {
         return grupo;
     }
 
-//------------------------------------------------------------------------------
-
-    
     public void setId(long id) {
         this.id = id;
     }
@@ -52,20 +60,17 @@ public class Peca implements Serializable{
         this.codigoReferencia = codigoReferencia;
     }
 
-    public void setGrupo(String grupo) {
+    public void setGrupo(GrupoENUM grupo) {
         this.grupo = grupo;
     }
 
-//------------------------------------------------------------------------------
-
-    
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 89 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 89 * hash + Objects.hashCode(this.descricao);
-        hash = 89 * hash + Objects.hashCode(this.codigoReferencia);
-        hash = 89 * hash + Objects.hashCode(this.grupo);
+        hash = 23 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 23 * hash + Objects.hashCode(this.descricao);
+        hash = 23 * hash + Objects.hashCode(this.codigoReferencia);
+        hash = 23 * hash + Objects.hashCode(this.grupo);
         return hash;
     }
 
@@ -97,8 +102,6 @@ public class Peca implements Serializable{
     public String toString() {
         return "Peca{" + "id=" + id + ", descricao=" + descricao + ", codigoReferencia=" + codigoReferencia + ", grupo=" + grupo + '}';
     }
-    
-    
-//------------------------------------------------------------------------------    
+
 
 }

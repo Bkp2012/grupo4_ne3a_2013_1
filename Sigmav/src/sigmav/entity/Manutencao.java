@@ -7,19 +7,57 @@ package sigmav.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import javax.persistence.*;
 
 /**
  *
  * @author fernando
  */
+
+@Entity
+@Table(name = "Manutencao")
 public class Manutencao implements Serializable{
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private long id;
+    
+    @Column(name = "quilometragem", nullable = false)
     private int quilometragem;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "dataManutencao", length = 8, nullable = false)
     private Date dataManutencao;
+    
+    @Column(name = "descriçao", length = 300, nullable = false)
     private String descriçao;
+    
+    @Column(name = "custoManutencao", nullable = false)
     private float custoManutencao;
-    private long idVeiculo;
+
+    
+    //##########################################################################
+    
+    public long getId() {
+        return id;
+    }
+
+    public int getQuilometragem() {
+        return quilometragem;
+    }
+
+    public Date getDataManutencao() {
+        return dataManutencao;
+    }
+
+    public String getDescriçao() {
+        return descriçao;
+    }
+
+    public float getCustoManutencao() {
+        return custoManutencao;
+    }
 
     public void setId(long id) {
         this.id = id;
@@ -41,44 +79,14 @@ public class Manutencao implements Serializable{
         this.custoManutencao = custoManutencao;
     }
 
-    public void setIdVeiculo(long idVeiculo) {
-        this.idVeiculo = idVeiculo;
-    }
-
-
-    public long getId() {
-        return id;
-    }
-
-    public int getQuilometragem() {
-        return quilometragem;
-    }
-
-    public Date getDataManutencao() {
-        return dataManutencao;
-    }
-
-    public String getDescriçao() {
-        return descriçao;
-    }
-
-    public float getCustoManutencao() {
-        return custoManutencao;
-    }
-
-    public long getIdVeiculo() {
-        return idVeiculo;
-    }
-
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 67 * hash + this.quilometragem;
-        hash = 67 * hash + Objects.hashCode(this.dataManutencao);
-        hash = 67 * hash + Objects.hashCode(this.descriçao);
-        hash = 67 * hash + Float.floatToIntBits(this.custoManutencao);
-        hash = 67 * hash + (int) (this.idVeiculo ^ (this.idVeiculo >>> 32));
+        hash = 41 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 41 * hash + this.quilometragem;
+        hash = 41 * hash + Objects.hashCode(this.dataManutencao);
+        hash = 41 * hash + Objects.hashCode(this.descriçao);
+        hash = 41 * hash + Float.floatToIntBits(this.custoManutencao);
         return hash;
     }
 
@@ -106,16 +114,13 @@ public class Manutencao implements Serializable{
         if (Float.floatToIntBits(this.custoManutencao) != Float.floatToIntBits(other.custoManutencao)) {
             return false;
         }
-        if (this.idVeiculo != other.idVeiculo) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Manutencao{" + "id=" + id + ", quilometragem=" + quilometragem + ", dataManutencao=" + dataManutencao + ", descri\u00e7ao=" + descriçao + ", custoManutencao=" + custoManutencao + ", idVeiculo=" + idVeiculo + '}';
+        return "Manutencao{" + "id=" + id + ", quilometragem=" + quilometragem + ", dataManutencao=" + dataManutencao + ", descri\u00e7ao=" + descriçao + ", custoManutencao=" + custoManutencao + '}';
     }
     
-    
+
 }
