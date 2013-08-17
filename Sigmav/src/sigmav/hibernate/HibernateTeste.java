@@ -35,10 +35,11 @@ public class HibernateTeste {
         
         System.out.println("FIM DA PERSISTENCIA DE PECA.");
         
-        //p = (Peca) tH.retrieveID(4);
-        
-        //p.setCodigoReferencia("PSC9929");
-        //p.setDescricao("Filtro ar C40");
+        //p = (Peca) tH.retrieveID(7);
+        p = new Peca();
+        p.setCodigoReferencia("BG31*");
+        p.setDescricao("Bucha InferiorSuperior");
+        p.setGrupo(GrupoENUM.SUSPENSAO);
         
         tH.persist(p);
         
@@ -48,7 +49,11 @@ public class HibernateTeste {
         List <Peca>list = tH.listAll();
         
         System.out.println(list.size());
-        System.out.println(p.toString());
+        //System.out.println(p.toString());
+        
+        for(Peca ts : list){
+            System.out.println(ts.toString());
+        }
         
     }
 }
