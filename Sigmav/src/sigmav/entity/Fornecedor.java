@@ -26,21 +26,21 @@ public class Fornecedor implements Serializable{
     @Column(name = "nome", length = 200, nullable = false)
     private String nome;
     
-    @Column(name = "cnpj", length = 13, nullable = false)
+    @Column(name = "cnpj", unique = true, length = 13, nullable = false)
     private String cnpj;
     
-    @Column(name = "cnpj", length = 200, nullable = false)
+    @Column(name = "endereco", length = 200, nullable = false)
     private String endereco;
     
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)    
     private Contato contato;    
     
-    @Enumerated(EnumType.STRING)
-    @Column(name = "grupo", length = 20, nullable = false)
-    @OneToMany(cascade= CascadeType.PERSIST, fetch = FetchType.EAGER)
-    private List<GrupoENUM> grupos = new ArrayList<>();    
+    //@Enumerated(EnumType.STRING)
+    //@Column(name = "grupo", length = 20, nullable = false)
+    //@OneToMany(cascade= CascadeType.PERSIST, fetch = FetchType.EAGER)
+    //private List<GrupoENUM> grupos = new ArrayList<>();    
     
-    @Column(name = "cnpj", length = 500, nullable = false)
+    @Column(name = "comentario", length = 500, nullable = false)
     private String comentario;
 
 //------------------------------------------------------------------------------
@@ -64,10 +64,12 @@ public class Fornecedor implements Serializable{
         return contato;
     }
 
+    /*
     public List<GrupoENUM> getGrupos() {
         return grupos;
     }
-
+    */
+    
     public String getComentario() {
         return comentario;
     }
@@ -92,9 +94,11 @@ public class Fornecedor implements Serializable{
         this.contato = contato;
     }
 
+    /*
     public void setGrupos(List<GrupoENUM> grupos) {
         this.grupos = grupos;
     }
+    */
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
@@ -108,7 +112,7 @@ public class Fornecedor implements Serializable{
         hash = 37 * hash + Objects.hashCode(this.cnpj);
         hash = 37 * hash + Objects.hashCode(this.endereco);
         hash = 37 * hash + Objects.hashCode(this.contato);
-        hash = 37 * hash + Objects.hashCode(this.grupos);
+        //hash = 37 * hash + Objects.hashCode(this.grupos);
         hash = 37 * hash + Objects.hashCode(this.comentario);
         return hash;
     }
@@ -134,12 +138,17 @@ public class Fornecedor implements Serializable{
         if (!Objects.equals(this.endereco, other.endereco)) {
             return false;
         }
+        
+        /*
         if (!Objects.equals(this.contato, other.contato)) {
-            return false;
+            retugruporn false;
         }
+        
         if (!Objects.equals(this.grupos, other.grupos)) {
             return false;
         }
+        */
+        
         if (!Objects.equals(this.comentario, other.comentario)) {
             return false;
         }
@@ -148,7 +157,7 @@ public class Fornecedor implements Serializable{
 
     @Override
     public String toString() {
-        return "Fornecedor{" + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", endereco=" + endereco + ", contato=" + contato + ", grupos=" + grupos + ", comentario=" + comentario + '}';
+        return "Fornecedor{" + "id=" + id + ", nome=" + nome + ", cnpj=" + cnpj + ", endereco=" + endereco + ", contato=" + contato +", comentario=" + comentario + '}';
     }
     
     

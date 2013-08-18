@@ -35,13 +35,13 @@ public class HibernatePOG {
         cfg.setProperty("hibernate.connection.password", "");
         cfg.setProperty("hibernate.connection.autocommit", "false");
         
-        //cfg.addAnnotatedClass(Consumo.class);
-        //cfg.addAnnotatedClass(Contato.class);
-        //cfg.addAnnotatedClass(Fornecedor.class);
+        cfg.addAnnotatedClass(Consumo.class);
+        cfg.addAnnotatedClass(Contato.class);
+        cfg.addAnnotatedClass(Fornecedor.class);
         //cfg.addAnnotatedClass(GrupoENUM.class);
-        //cfg.addAnnotatedClass(Manutencao.class);
+        cfg.addAnnotatedClass(Manutencao.class);
         cfg.addAnnotatedClass(Peca.class);
-        //cfg.addAnnotatedClass(Veiculo.class);
+        cfg.addAnnotatedClass(Veiculo.class);
         
         return cfg;
     }
