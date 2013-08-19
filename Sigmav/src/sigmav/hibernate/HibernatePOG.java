@@ -25,8 +25,8 @@ public class HibernatePOG {
         
         cfg = new AnnotationConfiguration();
         
-        cfg.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        cfg.setProperty("hibernate.hbm2ddl.auto", "update");
+        cfg.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
+        cfg.setProperty("hibernate.hbm2ddl.auto", "update");        
         cfg.setProperty("hibernate.show_sql", "true");
         cfg.setProperty("hibernate.format_sql", "true");
         cfg.setProperty("hibernate.connection.driver", "com.mysql.jdbc.Driver");

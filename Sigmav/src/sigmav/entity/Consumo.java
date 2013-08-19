@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @author fernando
  */
 @Entity
-@Table(name = "Cosumo")
+@Table(name = "Consumo")
 public class Consumo implements Serializable {
     
     @Id
@@ -23,7 +23,7 @@ public class Consumo implements Serializable {
     private long id;
     
     @Temporal(TemporalType.DATE)
-    @Column(name = "dataAbastecimento", length = 8, nullable = false)
+    @Column(name = "dataAbastecimento", length = 8, nullable = true)
     private Date dataAbastecimento;
     
     @Column(name = "quilometragem", nullable = false)
