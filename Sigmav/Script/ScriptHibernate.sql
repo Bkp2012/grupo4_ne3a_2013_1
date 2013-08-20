@@ -10,4 +10,6 @@ select * from Contato;
 
 select * from Veiculo;
 
-select * from Veiculo_Cosumo;
+select * from Consumo;
+
+select * from Veiculo_Consumo;
