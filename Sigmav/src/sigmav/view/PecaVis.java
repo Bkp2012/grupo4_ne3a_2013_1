@@ -4,30 +4,26 @@
  */
 package sigmav.view;
 
+import sigmav.entity.Peca;
+import sigmav.hibernate.HDaoPeca;
+
 /**
  *
  * @author meritor
  */
 
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import sigmav.entity.GrupoENUM;
-import sigmav.entity.Peca;
-import sigmav.hibernate.HDaoPeca;
-
-public class PecaCad extends javax.swing.JDialog {
+public class PecaVis extends javax.swing.JDialog {
 
     /**
      * Creates new form PPeca
      */
+    
     private HDaoPeca daoInterno;
     private Peca peca;
     java.awt.Frame parent;
-    boolean modal;    
-    
-    public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
+    boolean modal;
+
+    public PecaVis(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Cadastro de peças:");
@@ -38,18 +34,15 @@ public class PecaCad extends javax.swing.JDialog {
         
         this.daoInterno = daopeca;
         this.peca = peca;
+        
+        jTextFieldID.setText(String.valueOf(this.peca.getId()));
+        jTextFieldDescricao.setText(this.peca.getDescricao());
+        jTextFieldReferencia.setText(this.peca.getCodigoReferencia());
+        jTextFieldGrupo.setText(String.valueOf(this.peca.getGrupo()));
+        
     }
-    
-    public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca) {
-        super(parent, modal);
-        initComponents();
-        setTitle("Sigmav - Cadastro de peças:");
-        setLocationRelativeTo(null);
-        this.daoInterno = daopeca;
-        this.peca = new Peca();
-    }
-    
-    public PecaCad(java.awt.Frame parent, boolean modal) {
+        
+    public PecaVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Cadastro de peças:");
@@ -70,12 +63,13 @@ public class PecaCad extends javax.swing.JDialog {
         jTextFieldID = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTextFieldDescricao = new javax.swing.JTextField();
-        jTextFieldCodigoIndustria = new javax.swing.JTextField();
+        jTextFieldReferencia = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBoxGrupoMotor = new javax.swing.JComboBox();
+        jButtonRemover = new javax.swing.JButton();
+        jButtonEditar = new javax.swing.JButton();
+        jTextFieldGrupo = new javax.swing.JTextField();
         jButtonCancelar = new javax.swing.JButton();
-        jButtonSalvar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(400, 320));
@@ -83,7 +77,7 @@ public class PecaCad extends javax.swing.JDialog {
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
-        jLabel1.setText("Cadastrar/Alterar");
+        jLabel1.setText("Visualizar");
 
         jLabel2.setText("Código da peça:");
 
@@ -96,17 +90,31 @@ public class PecaCad extends javax.swing.JDialog {
 
         jLabel3.setText("Desrição:");
 
+        jTextFieldDescricao.setEditable(false);
+
+        jTextFieldReferencia.setEditable(false);
+
         jLabel4.setText("Referencia de industria:");
 
         jLabel5.setText("Grupo de aplicação:");
 
-        jComboBoxGrupoMotor.setModel(new javax.swing.DefaultComboBoxModel(GrupoENUM.getGrupos()));
-        jComboBoxGrupoMotor.setToolTipText("Grupo de aplicação");
-        jComboBoxGrupoMotor.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRemover.setText("Remover");
+        jButtonRemover.setToolTipText("Remover");
+        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxGrupoMotorActionPerformed(evt);
+                jButtonRemoverActionPerformed(evt);
             }
         });
+
+        jButtonEditar.setText("Editar");
+        jButtonEditar.setToolTipText("Editar");
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
+
+        jTextFieldGrupo.setEditable(false);
 
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.setToolTipText("Cancelar");
@@ -116,40 +124,34 @@ public class PecaCad extends javax.swing.JDialog {
             }
         });
 
-        jButtonSalvar.setText("Salvar");
-        jButtonSalvar.setToolTipText("Salvar");
-        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSalvarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jTextFieldCodigoIndustria)
-                            .addComponent(jTextFieldDescricao)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldReferencia, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5)
-                                    .addComponent(jComboBoxGrupoMotor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 226, Short.MAX_VALUE))))
+                                .addGap(0, 226, Short.MAX_VALUE))
+                            .addComponent(jTextFieldGrupo, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButtonSalvar)
+                                .addComponent(jButtonEditar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonRemover)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonCancelar)))))
                 .addContainerGap())
@@ -170,66 +172,39 @@ public class PecaCad extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldCodigoIndustria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextFieldReferencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBoxGrupoMotor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(jTextFieldGrupo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCancelar)
-                    .addComponent(jButtonSalvar))
+                    .addComponent(jButtonRemover)
+                    .addComponent(jButtonEditar)
+                    .addComponent(jButtonCancelar))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBoxGrupoMotorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxGrupoMotorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxGrupoMotorActionPerformed
-
     private void jTextFieldIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
-    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        try {
-            // TODO add your handling code here:
-            peca.setDescricao(jTextFieldDescricao.getText().trim());
-            peca.setGrupo(GrupoENUM.getGrupoEnum(jComboBoxGrupoMotor.getSelectedItem().toString()));
-            peca.setCodigoReferencia(jTextFieldCodigoIndustria.getText().trim());
-            daoInterno.persist(peca);
-                        
-        } catch (SQLException ex) {
-            Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            JOptionPane.showMessageDialog(null,"Peça cadastrada com sucesso.");            
-            
-            GeraVisualisarPeca();
-            
-            dispose();
-        }
-        
-    }//GEN-LAST:event_jButtonSalvarActionPerformed
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    private void GeraVisualisarPeca(){
-        PecaVis pecaVisalisao = new PecaVis(this.parent, this.modal, daoInterno, peca);
-        pecaVisalisao.setLocationRelativeTo(this);
-        pecaVisalisao.setResizable(false);
-        pecaVisalisao.setVisible(true);
-               
-    }
-    private void limpaCampos(){
-        jTextFieldID.setText(null);
-        jTextFieldCodigoIndustria.setText(null);
-        jTextFieldDescricao.setText(null);
-    }
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonEditarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -247,20 +222,20 @@ public class PecaCad extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PecaCad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PecaVis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PecaCad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PecaVis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PecaCad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PecaVis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PecaCad.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PecaVis.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                PecaCad dialog = new PecaCad(new javax.swing.JFrame(), true);
+                PecaVis dialog = new PecaVis(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -273,15 +248,16 @@ public class PecaCad extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelar;
-    private javax.swing.JButton jButtonSalvar;
-    private javax.swing.JComboBox jComboBoxGrupoMotor;
+    private javax.swing.JButton jButtonEditar;
+    private javax.swing.JButton jButtonRemover;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField jTextFieldCodigoIndustria;
     private javax.swing.JTextField jTextFieldDescricao;
+    private javax.swing.JTextField jTextFieldGrupo;
     private javax.swing.JTextField jTextFieldID;
+    private javax.swing.JTextField jTextFieldReferencia;
     // End of variables declaration//GEN-END:variables
 }
