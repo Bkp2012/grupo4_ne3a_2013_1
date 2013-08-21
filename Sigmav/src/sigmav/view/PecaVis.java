@@ -4,6 +4,10 @@
  */
 package sigmav.view;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import sigmav.entity.Peca;
 import sigmav.hibernate.HDaoPeca;
 
@@ -116,8 +120,8 @@ public class PecaVis extends javax.swing.JDialog {
 
         jTextFieldGrupo.setEditable(false);
 
-        jButtonCancelar.setText("Cancelar");
-        jButtonCancelar.setToolTipText("Cancelar");
+        jButtonCancelar.setText("Fechar");
+        jButtonCancelar.setToolTipText("Fechar");
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelarActionPerformed(evt);
@@ -193,7 +197,15 @@ public class PecaVis extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
-        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            daoInterno.delete(peca);
+        } catch (SQLException ex) {
+            Logger.getLogger(PecaVis.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            JOptionPane.showMessageDialog(null,"Peça removida com sucesso.");
+            dispose();
+        }        
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
@@ -203,6 +215,11 @@ public class PecaVis extends javax.swing.JDialog {
 
     private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
         // TODO add your handling code here:
+        AlteraCadastroPeca();
+        jTextFieldID.setText(String.valueOf(this.peca.getId()));
+        jTextFieldDescricao.setText(this.peca.getDescricao());
+        jTextFieldReferencia.setText(this.peca.getCodigoReferencia());
+        jTextFieldGrupo.setText(String.valueOf(this.peca.getGrupo()));        
     }//GEN-LAST:event_jButtonEditarActionPerformed
 
     /**
@@ -245,6 +262,17 @@ public class PecaVis extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    
+        
+        
+    }
+        //######################################################################
+    private void AlteraCadastroPeca(){
+        int pog = 2;
+        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, daoInterno, peca, pog);
+        pecaCadastro.setLocationRelativeTo(this);
+        pecaCadastro.setResizable(false);
+        pecaCadastro.setVisible(true);               
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelar;

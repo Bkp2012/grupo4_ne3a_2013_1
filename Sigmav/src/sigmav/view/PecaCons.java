@@ -210,7 +210,13 @@ public class PecaCons extends javax.swing.JDialog {
 
     private void jButtonNovaPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovaPecaActionPerformed
         // TODO add your handling code here:
+        this.peca = new Peca();
         GeraCadastrarPeca();
+        System.out.println(this.peca.getId());
+        if(this.peca.getId() >= 1){
+            VisualizarPeca();
+        }        
+        
     }//GEN-LAST:event_jButtonNovaPecaActionPerformed
 
     /**
@@ -255,12 +261,21 @@ public class PecaCons extends javax.swing.JDialog {
         });
     }
     
+    //##########################################################################
     
     private void GeraCadastrarPeca(){
-        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, daoInterno);
+        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, daoInterno, peca);
         pecaCadastro.setLocationRelativeTo(this);
         pecaCadastro.setResizable(false);
         pecaCadastro.setVisible(true);
+               
+    }
+    
+    private void VisualizarPeca(){
+        PecaVis pecaVisualizacao = new PecaVis(this.parent, this.modal, daoInterno, peca);
+        pecaVisualizacao.setLocationRelativeTo(this);
+        pecaVisualizacao.setResizable(false);
+        pecaVisualizacao.setVisible(true);
                
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

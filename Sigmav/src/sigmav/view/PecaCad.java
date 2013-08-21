@@ -40,6 +40,25 @@ public class PecaCad extends javax.swing.JDialog {
         this.peca = peca;
     }
     
+    public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca, int flagPOG) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Cadastro de peças:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.daoInterno = daopeca;
+        this.peca = peca;
+        
+        jTextFieldID.setText(String.valueOf(this.peca.getId()));
+        jTextFieldDescricao.setText(this.peca.getDescricao());
+        jTextFieldCodigoIndustria.setText(this.peca.getCodigoReferencia());
+        jComboBoxGrupoMotor.setSelectedIndex(1);
+        
+    }
+    /*
     public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca) {
         super(parent, modal);
         initComponents();
@@ -48,6 +67,7 @@ public class PecaCad extends javax.swing.JDialog {
         this.daoInterno = daopeca;
         this.peca = new Peca();
     }
+    */ 
     
     public PecaCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -206,8 +226,6 @@ public class PecaCad extends javax.swing.JDialog {
         } finally {
             JOptionPane.showMessageDialog(null,"Peça cadastrada com sucesso.");            
             
-            GeraVisualisarPeca();
-            
             dispose();
         }
         
@@ -215,6 +233,7 @@ public class PecaCad extends javax.swing.JDialog {
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
+        this.peca = null;
         dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
