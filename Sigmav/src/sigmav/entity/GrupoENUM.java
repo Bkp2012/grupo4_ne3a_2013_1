@@ -78,7 +78,7 @@ public enum GrupoENUM {
     
     @Override
     public String toString() {
-        return "Grupo{" + "grupo=" + grupo + '}';
+        return this.grupo;
     }
 
 

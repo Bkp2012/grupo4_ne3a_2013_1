@@ -27,9 +27,9 @@ public class TesteHibVeiculo {
     
         System.out.println("..........................");
         vt.setAnoModelo("9998");
-        vt.setCombustivel("Gasosa");
+        vt.setCombustivel("Gasosalina");
         vt.setMarca("Chevrolets");
-        vt.setModelo("Chevetts");
+        vt.setModelo("Chevettess");
         vt.setResponsavel("Fulanos");
         vt.setVersao("SOS");
         
@@ -47,12 +47,23 @@ public class TesteHibVeiculo {
             ct.setDataAbastecimento(tp);
             
             cons.add(ct);
+            
+            Manutencao mt = new Manutencao();
+            mt.setCustoManutencao(i*3);
+            mt.setDataManutencao(tp);
+            mt.setDescriçao("Rebinbocando a parafuseta");
+            mt.setQuilometragem(i*2);
+            
+            mans.add(mt);
         }
         
         vt.setManutencoes(mans);
         vt.setConsumo(cons);
         
+        System.out.println(vt.toString());
         ht.persist(vt);
+        
+        
     }
         
 }

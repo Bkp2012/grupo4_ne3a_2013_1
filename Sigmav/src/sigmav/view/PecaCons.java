@@ -9,9 +9,16 @@ package sigmav.view;
  * @author meritor
  */
 
+import java.sql.SQLException;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import sigmav.entity.Peca;
 import sigmav.hibernate.HDaoPeca;
-import sigmav.view.PecaCad;
 
 public class PecaCons extends javax.swing.JDialog {
 
@@ -20,29 +27,38 @@ public class PecaCons extends javax.swing.JDialog {
      */
     private HDaoPeca daoInterno;
     private Peca peca;
-    java.awt.Frame parent;
-    boolean modal;    
+    private List<Peca> listaPecas;
+    private java.awt.Frame parent;
+    private boolean modal;
+    private int linha = 0;
+    
     
     public PecaCons(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
         super(parent, modal);
         initComponents();
         this.parent = parent;
         this.modal = modal;
-        setTitle("Sigmav - Cadastro de peças:");
+        setTitle("Sigmav - Peças:");
         setLocationRelativeTo(null);
         this.daoInterno = daopeca;
         this.peca = peca;
+        this.listaPecas = new ArrayList<Peca>();
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
+        tablesModelis.setRowCount(0);
     }
     
     public PecaCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setTitle("Sigmav - Cadastro de peças:");
-        setLocationRelativeTo(null);        
+        setTitle("Sigmav - Peças:");
+        setLocationRelativeTo(null);
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
+        tablesModelis.setRowCount(0);
+        this.listaPecas = new ArrayList<Peca>();
     }
     
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -58,20 +74,25 @@ public class PecaCons extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jComboBoxTipoDePesquisa = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableVeiculos = new javax.swing.JTable(){
+
+            public boolean isCellEditable(int row, int col) {
+
+                return false;
+            }
+
+        };
         jButtonNovaPeca = new javax.swing.JButton();
         jButtonVisualizarPeca = new javax.swing.JButton();
         jButtonPesquisar = new javax.swing.JButton();
         jButtonFecharTela = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(400, 549));
         setMinimumSize(new java.awt.Dimension(400, 549));
-        setPreferredSize(new java.awt.Dimension(400, 549));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
-        jLabel1.setText("Pesquisar peças");
+        jLabel1.setText("Pesquisar");
 
         jLabel2.setText("Chave da busca:");
 
@@ -86,18 +107,29 @@ public class PecaCons extends javax.swing.JDialog {
         jComboBoxTipoDePesquisa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código peça", "Descrição", "Referencia industria"}));
         jComboBoxTipoDePesquisa.setToolTipText("Tipo de pesquisa");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableVeiculos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Código peça:", "Descrição:", "Ref. industria:"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTableVeiculos);
+        jTableVeiculos.getColumnModel().getColumn(0).setResizable(false);
+        jTableVeiculos.getColumnModel().getColumn(1).setResizable(false);
+        jTableVeiculos.getColumnModel().getColumn(2).setResizable(false);
 
         jButtonNovaPeca.setText("Adicionar");
         jButtonNovaPeca.setToolTipText("Adicionar");
@@ -196,7 +228,73 @@ public class PecaCons extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldChaveDaPesquisaActionPerformed
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
-        // TODO add your handling code here:
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
+        this.listaPecas = new ArrayList<Peca>();
+        char[] caux = jTextFieldChaveDaPesquisa.getText().trim().toCharArray();
+        boolean daxus = true;
+        boolean auxsPog = true;
+        
+        for ( int i = 0; i < caux.length; i++ ){  
+        // verifica se o char não é um dígito  
+            if ( !Character.isDigit( caux[ i ] ) )  
+                daxus = false;  
+                break;  
+        }  
+    
+        //String axs = jTextFieldChaveDaPesquisa.getText().trim();
+        //System.out.println("###############################"+axs.length());
+        //System.out.println(jComboBoxTipoDePesquisa.getSelectedItem());
+        //System.out.println(jComboBoxTipoDePesquisa.getSelectedIndex());      
+        
+        tablesModelis.setRowCount(0);
+        
+        try {
+            // TODO add your handling code here:
+            //this.peca = new Peca();
+            if(jComboBoxTipoDePesquisa.getSelectedIndex() == 0){
+               if(daxus == false || caux.length == 0){
+                    JOptionPane.showMessageDialog(parent, "Chave de busca inválida, reconfigure.", "Pesquisar", 2, null);
+                    auxsPog = false;
+                    
+               } else{
+                this.peca = (Peca) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
+                //System.out.println(peca.toString());
+                if(this.peca != null){
+                    this.listaPecas.add(this.peca);
+                }
+               }
+                
+            } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
+                this.listaPecas = daoInterno.retrieveDescricao(jTextFieldChaveDaPesquisa.getText());
+            }            
+            else {
+                this.listaPecas = daoInterno.retrieveCodReferencia(jTextFieldChaveDaPesquisa.getText());
+            } 
+            
+            
+            
+            if(listaPecas.size() > 0){
+                for(Peca pecaTemp : listaPecas){
+                    tablesModelis.addRow(new Object[]{pecaTemp.getId(),pecaTemp.getDescricao(),pecaTemp.getGrupo()});
+                }
+            }
+            
+            jTableVeiculos.setModel(tablesModelis);
+            
+            //peca = listaPecas.get(jTextFieldChaveDaPesquisa.cocon)
+            //tedBook = booksList.get(table.convertRowIndexToModel(selectedRow));
+            
+            //jTable1.getse
+            
+            
+            if(tablesModelis.getRowCount() == 0 && auxsPog == true){
+                JOptionPane.showMessageDialog(parent, "Nenhuma peça encontrada.", "Pesquisar", 2, null);
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PecaCons.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
 
     private void jButtonFecharTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharTelaActionPerformed
@@ -206,6 +304,17 @@ public class PecaCons extends javax.swing.JDialog {
 
     private void jButtonVisualizarPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarPecaActionPerformed
         // TODO add your handling code here:
+        linha = jTableVeiculos.getSelectedRow();
+        //System.out.println(linha+"################");
+        if(linha < 0){
+            // Alerta se nenhum item for selecionado
+            JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
+        } else{
+            this.peca = this.listaPecas.get(linha);
+            VisualizarPeca();
+            jButtonPesquisarActionPerformed(evt);
+        }
+                
     }//GEN-LAST:event_jButtonVisualizarPecaActionPerformed
 
     private void jButtonNovaPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovaPecaActionPerformed
@@ -288,7 +397,7 @@ public class PecaCons extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableVeiculos;
     private javax.swing.JTextField jTextFieldChaveDaPesquisa;
     // End of variables declaration//GEN-END:variables
 }

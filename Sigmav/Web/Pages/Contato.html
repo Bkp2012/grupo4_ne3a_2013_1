@@ -1,25 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-
-<head>
+	<head>
+                       
+<script type="text/javascript" src="../scripts/Contato.js"></script>
+	
+	<script type="text/javascript" src="../Scripts/Contato.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	
 	<link rel="stylesheet" href="../Styles/EstiloMestre.css" type="text/css" />
 	<link rel="stylesheet" href="../Styles/Menu.css" type="text/css" />	
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	
+	           
 	<meta name="keywords" content="Sistema, Software, Mecanica, Oficina" />
-	<meta name="description" content="Website Nome do sistema aqui." />	 
+	<meta name="description" content="Sigmav" />	 
 		
-	<title> Nome do sistema aqui </title>
+	<title> Sigmav - Sistema gerenciamento de manutenção veicular </title>
 </head>
 
 	<body>
 		<div id="topo"> 
 			<br/>
 			<br/>
-			<h1 style="font-size: 60px">&nbsp; &nbsp; Nome do sistema aqui</h1>
+			<h1 style="font-size: 60px">&nbsp; &nbsp; Sigmav</h1>
 		</div>
 
 		<!-- Coluna esquerda, menu, ABAIXO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		
 		<div id="conteudoEsq">			
 			<ul id="menutt">
 				<li>
@@ -78,17 +85,103 @@
 				<!-- Coluna direita,ABAIXO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 				<div id="colDir">				
 					<div id="conteudoDir"> 
-					Botoes navegacao aqui  
+					      <p align="center">
+							<a href="http://desciclo.pedia.ws/wiki/Chuck_norris" target="_blank" > 
+								<img src="http://images.uncyc.org/commons/thumb/0/08/ChuckApproves.gif/250px-ChuckApproves.gif" alt="Chuck Norris Aproves" border="0" width="75" height="70" /> 
+							</a>
+					      </p>
 					</div>
 				<!-- Coluna direita, ACIMA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->	
 					
 					<div id="sepcolCentralDir">
 						
-						<!-- Coluna CENTRAL/PAGINA, ABAIXO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Coluna CENTRAL/PAGINA, ABAIXO ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 						<div id="colCentral">
-							<h1>Conteudo pagina aqui</h1>
-									
-							Montar pagina contato
+							
+				
+				
+							<h2 style="font-size: 30px; text-align: center"> Contato: </h2>
+				
+						<form name="contato" action="mailto:rocha.tsi@gmail" onsubmit="return valida(this)" method="post" id="faleconosco">
+
+								<div class="fdContainer">
+								    <div class="linha">
+									<div class="label">
+									    <label>Nome: </label>
+									</div>  
+								    </div>
+								    <div class="linha">
+									<div class="input">
+									    <input name="nome" type="text"  id="nomez"/>
+									</div>
+								    </div>
+
+								    <div class="linha">
+									<div class="label">
+									    <label>E-Mail: </label>
+									</div>
+								    </div>
+								      <div class="linha">
+									<div class="input">
+									    <input name="email" type="text" id="emailz" />
+									</div>
+								    </div>
+
+								    <div class="linha">
+									<div class="label">
+									    <label>CPF: </label>
+									</div>
+								    </div>
+								      <div class="linha">
+									<div class="input">
+									    <input name="cpf" type="text" id="cpfz"/>
+									</div>
+								    </div>
+
+								    <div class="linha">
+									<div class="label">
+									    <label>Data de Nascimento (dd/mm/aaaa): </label>
+									</div>
+								    </div>
+								      <div class="linha">
+									<div class="input">
+									    <input name="dataNasc" type="text" value="" maxlength="10" id="nascz"onfocus="if (this.value=='dd/mm/aaaa'){this.value='';}" onblur="if (this.value==''){this.value='dd/mm/aaaa';}"/>
+									</div>
+								    </div>
+
+								    <div class="linha">
+									<div class="label">
+									    <label>Assunto: </label>
+									</div>
+								    </div>
+								      <div class="linha">
+									<div class="input">
+									    <input name="assunto" type="text" id="assuntoz"/>
+									</div>
+								    </div>
+
+								    <div class="linha">
+									<div class="label">
+									    <label>Mensagem:</label>
+									</div>
+								    </div>
+								    <div class="area">
+									<div class="textarea">
+									    <textarea name="textoArea" cols="47" rows="10" id="msgz"></textarea>
+									</div>
+								    </div>
+
+								</div>
+
+								<div class="botoes">
+								    <input type="button" onclick="confa()" id="btnLimpar" value="Limpar" />
+								    <input type="submit" id="btnEnviar" value="Enviar" />
+								</div>
+
+						</form>
+				
+				
+							
 							
 						</div>
 						<!-- Coluna CENTRAL/PAGINA, ACIMA ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->

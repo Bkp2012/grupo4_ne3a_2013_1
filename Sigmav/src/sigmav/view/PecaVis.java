@@ -4,6 +4,7 @@
  */
 package sigmav.view;
 
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,7 @@ public class PecaVis extends javax.swing.JDialog {
     public PecaVis(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
         super(parent, modal);
         initComponents();
-        setTitle("Sigmav - Cadastro de peças:");
+        setTitle("Sigmav - Peças:");
         setLocationRelativeTo(null);
         
         this.parent = parent;
@@ -39,9 +40,13 @@ public class PecaVis extends javax.swing.JDialog {
         this.daoInterno = daopeca;
         this.peca = peca;
         
+        jTextFieldID.setBackground(Color.GRAY);
         jTextFieldID.setText(String.valueOf(this.peca.getId()));
+        jTextFieldDescricao.setBackground(Color.GRAY);
         jTextFieldDescricao.setText(this.peca.getDescricao());
+        jTextFieldReferencia.setBackground(Color.GRAY);
         jTextFieldReferencia.setText(this.peca.getCodigoReferencia());
+        jTextFieldGrupo.setBackground(Color.GRAY);
         jTextFieldGrupo.setText(String.valueOf(this.peca.getGrupo()));
         
     }
@@ -49,7 +54,7 @@ public class PecaVis extends javax.swing.JDialog {
     public PecaVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        setTitle("Sigmav - Cadastro de peças:");
+        setTitle("Sigmav - Peças:");
         setLocationRelativeTo(null);
     }
 
@@ -197,15 +202,23 @@ public class PecaVis extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
-        try {
-            // TODO add your handling code here:
-            daoInterno.delete(peca);
-        } catch (SQLException ex) {
-            Logger.getLogger(PecaVis.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            JOptionPane.showMessageDialog(null,"Peça removida com sucesso.");
-            dispose();
-        }        
+        
+        int auxs = JOptionPane.showConfirmDialog(parent, "Deseja remover esta peça?", "Remover", 0, 3, null);
+        
+        if(auxs == 0){
+            try {
+                // TODO add your handling code here:
+               daoInterno.delete(peca);
+            } catch (SQLException ex) {
+                Logger.getLogger(PecaVis.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                JOptionPane.showMessageDialog(null,"Peça removida com sucesso.","Remover",1, null);
+                dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,"Operação cancelada.","Remover",1, null);
+        }
+                
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed

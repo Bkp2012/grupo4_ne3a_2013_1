@@ -32,7 +32,7 @@ public class Veiculo implements Serializable {
     @Column(nullable = true)
     private List<Consumo> consumo = new ArrayList<>();
     
-    @Column(name = "mediaConsumo", nullable = true)
+    @Transient
     private float mediaConsumo;
     
     @Column(name = "marca", length = 40, nullable = false)

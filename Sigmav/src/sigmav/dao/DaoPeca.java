@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import sigmav.entity.GrupoENUM;
 import sigmav.entity.Peca;
 
 /**
@@ -26,7 +27,7 @@ public class DaoPeca implements DaoInterface<Peca>{
         Peca pTemp = new Peca();
         pTemp.setId(rs.getLong("id"));
         pTemp.setDescricao(rs.getString("descricao"));
-        pTemp.setGrupo(rs.getString("grupo"));
+        pTemp.setGrupo(GrupoENUM.valueOf(rs.getString("grupo")));
         pTemp.setCodigoReferencia(rs.getString("codigoReferencia"));
         
         return pTemp;
@@ -51,7 +52,7 @@ public class DaoPeca implements DaoInterface<Peca>{
         
         pst.setString(1, pTemp.getDescricao());
         pst.setString(2, pTemp.getCodigoReferencia());
-        pst.setString(3, pTemp.getGrupo());
+        pst.setString(3, pTemp.getGrupo().name());
                 
         pst.execute();
         
@@ -67,7 +68,7 @@ public class DaoPeca implements DaoInterface<Peca>{
         
         pst.setString(1, pTemp.getDescricao());
         pst.setString(2, pTemp.getCodigoReferencia());
-        pst.setString(3, pTemp.getGrupo());
+        pst.setString(3, pTemp.getGrupo().name());
         pst.setLong(4, pTemp.getId());
         
         pst.execute();

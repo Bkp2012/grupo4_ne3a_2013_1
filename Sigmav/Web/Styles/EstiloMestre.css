@@ -1,7 +1,7 @@
 body {
    	margin:0 0 5px 0;
 	padding:0;
-	background-color:#C4E495;
+	background-color:#9ACD32;
 	font:italic 14px/1.5em 
 	Verdana, Arial, Serif;
 	height: 100%;
@@ -36,7 +36,7 @@ body {
 	/* border-bottom:3px double #666; */
 }
 #colEsq {
-	background:#59AF7F;
+	background:#9ACD32;
 }
 #sepEsqcolCentral {
 	margin-left:200px;
@@ -44,7 +44,7 @@ body {
 	/* background:#666; */
 }
 #colDir {
-	background:#D97A00;
+	background:#9ACD32;
 	margin:0px;	
 }
 #sepcolCentralDir {
@@ -53,7 +53,7 @@ body {
 	/* background:#666; */
 }
 #colCentral {	    
-	background:#E44C00;
+	background:#A2CD5A;
 	color:#333333;
 	padding:2px 10px;
 	padding-bottom: 10px;

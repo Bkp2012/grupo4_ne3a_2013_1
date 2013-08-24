@@ -9,6 +9,7 @@ package sigmav.view;
  * @author meritor
  */
 
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,7 @@ public class PecaCad extends javax.swing.JDialog {
     public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
         super(parent, modal);
         initComponents();
-        setTitle("Sigmav - Cadastro de peças:");
+        setTitle("Sigmav - Peças:");
         setLocationRelativeTo(null);
         
         this.parent = parent;
@@ -38,12 +39,13 @@ public class PecaCad extends javax.swing.JDialog {
         
         this.daoInterno = daopeca;
         this.peca = peca;
+        jTextFieldID.setBackground(Color.GRAY);
     }
     
     public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca, int flagPOG) {
         super(parent, modal);
         initComponents();
-        setTitle("Sigmav - Cadastro de peças:");
+        setTitle("Sigmav - Peças:");
         setLocationRelativeTo(null);
         
         this.parent = parent;
@@ -52,10 +54,11 @@ public class PecaCad extends javax.swing.JDialog {
         this.daoInterno = daopeca;
         this.peca = peca;
         
+        jTextFieldID.setBackground(Color.GRAY);
         jTextFieldID.setText(String.valueOf(this.peca.getId()));
         jTextFieldDescricao.setText(this.peca.getDescricao());
         jTextFieldCodigoIndustria.setText(this.peca.getCodigoReferencia());
-        jComboBoxGrupoMotor.setSelectedIndex(1);
+        jComboBoxGrupoMotor.setSelectedItem(peca.getGrupo());
         
     }
     /*
@@ -120,7 +123,7 @@ public class PecaCad extends javax.swing.JDialog {
 
         jLabel5.setText("Grupo de aplicação:");
 
-        jComboBoxGrupoMotor.setModel(new javax.swing.DefaultComboBoxModel(GrupoENUM.getGrupos()));
+        jComboBoxGrupoMotor.setModel(new javax.swing.DefaultComboBoxModel(GrupoENUM.values()));
         jComboBoxGrupoMotor.setToolTipText("Grupo de aplicação");
         jComboBoxGrupoMotor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,15 +220,16 @@ public class PecaCad extends javax.swing.JDialog {
         try {
             // TODO add your handling code here:
             peca.setDescricao(jTextFieldDescricao.getText().trim());
-            peca.setGrupo(GrupoENUM.getGrupoEnum(jComboBoxGrupoMotor.getSelectedItem().toString()));
+            peca.setGrupo((GrupoENUM)jComboBoxGrupoMotor.getSelectedItem());
             peca.setCodigoReferencia(jTextFieldCodigoIndustria.getText().trim());
             daoInterno.persist(peca);
-                        
+                       
+                    
         } catch (SQLException ex) {
             Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            JOptionPane.showMessageDialog(null,"Peça cadastrada com sucesso.");            
             
+            JOptionPane.showMessageDialog(parent, "Peça salva com sucesso.", "Salvar", 1, null);                        
             dispose();
         }
         
