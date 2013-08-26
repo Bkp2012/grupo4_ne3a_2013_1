@@ -228,11 +228,16 @@ public class FornCons extends javax.swing.JDialog {
         boolean daxus = true;
         boolean auxsPog = true;
         
-        for ( int i = 0; i < caux.length; i++ ){  
+        for ( int i = 0; i < caux.length; i++ ){
+            System.out.println(caux[i]);
         // verifica se o char não é um dígito  
-            if ( !Character.isDigit( caux[ i ] ) )  
-                daxus = false;  
-                break;  
+            
+            if ( !Character.isDigit( caux[ i ] ) ){
+                daxus = false;
+                
+                break;
+            }
+                
         }  
     
         tablesModelis.setRowCount(0);
@@ -257,12 +262,11 @@ public class FornCons extends javax.swing.JDialog {
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
                 this.listaFornecedores = daoInterno.retrieveNome(jTextFieldChaveDaPesquisa.getText());
+                
             }            
             else {
                 this.listaFornecedores = daoInterno.retrieveResponsavel(jTextFieldChaveDaPesquisa.getText());
             } 
-            
-            
             
             if(listaFornecedores.size() > 0){
                 for(Fornecedor fTemp : listaFornecedores){                    
