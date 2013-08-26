@@ -238,9 +238,10 @@ public class PecaCons extends javax.swing.JDialog {
         
         for ( int i = 0; i < caux.length; i++ ){  
         // verifica se o char não é um dígito  
-            if ( !Character.isDigit( caux[ i ] ) )  
+            if ( !Character.isDigit( caux[ i ] ) ){  
                 daxus = false;  
                 break;  
+            }
         }  
     
         //String axs = jTextFieldChaveDaPesquisa.getText().trim();

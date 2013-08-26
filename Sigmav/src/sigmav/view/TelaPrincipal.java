@@ -37,7 +37,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
         
         StatusBar();
         JOptionPane.showMessageDialog(rootPane, "Falta: \n"
-                + "Validar preenchimento de peças", "Pendencias!", 2,null);
+                //+ "Validar Busca por codigo com caractere invalido \n"
+                + "Validar preenchimento de peças \n"
+                + "Validar preenchimento de fornecedores ", "Pendencias! ", 2,null);
                 
     }
 

@@ -27,7 +27,7 @@ public class Manutencao implements Serializable{
     private int quilometragem;
     
     @Temporal(TemporalType.DATE)
-    @Column(name = "dataManutencao", length = 8, nullable = false)
+    @Column(name = "dataManutencao", length = 8, nullable = true)
     private Date dataManutencao;
     
     @Column(name = "descriçao", length = 300, nullable = false)
