@@ -33,7 +33,7 @@ public class Fornecedor implements Serializable{
     private String endereco;
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)    
-    private Contato contato;    
+    private Contato contato = new Contato();    
     
     //@Enumerated(EnumType.STRING)
     //@Column(name = "grupo", length = 20, nullable = false)

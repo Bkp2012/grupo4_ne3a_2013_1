@@ -4,7 +4,6 @@
  */
 package sigmav.view;
 
-import java.awt.Color;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,13 +39,13 @@ public class PecaVis extends javax.swing.JDialog {
         this.daoInterno = daopeca;
         this.peca = peca;
         
-        jTextFieldID.setBackground(Color.GRAY);
+        //jTextFieldID.setBackground(Color.GRAY);
         jTextFieldID.setText(String.valueOf(this.peca.getId()));
-        jTextFieldDescricao.setBackground(Color.GRAY);
+        //jTextFieldDescricao.setBackground(Color.GRAY);
         jTextFieldDescricao.setText(this.peca.getDescricao());
-        jTextFieldReferencia.setBackground(Color.GRAY);
+        //jTextFieldReferencia.setBackground(Color.GRAY);
         jTextFieldReferencia.setText(this.peca.getCodigoReferencia());
-        jTextFieldGrupo.setBackground(Color.GRAY);
+        //jTextFieldGrupo.setBackground(Color.GRAY);
         jTextFieldGrupo.setText(String.valueOf(this.peca.getGrupo()));
         
     }
@@ -81,7 +80,6 @@ public class PecaVis extends javax.swing.JDialog {
         jButtonCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(400, 320));
         setMinimumSize(new java.awt.Dimension(400, 320));
         setResizable(false);
 
@@ -91,6 +89,7 @@ public class PecaVis extends javax.swing.JDialog {
         jLabel2.setText("Código da peça:");
 
         jTextFieldID.setEditable(false);
+        jTextFieldID.setBackground(java.awt.Color.lightGray);
         jTextFieldID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldIDActionPerformed(evt);
@@ -100,8 +99,10 @@ public class PecaVis extends javax.swing.JDialog {
         jLabel3.setText("Desrição:");
 
         jTextFieldDescricao.setEditable(false);
+        jTextFieldDescricao.setBackground(java.awt.Color.lightGray);
 
         jTextFieldReferencia.setEditable(false);
+        jTextFieldReferencia.setBackground(java.awt.Color.lightGray);
 
         jLabel4.setText("Referencia de industria:");
 
@@ -124,6 +125,7 @@ public class PecaVis extends javax.swing.JDialog {
         });
 
         jTextFieldGrupo.setEditable(false);
+        jTextFieldGrupo.setBackground(java.awt.Color.lightGray);
 
         jButtonCancelar.setText("Fechar");
         jButtonCancelar.setToolTipText("Fechar");

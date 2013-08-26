@@ -39,7 +39,7 @@ public class PecaCad extends javax.swing.JDialog {
         
         this.daoInterno = daopeca;
         this.peca = peca;
-        jTextFieldID.setBackground(Color.GRAY);
+        
     }
     
     public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca, int flagPOG) {
@@ -54,7 +54,7 @@ public class PecaCad extends javax.swing.JDialog {
         this.daoInterno = daopeca;
         this.peca = peca;
         
-        jTextFieldID.setBackground(Color.GRAY);
+        
         jTextFieldID.setText(String.valueOf(this.peca.getId()));
         jTextFieldDescricao.setText(this.peca.getDescricao());
         jTextFieldCodigoIndustria.setText(this.peca.getCodigoReferencia());
@@ -101,7 +101,6 @@ public class PecaCad extends javax.swing.JDialog {
         jButtonSalvar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(400, 320));
         setMinimumSize(new java.awt.Dimension(400, 320));
         setResizable(false);
 
@@ -111,17 +110,18 @@ public class PecaCad extends javax.swing.JDialog {
         jLabel2.setText("Código da peça:");
 
         jTextFieldID.setEditable(false);
+        jTextFieldID.setBackground(java.awt.Color.lightGray);
         jTextFieldID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldIDActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Desrição:");
+        jLabel3.setText("Desrição*:");
 
-        jLabel4.setText("Referencia de industria:");
+        jLabel4.setText("Referencia de industria*:");
 
-        jLabel5.setText("Grupo de aplicação:");
+        jLabel5.setText("Grupo de aplicação*:");
 
         jComboBoxGrupoMotor.setModel(new javax.swing.DefaultComboBoxModel(GrupoENUM.values()));
         jComboBoxGrupoMotor.setToolTipText("Grupo de aplicação");
@@ -166,7 +166,7 @@ public class PecaCad extends javax.swing.JDialog {
                                     .addComponent(jLabel5)
                                     .addComponent(jComboBoxGrupoMotor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 226, Short.MAX_VALUE))))
+                                .addGap(0, 220, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

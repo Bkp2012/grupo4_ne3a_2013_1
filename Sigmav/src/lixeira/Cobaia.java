@@ -37,7 +37,7 @@ public class Cobaia {
         cfg.setProperty("hibernate.connection.password", "");
         cfg.setProperty("hibernate.connection.autocommit", "false");
 
-        outputfile.(nomestring)
+        //outputfile.(nomestring)
         cfg.addAnnotatedClass(Manutencao.class);
 
         SessionFactory sessionFactory = cfg.buildSessionFactory();

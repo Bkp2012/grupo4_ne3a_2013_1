@@ -24,7 +24,7 @@ public class Peca implements Serializable{
     @Column(name = "descricao", length = 50, nullable = false)
     private String descricao;
     
-    @Column(name = "codigoReferencia", length = 70, nullable = true)
+    @Column(name = "codigoReferencia", length = 70, nullable = false)
     private String codigoReferencia;
     
     @Enumerated(EnumType.STRING)

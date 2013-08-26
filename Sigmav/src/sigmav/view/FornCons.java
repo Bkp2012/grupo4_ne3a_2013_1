@@ -10,53 +10,45 @@ package sigmav.view;
  */
 
 import java.sql.SQLException;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import sigmav.entity.Peca;
-import sigmav.hibernate.HDaoPeca;
+import sigmav.entity.Contato;
+import sigmav.entity.Fornecedor;
+import sigmav.hibernate.HDaoFornecedor;
 
-public class PecaCons extends javax.swing.JDialog {
+public class FornCons extends javax.swing.JDialog {
 
     /**
      * Creates new form PecaCons
      */
-    private HDaoPeca daoInterno;
-    private Peca peca;
-    private List<Peca> listaPecas;
+    private HDaoFornecedor daoInterno;
+    private Fornecedor fornecedor;
+    private Contato contato;
+    private List<Fornecedor> listaFornecedores;
     private java.awt.Frame parent;
     private boolean modal;
     private int linha = 0;
     
     
-    public PecaCons(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
+    public FornCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
         this.parent = parent;
         this.modal = modal;
-        setTitle("Sigmav - Peças:");
-        setLocationRelativeTo(null);
-        this.daoInterno = daopeca;
-        this.peca = peca;
-        this.listaPecas = new ArrayList<Peca>();
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
-        tablesModelis.setRowCount(0);
-    }
-    
-    public PecaCons(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        setTitle("Sigmav - Peças:");
+        setTitle("Sigmav - Fornecedores:");
         setLocationRelativeTo(null);
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
+        this.daoInterno = new HDaoFornecedor();        
+        this.listaFornecedores = new ArrayList<Fornecedor>();
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
         tablesModelis.setRowCount(0);
-        this.listaPecas = new ArrayList<Peca>();
     }
     
     /**
@@ -74,7 +66,7 @@ public class PecaCons extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jComboBoxTipoDePesquisa = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTablePecas = new javax.swing.JTable(){
+        jTableFornecedores = new javax.swing.JTable(){
 
             public boolean isCellEditable(int row, int col) {
 
@@ -104,10 +96,10 @@ public class PecaCons extends javax.swing.JDialog {
 
         jLabel3.setText("Pesquisar por:");
 
-        jComboBoxTipoDePesquisa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código peça", "Descrição", "Referencia industria"}));
+        jComboBoxTipoDePesquisa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código fornecedor", "Nome", "Responsável"}));
         jComboBoxTipoDePesquisa.setToolTipText("Tipo de pesquisa");
 
-        jTablePecas.setModel(new javax.swing.table.DefaultTableModel(
+        jTableFornecedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -115,7 +107,7 @@ public class PecaCons extends javax.swing.JDialog {
                 {null, null, null}
             },
             new String [] {
-                "Código peça:", "Descrição:", "Ref. industria:"
+                "Código fornecedor:", "Nome:", "Responsável:"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -126,11 +118,11 @@ public class PecaCons extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jTablePecas.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTablePecas);
-        jTablePecas.getColumnModel().getColumn(0).setResizable(false);
-        jTablePecas.getColumnModel().getColumn(1).setResizable(false);
-        jTablePecas.getColumnModel().getColumn(2).setResizable(false);
+        jTableFornecedores.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTableFornecedores);
+        jTableFornecedores.getColumnModel().getColumn(0).setResizable(false);
+        jTableFornecedores.getColumnModel().getColumn(1).setResizable(false);
+        jTableFornecedores.getColumnModel().getColumn(2).setResizable(false);
 
         jButtonNovaPeca.setText("Adicionar");
         jButtonNovaPeca.setToolTipText("Adicionar");
@@ -230,8 +222,8 @@ public class PecaCons extends javax.swing.JDialog {
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
-        this.listaPecas = new ArrayList<Peca>();
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
+        this.listaFornecedores = new ArrayList<Fornecedor>();
         char[] caux = jTextFieldChaveDaPesquisa.getText().trim().toCharArray();
         boolean daxus = true;
         boolean auxsPog = true;
@@ -243,45 +235,43 @@ public class PecaCons extends javax.swing.JDialog {
                 break;  
         }  
     
-        //String axs = jTextFieldChaveDaPesquisa.getText().trim();
-        //System.out.println("###############################"+axs.length());
-        //System.out.println(jComboBoxTipoDePesquisa.getSelectedItem());
-        //System.out.println(jComboBoxTipoDePesquisa.getSelectedIndex());      
-        
         tablesModelis.setRowCount(0);
         
         try {
             // TODO add your handling code here:
             //this.peca = new Peca();
             if(jComboBoxTipoDePesquisa.getSelectedIndex() == 0){
-               if(daxus == false || caux.length == 0){
+               
+                if(daxus == false || caux.length == 0){                    
                     JOptionPane.showMessageDialog(parent, "Busca inválida, reconfigure.", "Pesquisar", 2, null);
                     auxsPog = false;
                     
-               } else{
-                this.peca = (Peca) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
-                //System.out.println(peca.toString());
-                if(this.peca != null){
-                    this.listaPecas.add(this.peca);
-                }
+                } else{
+                    this.fornecedor = (Fornecedor) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
+
+                    if(this.fornecedor != null){
+                        this.listaFornecedores.add(this.fornecedor);
+                    }
+                    
                }
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
-                this.listaPecas = daoInterno.retrieveDescricao(jTextFieldChaveDaPesquisa.getText());
+                this.listaFornecedores = daoInterno.retrieveNome(jTextFieldChaveDaPesquisa.getText());
             }            
             else {
-                this.listaPecas = daoInterno.retrieveCodReferencia(jTextFieldChaveDaPesquisa.getText());
+                this.listaFornecedores = daoInterno.retrieveResponsavel(jTextFieldChaveDaPesquisa.getText());
             } 
             
             
             
-            if(listaPecas.size() > 0){
-                for(Peca pecaTemp : listaPecas){
-                    tablesModelis.addRow(new Object[]{pecaTemp.getId(),pecaTemp.getDescricao(),pecaTemp.getGrupo()});
+            if(listaFornecedores.size() > 0){
+                for(Fornecedor fTemp : listaFornecedores){                    
+                    tablesModelis.addRow(new Object[]{fTemp.getId(),fTemp.getNome(),fTemp.getContato().getResponsavel()});
+                    
                 }
             }
             
-            jTablePecas.setModel(tablesModelis);
+            jTableFornecedores.setModel(tablesModelis);
             
             //peca = listaPecas.get(jTextFieldChaveDaPesquisa.cocon)
             //tedBook = booksList.get(table.convertRowIndexToModel(selectedRow));
@@ -290,41 +280,40 @@ public class PecaCons extends javax.swing.JDialog {
             
             
             if(tablesModelis.getRowCount() == 0 && auxsPog == true){
-                JOptionPane.showMessageDialog(parent, "Nenhuma peça encontrada.", "Pesquisar", 2, null);
+                JOptionPane.showMessageDialog(parent, "Nenhum fornecedor encontrado.", "Pesquisar", 2, null);
             }
             
         } catch (SQLException ex) {
-            Logger.getLogger(PecaCons.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FornCons.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
 
     private void jButtonFecharTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharTelaActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:        
         dispose();
     }//GEN-LAST:event_jButtonFecharTelaActionPerformed
 
     private void jButtonVisualizarPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarPecaActionPerformed
         // TODO add your handling code here:
-        linha = jTablePecas.getSelectedRow();
+        linha = jTableFornecedores.getSelectedRow();
         //System.out.println(linha+"################");
         if(linha < 0){
             // Alerta se nenhum item for selecionado
             JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
         } else{
-            this.peca = this.listaPecas.get(linha);
-            VisualizarPeca();
+            this.fornecedor = this.listaFornecedores.get(linha);
+            VisualizarFornecedor();
             jButtonPesquisarActionPerformed(evt);
         }
                 
     }//GEN-LAST:event_jButtonVisualizarPecaActionPerformed
 
     private void jButtonNovaPecaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovaPecaActionPerformed
-        // TODO add your handling code here:
-        this.peca = new Peca();
-        GeraCadastrarPeca();
-        System.out.println(this.peca.getId());
-        if(this.peca.getId() >= 1){
-            VisualizarPeca();
+        // TODO add your handling code here:        
+        NovoCadastroFornecedor();
+        
+        if(this.fornecedor.getId() >= 1){
+            VisualizarFornecedor();
         }        
         
     }//GEN-LAST:event_jButtonNovaPecaActionPerformed
@@ -346,20 +335,20 @@ public class PecaCons extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PecaCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FornCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PecaCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FornCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PecaCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FornCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PecaCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FornCons.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                PecaCons dialog = new PecaCons(new javax.swing.JFrame(), true);
+                FornCons dialog = new FornCons(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -373,19 +362,24 @@ public class PecaCons extends javax.swing.JDialog {
     
     //##########################################################################
     
-    private void GeraCadastrarPeca(){
-        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, daoInterno, peca);
-        pecaCadastro.setLocationRelativeTo(this);
-        pecaCadastro.setResizable(false);
-        pecaCadastro.setVisible(true);
-               
+    private void NovoCadastroFornecedor(){
+        this.fornecedor = new Fornecedor();
+        //this.contato = new Contato();
+        //this.fornecedor.setContato(this.contato);
+        
+        int flagPOG = 2;
+        FornCad tFornCad = new FornCad(this.parent, this.modal, this.fornecedor, flagPOG);
+        tFornCad.setLocationRelativeTo(this);
+        tFornCad.setResizable(false);
+        tFornCad.setVisible(true);
+        
     }
     
-    private void VisualizarPeca(){
-        PecaVis pecaVisualizacao = new PecaVis(this.parent, this.modal, daoInterno, peca);
-        pecaVisualizacao.setLocationRelativeTo(this);
-        pecaVisualizacao.setResizable(false);
-        pecaVisualizacao.setVisible(true);
+    private void VisualizarFornecedor(){
+        FornVis tFornVis = new FornVis(this.parent, this.modal,this.fornecedor);
+        tFornVis.setLocationRelativeTo(this);
+        tFornVis.setResizable(false);
+        tFornVis.setVisible(true);
                
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -398,7 +392,7 @@ public class PecaCons extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTablePecas;
+    private javax.swing.JTable jTableFornecedores;
     private javax.swing.JTextField jTextFieldChaveDaPesquisa;
     // End of variables declaration//GEN-END:variables
 }

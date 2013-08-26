@@ -4,8 +4,16 @@
  */
 package sigmav.view;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import sigmav.dao.ConnectionFactory;
 import sigmav.entity.Peca;
 import sigmav.hibernate.HDaoPeca;
+
 
 /**
  *
@@ -25,7 +33,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         
         this.daoPecaMestre = new HDaoPeca();
-        this.pecaMestre = new Peca();            
+        this.pecaMestre = new Peca();
+        
+        StatusBar();
+        JOptionPane.showMessageDialog(rootPane, "Falta: \n"
+                + "Validar preenchimento de peças", "Pendencias!", 2,null);
                 
     }
 
@@ -40,10 +52,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButtonFornecedores = new javax.swing.JButton();
         jButtonPecaTela = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        horaExibida = new javax.swing.JLabel();
+        jLabelStatusBar = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         Cadastros = new javax.swing.JMenu();
         jMenuItemVeiculos = new javax.swing.JMenuItem();
@@ -68,7 +80,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jButton1.setText("Veículos");
 
-        jButton2.setText("Fornecedores");
+        jButtonFornecedores.setText("Fornecedores");
+        jButtonFornecedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFornecedoresActionPerformed(evt);
+            }
+        });
 
         jButtonPecaTela.setText("Peças");
         jButtonPecaTela.addActionListener(new java.awt.event.ActionListener() {
@@ -79,7 +96,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        horaExibida.setText("Hora");
+        jLabelStatusBar.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabelStatusBar.setText("Veiculos: ----- / Fornecedores: ----- / Peças: -----");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -87,14 +105,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(horaExibida)
+                .addComponent(jLabelStatusBar)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
-                .addComponent(horaExibida))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelStatusBar))
         );
 
         Cadastros.setText("Cadastros");
@@ -111,6 +129,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jMenuItemFornecedores.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F, java.awt.event.InputEvent.ALT_MASK));
         jMenuItemFornecedores.setText("Fornecedores");
+        jMenuItemFornecedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemFornecedoresActionPerformed(evt);
+            }
+        });
         Cadastros.add(jMenuItemFornecedores);
         Cadastros.add(jSeparator3);
 
@@ -151,12 +174,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 140, Short.MAX_VALUE)
+                        .addGap(0, 43, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2)
+                                .addComponent(jButtonFornecedores)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonPecaTela)
                                 .addGap(112, 112, 112))
@@ -175,9 +198,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
+                    .addComponent(jButtonFornecedores)
                     .addComponent(jButtonPecaTela))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 182, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -191,11 +214,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jButtonPecaTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPecaTelaActionPerformed
         GeraPecaConsulta();
+        StatusBar();
     }//GEN-LAST:event_jButtonPecaTelaActionPerformed
 
     private void jMenuItemPecasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPecasActionPerformed
         GeraPecaConsulta();
+        StatusBar();
     }//GEN-LAST:event_jMenuItemPecasActionPerformed
+
+    private void jButtonFornecedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFornecedoresActionPerformed
+        // TODO add your handling code here:
+        GeraTelaFornecedor();
+        StatusBar();
+    }//GEN-LAST:event_jButtonFornecedoresActionPerformed
+
+    private void jMenuItemFornecedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemFornecedoresActionPerformed
+        // TODO add your handling code here:
+        GeraTelaFornecedor();
+        StatusBar();
+    }//GEN-LAST:event_jMenuItemFornecedoresActionPerformed
 
     /**
      * @param args the command line arguments
@@ -239,16 +276,56 @@ public class TelaPrincipal extends javax.swing.JFrame {
         pecaConsulta.setLocationRelativeTo(this);
         pecaConsulta.setResizable(false);
         pecaConsulta.setVisible(true);
-       
+               
+    }
+    
+    private void GeraTelaFornecedor(){
+        FornCons telaForn = new FornCons(this, rootPaneCheckingEnabled);
+        telaForn.setLocationRelativeTo(this);
+        telaForn.setResizable(false);
+        telaForn.setVisible(true);
+        
+    }
+    
+    //POG para preencher StatusBar
+    private void StatusBar(){
+        try {
+            Statement st = ConnectionFactory.preparedConnection().createStatement();
+            
+            int tPeca = 0;
+            int tFornecedore = 0;
+            int tVeiculos = 0;
+            
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Peca");
+            while(rs.next()){
+                            tPeca = rs.getInt("COUNT(*)");                              
+            }
+            
+            rs = st.executeQuery("SELECT COUNT(*) FROM Fornecedor");
+            while(rs.next()){
+                            tFornecedore = rs.getInt("COUNT(*)");                              
+            }
+            
+            rs = st.executeQuery("SELECT COUNT(*) FROM Veiculo");
+            while(rs.next()){
+                            tVeiculos = rs.getInt("COUNT(*)");                              
+            }
+            
+            jLabelStatusBar.setText("Veiculos: "+tVeiculos+" -- Fornecedores: "+tFornecedore+" -- Peças: "+ tPeca);
+            
+            //System.out.println(tPeca);
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu Cadastros;
-    private javax.swing.JLabel horaExibida;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonFornecedores;
     private javax.swing.JButton jButtonPecaTela;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelStatusBar;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemAjuda;
     private javax.swing.JMenuItem jMenuItemConfiguracoes;

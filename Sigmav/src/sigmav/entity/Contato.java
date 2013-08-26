@@ -33,7 +33,7 @@ public class Contato implements Serializable{
     @Column(name = "eMail", length = 200, nullable = true)
     private String eMail;
     
-    @Column(name = "reponsavel", length = 30, nullable = true)
+    @Column(name = "responsavel", length = 30, nullable = true)
     private String responsavel;
 
 //------------------------------------------------------------------------------
