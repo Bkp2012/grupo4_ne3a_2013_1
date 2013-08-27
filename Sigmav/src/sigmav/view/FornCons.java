@@ -271,8 +271,9 @@ public class FornCons extends javax.swing.JDialog {
             if(listaFornecedores.size() > 0){
                 for(Fornecedor fTemp : listaFornecedores){                    
                     tablesModelis.addRow(new Object[]{fTemp.getId(),fTemp.getNome(),fTemp.getContato().getResponsavel()});
-                    
+                                        
                 }
+                jTableFornecedores.setRowSelectionInterval(0, 0);
             }
             
             jTableFornecedores.setModel(tablesModelis);
