@@ -53,8 +53,29 @@ public class Veiculo implements Serializable {
     @Column(name = "responsavel", length = 30, nullable = false)
     private String responsavel;
 
-    
+    @Column(name = "placa", length = 7, nullable = false, unique = true)
+    private String placa;
+
+    @Column(name = "kmCompra", length = 10, nullable = false)
+    private String kmCompra;
+
     //##########################################################################
+    public void setKmCompra(String kmCompra) {
+        this.kmCompra = kmCompra;
+    }
+    
+    public String getKmCompra() {
+        return kmCompra;
+    }
+    
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public String getPlaca() {
+        return placa;
+    }
+        
     public long getId() {
         return id;
     }
@@ -138,16 +159,18 @@ public class Veiculo implements Serializable {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 41 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 41 * hash + Objects.hashCode(this.manutencoes);
-        hash = 41 * hash + Objects.hashCode(this.consumo);
-        hash = 41 * hash + Float.floatToIntBits(this.mediaConsumo);
-        hash = 41 * hash + Objects.hashCode(this.marca);
-        hash = 41 * hash + Objects.hashCode(this.modelo);
-        hash = 41 * hash + Objects.hashCode(this.versao);
-        hash = 41 * hash + Objects.hashCode(this.combustivel);
-        hash = 41 * hash + Objects.hashCode(this.anoModelo);
-        hash = 41 * hash + Objects.hashCode(this.responsavel);
+        hash = 79 * hash + (int) (this.id ^ (this.id >>> 32));
+        hash = 79 * hash + Objects.hashCode(this.manutencoes);
+        hash = 79 * hash + Objects.hashCode(this.consumo);
+        hash = 79 * hash + Float.floatToIntBits(this.mediaConsumo);
+        hash = 79 * hash + Objects.hashCode(this.marca);
+        hash = 79 * hash + Objects.hashCode(this.modelo);
+        hash = 79 * hash + Objects.hashCode(this.versao);
+        hash = 79 * hash + Objects.hashCode(this.combustivel);
+        hash = 79 * hash + Objects.hashCode(this.anoModelo);
+        hash = 79 * hash + Objects.hashCode(this.responsavel);
+        hash = 79 * hash + Objects.hashCode(this.placa);
+        hash = 79 * hash + Objects.hashCode(this.kmCompra);
         return hash;
     }
 
@@ -190,14 +213,20 @@ public class Veiculo implements Serializable {
         if (!Objects.equals(this.responsavel, other.responsavel)) {
             return false;
         }
+        if (!Objects.equals(this.placa, other.placa)) {
+            return false;
+        }
+        if (!Objects.equals(this.kmCompra, other.kmCompra)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Veiculo{" + "id=" + id + ", manutencoes=" + manutencoes + ", consumo=" + consumo + ", mediaConsumo=" + mediaConsumo + ", marca=" + marca + ", modelo=" + modelo + ", versao=" + versao + ", combustivel=" + combustivel + ", anoModelo=" + anoModelo + ", responsavel=" + responsavel + '}';
+        return "Veiculo{" + "id=" + id + ", manutencoes=" + manutencoes + ", consumo=" + consumo + ", mediaConsumo=" + mediaConsumo + ", marca=" + marca + ", modelo=" + modelo + ", versao=" + versao + ", combustivel=" + combustivel + ", anoModelo=" + anoModelo + ", responsavel=" + responsavel + ", placa=" + placa + ", kmCompra=" + kmCompra + '}';
     }
-    
+
     
     
 }
