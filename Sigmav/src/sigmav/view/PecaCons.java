@@ -280,6 +280,7 @@ public class PecaCons extends javax.swing.JDialog {
                 for(Peca pecaTemp : listaPecas){
                     tablesModelis.addRow(new Object[]{pecaTemp.getId(),pecaTemp.getDescricao(),pecaTemp.getGrupo()});
                 }
+                jTablePecas.setRowSelectionInterval(0, 0);
             }
             
             jTablePecas.setModel(tablesModelis);
@@ -293,6 +294,7 @@ public class PecaCons extends javax.swing.JDialog {
             if(tablesModelis.getRowCount() == 0 && auxsPog == true){
                 JOptionPane.showMessageDialog(parent, "Nenhuma peça encontrada.", "Pesquisar", 2, null);
             }
+                
             
         } catch (SQLException ex) {
             Logger.getLogger(PecaCons.class.getName()).log(Level.SEVERE, null, ex);
