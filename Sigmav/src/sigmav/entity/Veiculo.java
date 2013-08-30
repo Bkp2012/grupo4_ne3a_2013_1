@@ -24,11 +24,11 @@ public class Veiculo implements Serializable {
     private long id;        
     
     //As duas list com , fetch = FetchType.EAGER da erro no hibernate, com apenas um list roda normalmente, porque?
-    @OneToMany(cascade= CascadeType.ALL)
+    @OneToMany(cascade= CascadeType.ALL , fetch = FetchType.LAZY)
     @Column(nullable = true)
     private List<Manutencao> manutencoes = new ArrayList<>();    
     
-    @OneToMany(cascade= CascadeType.ALL )
+    @OneToMany(cascade= CascadeType.ALL, fetch = FetchType.LAZY )
     @Column(nullable = true)
     private List<Consumo> consumo = new ArrayList<>();
     
