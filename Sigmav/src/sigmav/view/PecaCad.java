@@ -11,6 +11,8 @@ package sigmav.view;
 
 import java.awt.Color;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -25,8 +27,11 @@ public class PecaCad extends javax.swing.JDialog {
      */
     private HDaoPeca daoInterno;
     private Peca peca;
+    
     java.awt.Frame parent;
-    boolean modal;    
+    boolean modal;
+    
+    private List<String> listaErros;
     
     public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
         super(parent, modal);
@@ -217,6 +222,11 @@ public class PecaCad extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        if(validar()){
+            
+        } else {
+        }
+        
         try {
             // TODO add your handling code here:
             peca.setDescricao(jTextFieldDescricao.getText().trim());
@@ -252,6 +262,22 @@ public class PecaCad extends javax.swing.JDialog {
         jTextFieldID.setText(null);
         jTextFieldCodigoIndustria.setText(null);
         jTextFieldDescricao.setText(null);
+    }
+    
+    public boolean validar(){
+        this.listaErros = new ArrayList<>();
+            if(jTextFieldDescricao.getText().length()<4 || jTextFieldDescricao.getText().contains(".")){
+                listaErros.add("O Campo Nome é Obrigatório e não pode haver abreviaturas. \n");
+                jTextFieldDescricao.setBackground(Color.magenta);
+            }else {
+                jTextFieldDescricao.setBackground(Color.WHITE);
+            }
+            
+            if(listaErros.size() == 0){
+            return true;
+        }        
+        return false;
+            
     }
     /**
      * @param args the command line arguments
@@ -293,6 +319,9 @@ public class PecaCad extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+        
+        //######################################################################
+      
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelar;

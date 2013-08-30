@@ -27,6 +27,7 @@ public class FornCons extends javax.swing.JDialog {
      */
     private HDaoFornecedor daoInterno;
     private Fornecedor fornecedor;
+    private Fornecedor fornAbas; 
     private Contato contato;
     private List<Fornecedor> listaFornecedores;
     private java.awt.Frame parent;
@@ -44,6 +45,25 @@ public class FornCons extends javax.swing.JDialog {
         setTitle("Sigmav - Fornecedores:");
         setLocationRelativeTo(null);
         
+        this.daoInterno = new HDaoFornecedor();        
+        this.listaFornecedores = new ArrayList<Fornecedor>();
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
+        tablesModelis.setRowCount(0);
+    }
+    
+    public FornCons(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt) {
+        super(parent, modal);
+        initComponents();
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        setTitle("Sigmav - Fornecedores:");
+        setLocationRelativeTo(null);
+        
+        this.fornecedor = new Fornecedor();
+        this.fornAbas = fornecedorExt;
         this.daoInterno = new HDaoFornecedor();        
         this.listaFornecedores = new ArrayList<Fornecedor>();
         
@@ -78,6 +98,7 @@ public class FornCons extends javax.swing.JDialog {
         jButtonVisualizarPeca = new javax.swing.JButton();
         jButtonPesquisar = new javax.swing.JButton();
         jButtonFecharTela = new javax.swing.JButton();
+        jButtonSetLocAb = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(400, 549));
@@ -156,6 +177,14 @@ public class FornCons extends javax.swing.JDialog {
             }
         });
 
+        jButtonSetLocAb.setText("Selecionar fornecedor abastecimento");
+        jButtonPesquisar.setToolTipText("Seleconar fornecedor abastecimeto");
+        jButtonSetLocAb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSetLocAbActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -183,7 +212,8 @@ public class FornCons extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonVisualizarPeca)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonFecharTela)))))
+                                .addComponent(jButtonFecharTela))
+                            .addComponent(jButtonSetLocAb, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -201,8 +231,10 @@ public class FornCons extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxTipoDePesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonPesquisar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonSetLocAb)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonNovaPeca)
@@ -306,8 +338,8 @@ public class FornCons extends javax.swing.JDialog {
             // Alerta se nenhum item for selecionado
             JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
         } else{
-            this.fornecedor = this.listaFornecedores.get(linha);
-            VisualizarFornecedor();
+            this.fornecedor = this.listaFornecedores.get(linha);            
+            VisualizarFornecedor();            
             jButtonPesquisarActionPerformed(evt);
         }
                 
@@ -322,6 +354,29 @@ public class FornCons extends javax.swing.JDialog {
         }        
         
     }//GEN-LAST:event_jButtonNovaPecaActionPerformed
+
+    private void jButtonSetLocAbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSetLocAbActionPerformed
+        // TODO add your handling code here:
+        linha = jTableFornecedores.getSelectedRow();
+        //System.out.println(linha+"################");
+        if(linha < 0){
+            // Alerta se nenhum item for selecionado
+            JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
+        } else{
+            this.fornecedor = this.listaFornecedores.get(linha);                      
+        }
+        
+        
+        //POG!
+        this.fornAbas.setId(this.fornecedor.getId());
+        this.fornAbas.setNome(this.fornecedor.getNome());
+        this.fornAbas.setEndereco(this.fornecedor.getEndereco());
+        this.fornAbas.setContato(this.fornecedor.getContato());
+        this.fornAbas.setComentario(this.fornecedor.getComentario());
+        this.fornAbas.setCnpj(this.fornecedor.getCnpj());
+        
+        dispose();
+    }//GEN-LAST:event_jButtonSetLocAbActionPerformed
 
     /**
      * @param args the command line arguments
@@ -391,6 +446,7 @@ public class FornCons extends javax.swing.JDialog {
     private javax.swing.JButton jButtonFecharTela;
     private javax.swing.JButton jButtonNovaPeca;
     private javax.swing.JButton jButtonPesquisar;
+    private javax.swing.JButton jButtonSetLocAb;
     private javax.swing.JButton jButtonVisualizarPeca;
     private javax.swing.JComboBox jComboBoxTipoDePesquisa;
     private javax.swing.JLabel jLabel1;

@@ -4,6 +4,14 @@
  */
 package sigmav.view;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import sigmav.entity.Consumo;
+import sigmav.entity.Fornecedor;
+import sigmav.hibernate.HDaoConsumo;
+
 /**
  *
  * @author meritor
@@ -15,12 +23,22 @@ public class ConsCad extends javax.swing.JDialog {
      */
     java.awt.Frame parent;
     boolean modal;
-    
+    HDaoConsumo daoInterno;
+    Consumo consumo;
+    Fornecedor localAbasticento;
+        
     public ConsCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
         setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.daoInterno = new HDaoConsumo();
+        this.consumo = new Consumo();
+        this.localAbasticento = consumo.getLocal();
     }
 
     /**
@@ -111,14 +129,32 @@ public class ConsCad extends javax.swing.JDialog {
 
         jLabel8.setText("Nome:");
 
+        jTextFieldLocalAbastecimento.setEditable(false);
+        jTextFieldLocalAbastecimento.setBackground(new java.awt.Color(192, 192, 192));
+
         jButtonAlterarLocal.setText("Alterar local");
         jButtonAlterarLocal.setToolTipText("Alterar Local abastecimento");
+        jButtonAlterarLocal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAlterarLocalActionPerformed(evt);
+            }
+        });
 
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.setToolTipText("Cancelar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
 
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.setToolTipText("Salvar");
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -239,6 +275,42 @@ public class ConsCad extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCombustivelActionPerformed
 
+    private void jButtonAlterarLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarLocalActionPerformed
+        // TODO add your handling code here:
+        this.localAbasticento = new Fornecedor();
+        ConsultarFornecedor();
+        jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());
+                
+    }//GEN-LAST:event_jButtonAlterarLocalActionPerformed
+
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        // TODO add your handling code here:
+        try{
+            this.consumo.setCombustivel(jTextFieldCombustivel.getText().trim());
+            this.consumo.setDataAbastecimento(null);
+            this.consumo.setLitros(Float.parseFloat(jTextFieldLitros.getText().trim()));
+            this.consumo.setLocal(this.localAbasticento);
+            this.consumo.setPreco(Float.parseFloat(jTextFieldPrecoLitro.getText().trim()));
+            this.consumo.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().toString()));
+            
+            daoInterno.persist(consumo);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            
+            JOptionPane.showMessageDialog(parent, "Abastecimento salvo com sucesso.", "Salvar", 1, null);                        
+            dispose();
+        }
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
+
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        // TODO add your handling code here:
+        this.consumo = null;
+        dispose();
+        
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -279,6 +351,14 @@ public class ConsCad extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    private void ConsultarFornecedor(){
+        FornCons tFornCons = new FornCons(this.parent, this.modal,this.localAbasticento);
+        tFornCons.setLocationRelativeTo(this);
+        tFornCons.setResizable(false);
+        tFornCons.setVisible(true);
+               
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAlterarLocal;

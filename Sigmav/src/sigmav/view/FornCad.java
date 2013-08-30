@@ -69,6 +69,7 @@ public class FornCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
+        this.daoInterno = new HDaoFornecedor();
         this.fornecedor = fornecedorExt;
         this.contato = fornecedorExt.getContato();
         
@@ -326,14 +327,15 @@ public class FornCad extends javax.swing.JDialog {
             
             this.fornecedor.setContato(this.contato);
             
-            daoInterno.persist(fornecedor);
+            daoInterno.persist(this.fornecedor);
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            
+        } finally {            
             JOptionPane.showMessageDialog(parent, "Fornecedor salvo com sucesso.", "Salvar", 1, null);                        
             dispose();
+            
         }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
