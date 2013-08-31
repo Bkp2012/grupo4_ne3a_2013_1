@@ -11,8 +11,6 @@ package sigmav.view;
 
 import java.awt.Color;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -31,7 +29,7 @@ public class PecaCad extends javax.swing.JDialog {
     java.awt.Frame parent;
     boolean modal;
     
-    private List<String> listaErros;
+    private StringBuilder listaErros;
     
     public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
         super(parent, modal);
@@ -223,25 +221,26 @@ public class PecaCad extends javax.swing.JDialog {
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
         if(validar()){
-            
-        } else {
+            try {
+                // TODO add your handling code here:
+                peca.setDescricao(jTextFieldDescricao.getText().trim());
+                peca.setGrupo((GrupoENUM)jComboBoxGrupoMotor.getSelectedItem());
+                peca.setCodigoReferencia(jTextFieldCodigoIndustria.getText().trim());
+                daoInterno.persist(peca);
+
+
+            } catch (SQLException ex) {
+                Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+
+                JOptionPane.showMessageDialog(parent, "Peça salva com sucesso.", "Salvar", 1, null);                        
+                dispose();
+            }    
+        } else {            
+            JOptionPane.showMessageDialog(parent, this.listaErros, "Salvar",2,null);
         }
         
-        try {
-            // TODO add your handling code here:
-            peca.setDescricao(jTextFieldDescricao.getText().trim());
-            peca.setGrupo((GrupoENUM)jComboBoxGrupoMotor.getSelectedItem());
-            peca.setCodigoReferencia(jTextFieldCodigoIndustria.getText().trim());
-            daoInterno.persist(peca);
-                       
-                    
-        } catch (SQLException ex) {
-            Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            
-            JOptionPane.showMessageDialog(parent, "Peça salva com sucesso.", "Salvar", 1, null);                        
-            dispose();
-        }
+        
         
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
@@ -265,19 +264,48 @@ public class PecaCad extends javax.swing.JDialog {
     }
     
     public boolean validar(){
-        this.listaErros = new ArrayList<>();
-            if(jTextFieldDescricao.getText().length()<4 || jTextFieldDescricao.getText().contains(".")){
-                listaErros.add("O Campo Nome é Obrigatório e não pode haver abreviaturas. \n");
-                jTextFieldDescricao.setBackground(Color.magenta);
+        this.listaErros = new StringBuilder();
+            //DESCRICAO#########################################################
+            if(jTextFieldDescricao.getText().length()<4 ||
+                    jTextFieldDescricao.getText().contains(".")){
+                
+                listaErros.append("# O Campo 'Descrição' é obrigatório e não pode haver abreviaturas. \n");
+                jTextFieldDescricao.setBackground(Color.orange);                
+                
             }else {
                 jTextFieldDescricao.setBackground(Color.WHITE);
+                
+                if(jTextFieldDescricao.getText().length()>50){
+                    jTextFieldDescricao.setBackground(Color.orange);
+                    listaErros.append("# O Campo 'Descrição' excedeu a quantidade de caracteres (50). \n");
+                }else {
+                    jTextFieldDescricao.setBackground(Color.WHITE);
+                }
             }
             
-            if(listaErros.size() == 0){
-            return true;
-        }        
-        return false;
             
+            //CODIGO REFERENCIA#################################################
+            if(jTextFieldCodigoIndustria.getText().length()>50){
+                jTextFieldCodigoIndustria.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Referencia de industria' excedeu a quantidade de caracteres (70). \n");
+            }else {
+                jTextFieldCodigoIndustria.setBackground(Color.WHITE);
+            }
+            
+            
+            //GRUPO MOTOR#######################################################
+            if(jComboBoxGrupoMotor.getSelectedItem() == GrupoENUM.INVALIDO){
+                jComboBoxGrupoMotor.setBackground(Color.orange);
+                listaErros.append("# Selecione um grupo válido para 'Grupo de aplicação'. \n");
+            } else{
+                jComboBoxGrupoMotor.setBackground(Color.WHITE);
+            }
+            //FIM###############################################################
+            if(listaErros.length() == 0){
+                return true;
+            }
+            
+        return false;            
     }
     /**
      * @param args the command line arguments
