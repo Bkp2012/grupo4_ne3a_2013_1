@@ -40,7 +40,7 @@ public class Fornecedor implements Serializable{
     //@OneToMany(cascade= CascadeType.PERSIST, fetch = FetchType.EAGER)
     //private List<GrupoENUM> grupos = new ArrayList<>();    
     
-    @Column(name = "comentario", length = 500, nullable = false)
+    @Column(name = "comentario", length = 200, nullable = false)
     private String comentario;
 
 //------------------------------------------------------------------------------

@@ -4,7 +4,10 @@
  */
 package sigmav.view;
 
+import java.awt.Color;
+import java.util.regex.*; 
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -28,6 +31,7 @@ public class FornCad extends javax.swing.JDialog {
     private Contato contato;
     java.awt.Frame parent;
     boolean modal;
+    private StringBuilder listaErros;
     
     public FornCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -89,7 +93,180 @@ public class FornCad extends javax.swing.JDialog {
         this.fornecedor.setContato(this.contato);
         
     }
+       
+            
+    public boolean validar(){
+        this.listaErros = new StringBuilder();
+        
+        //NOME EMPRESA##########################################################
+        if(jTextFieldNome.getText().length()<4 ||
+                jTextFieldNome.getText().contains(".")){
 
+            listaErros.append("# O Campo 'Nome' é obrigatório e não pode haver abreviaturas. \n");
+            jTextFieldNome.setBackground(Color.orange);                
+
+        }else {
+            jTextFieldNome.setBackground(Color.WHITE);
+
+            if(jTextFieldNome.getText().length()>200){
+                jTextFieldNome.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Nome' excedeu a quantidade de caracteres (50). \n");
+            }else {
+                jTextFieldNome.setBackground(Color.WHITE);
+            }
+        }
+
+        
+        
+        //CPF###################################################################
+        if(jTextFieldCnpj.getText().trim().length() > 0){
+            
+        } else {
+            jTextFieldCnpj.setBackground(Color.white);
+        }
+        //ENDERECO##############################################################
+        if(jTextFieldEndereco.getText().length()<4){
+            listaErros.append("# O Campo 'Endereço' é obrigatório. \n");
+            jTextFieldEndereco.setBackground(Color.orange);                
+
+        }else {
+            jTextFieldNome.setBackground(Color.WHITE);
+            
+            if(jTextFieldEndereco.getText().length()>200){
+                jTextFieldEndereco.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Comentário' excedeu a quantidade de caracteres (200). \n");
+            } else { 
+                jTextFieldEndereco.setBackground(Color.white);
+            }
+        }
+        
+        
+        //COMENTARIO############################################################
+        if(jTextFieldComentario.getText().length()>200){
+            jTextFieldComentario.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Comentário' excedeu a quantidade de caracteres (200). \n");
+        } else{
+            jTextFieldComentario.setBackground(Color.white);
+        }   
+
+        
+        //RESPONSAVEL###########################################################
+        if(jTextFieldResponsavel.getText().length()>30){
+            jTextFieldResponsavel.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Responsável' excedeu a quantidade de caracteres (30). \n");
+        } else{
+            jTextFieldResponsavel.setBackground(Color.white);
+        }
+        
+        
+        //TELEFONES#############################################################
+        char[] vauxs = jTextFieldTelefoneA.getText().toCharArray();
+        boolean flag = true;
+            
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){
+                flag = false;                    
+                break;
+            }                
+        }
+        
+        if(flag == false){
+            
+            jTextFieldTelefoneA.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Telefone A' possui caracteres inválidos. \n");
+        } else{
+            jTextFieldTelefoneA.setBackground(Color.white);
+            
+            if(jTextFieldTelefoneA.getText().length()>20){
+                jTextFieldTelefoneA.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Telefone A' excedeu a quantidade de caracteres (20). \n");
+            } else{
+                jTextFieldTelefoneA.setBackground(Color.white);
+            }
+            
+        }
+        
+        
+        vauxs = jTextFieldTelefoneB.getText().toCharArray();
+        flag = true;
+            
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){
+                flag = false;                    
+                break;
+            }                
+        }
+        
+        if(flag == false){
+            
+            jTextFieldTelefoneB.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Telefone B' possui caracteres inválidos. \n");
+        } else{
+            jTextFieldTelefoneB.setBackground(Color.white);
+            
+            if(jTextFieldTelefoneB.getText().length()>20){
+                jTextFieldTelefoneB.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Telefone B' excedeu a quantidade de caracteres (20). \n");
+            } else{
+                jTextFieldTelefoneB.setBackground(Color.white);
+            }
+            
+        }
+        
+        
+        vauxs = jTextFieldTelefoneC.getText().toCharArray();
+        flag = true;
+            
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){
+                flag = false;                    
+                break;
+            }                
+        }
+        
+        if(flag == false){
+            
+            jTextFieldTelefoneC.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Telefone C' possui caracteres inválidos. \n");
+        } else{
+            jTextFieldTelefoneC.setBackground(Color.white);
+            
+            if(jTextFieldTelefoneC.getText().length()>20){
+                jTextFieldTelefoneC.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Telefone C' excedeu a quantidade de caracteres (20). \n");
+            } else{
+                jTextFieldTelefoneC.setBackground(Color.white);
+            }
+            
+        }
+        
+        
+        //EMAIL#################################################################
+        Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$"); 
+        Matcher m = p.matcher(jTextFieldEmail.getText());
+                
+        if (m.find()){
+            jTextFieldEmail.setBackground(Color.white);
+            
+            if(jTextFieldEmail.getText().length()>200){
+                jTextFieldEmail.setBackground(Color.orange);
+                listaErros.append("# O Campo 'E-mail' excedeu a quantidade de caracteres (200). \n");
+            } else{
+                jTextFieldEmail.setBackground(Color.white);
+            }
+            
+        } else {
+            jTextFieldEmail.setBackground(Color.orange);
+            listaErros.append("# O Campo 'E-mail' está incorreto, verifique. \n");
+        }  
+        
+        
+        //FIM###################################################################
+        if(listaErros.length() == 0){
+                return true;
+        }
+        return false;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -138,44 +315,26 @@ public class FornCad extends javax.swing.JDialog {
         jTextFieldId.setEditable(false);
         jTextFieldId.setBackground(java.awt.Color.lightGray);
 
-        jLabel3.setText("Nome:");
-
-        jTextFieldNome.setBackground(java.awt.Color.white);
+        jLabel3.setText("Nome*:");
 
         jLabel4.setText("CNPJ:");
 
-        jTextFieldCnpj.setBackground(java.awt.Color.white);
-
-        jTextFieldEndereco.setBackground(java.awt.Color.white);
-
-        jLabel5.setText("Endereço:");
+        jLabel5.setText("Endereço*:");
 
         jLabel7.setText("Comentário:");
-
-        jTextFieldComentario.setBackground(java.awt.Color.white);
 
         jLabel6.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         jLabel6.setText("Contato");
 
         jLabel8.setText("Responsável:");
 
-        jTextFieldResponsavel.setBackground(java.awt.Color.white);
-
         jLabel9.setText("Telefone A:");
 
-        jTextFieldTelefoneA.setBackground(java.awt.Color.white);
-
         jLabel10.setText("Telefone B:");
-
-        jTextFieldTelefoneB.setBackground(java.awt.Color.white);
-
-        jTextFieldTelefoneC.setBackground(java.awt.Color.white);
 
         jLabel11.setText("Telefone C:");
 
         jLabel12.setText("E-mail:");
-
-        jTextFieldEmail.setBackground(java.awt.Color.white);
 
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.setToolTipText("Cancelar");
@@ -313,30 +472,36 @@ public class FornCad extends javax.swing.JDialog {
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
         // TODO add your handling code here:
-        try {
-            this.fornecedor.setNome(jTextFieldNome.getText().trim());
-            this.fornecedor.setCnpj(jTextFieldCnpj.getText().trim());
-            this.fornecedor.setEndereco(jTextFieldEndereco.getText().trim());
-            this.fornecedor.setComentario(jTextFieldComentario.getText().trim());
+        if(validar()){
+            try {
+                this.fornecedor.setNome(jTextFieldNome.getText().trim());
+                this.fornecedor.setCnpj(jTextFieldCnpj.getText().trim());
+                this.fornecedor.setEndereco(jTextFieldEndereco.getText().trim());
+                this.fornecedor.setComentario(jTextFieldComentario.getText().trim());
+
+                this.contato.setResponsavel(jTextFieldResponsavel.getText().trim());
+                this.contato.setTelefoneA(jTextFieldTelefoneA.getText().trim());
+                this.contato.setTelefoneB(jTextFieldTelefoneB.getText().trim());
+                this.contato.setTelefoneC(jTextFieldTelefoneC.getText().trim());
+                this.contato.seteMail(jTextFieldEmail.getText().trim());
+
+                this.fornecedor.setContato(this.contato);
+
+                daoInterno.persist(this.fornecedor);
+
+            } catch (SQLException ex) {
+               Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {            
+                JOptionPane.showMessageDialog(parent, "Fornecedor salvo com sucesso.", "Salvar", 1, null);                        
+                dispose();
             
-            this.contato.setResponsavel(jTextFieldResponsavel.getText().trim());
-            this.contato.setTelefoneA(jTextFieldTelefoneA.getText().trim());
-            this.contato.setTelefoneB(jTextFieldTelefoneB.getText().trim());
-            this.contato.setTelefoneC(jTextFieldTelefoneC.getText().trim());
-            this.contato.seteMail(jTextFieldEmail.getText().trim());
-            
-            this.fornecedor.setContato(this.contato);
-            
-            daoInterno.persist(this.fornecedor);
-            
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {            
-            JOptionPane.showMessageDialog(parent, "Fornecedor salvo com sucesso.", "Salvar", 1, null);                        
-            dispose();
-            
+            }
+        } else  {
+            JOptionPane.showMessageDialog(parent, this.listaErros, "Salvar",2,null);
         }
+            
+        
+        
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     /**
