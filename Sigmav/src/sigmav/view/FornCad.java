@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.util.regex.*; 
 import java.sql.SQLException;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -94,8 +95,45 @@ public class FornCad extends javax.swing.JDialog {
         
     }
        
-            
-    public boolean validar(){
+//##############################################################################
+
+    private static final int[] pesoCPF = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
+    private static final int[] pesoCNPJ = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+    
+    private static int calcularDigito(String str, int[] peso) {
+        int soma = 0;
+        for (int indice=str.length()-1, digito; indice >= 0; indice-- ) {
+            digito = Integer.parseInt(str.substring(indice,indice+1));
+            soma += digito*peso[peso.length-str.length()+indice];
+        }
+        soma = 11 - soma % 11;
+        return soma > 9 ? 0 : soma;
+    }
+    
+    public static boolean isValidCPF(String cpf) {
+        if ((cpf==null) || (cpf.length()!=11)){
+            return false;
+        }
+
+        Integer digito1 = calcularDigito(cpf.substring(0,9), pesoCPF);
+        Integer digito2 = calcularDigito(cpf.substring(0,9) + digito1, pesoCPF);
+        
+        return cpf.equals(cpf.substring(0,9) + digito1.toString() + digito2.toString());
+    }
+    
+    public static boolean isValidCNPJ(String cnpj) {
+        if ((cnpj==null)||(cnpj.length()!=14)){
+            return false;
+        }
+
+        Integer digito1 = calcularDigito(cnpj.substring(0,12), pesoCNPJ);
+        Integer digito2 = calcularDigito(cnpj.substring(0,12) + digito1, pesoCNPJ);
+        
+        return cnpj.equals(cnpj.substring(0,12) + digito1.toString() + digito2.toString());
+    }
+          
+//##############################################################################
+    public boolean validar() throws SQLException{
         this.listaErros = new StringBuilder();
         
         //NOME EMPRESA##########################################################
@@ -118,12 +156,76 @@ public class FornCad extends javax.swing.JDialog {
 
         
         
-        //CPF###################################################################
-        if(jTextFieldCnpj.getText().trim().length() > 0){
+        //CPNJ - CPF############################################################
+        jTextFieldCnpj.setBackground(Color.white);
+        char[] vauxz = jTextFieldCnpj.getText().trim().toCharArray();
+        boolean flagz = true;
             
-        } else {
-            jTextFieldCnpj.setBackground(Color.white);
+        for ( int i = 0; i < vauxz.length; i++ ){            
+            if ( !Character.isDigit( vauxz[ i ] ) ){
+                flagz = false;                    
+                break;
+            }                
         }
+        if(flagz == false ){
+            jTextFieldCnpj.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Cnpj' possui caracteres inválidos, digite apenas números \n");
+        } else {
+                if(jTextFieldCnpj.getText().trim().length() > 0){
+
+                //CNPJ
+                if(jTextFieldCnpj.getText().trim().length() == 14 || jTextFieldCnpj.getText().trim().length() == 11){
+
+                    if(jTextFieldCnpj.getText().trim().length() == 14){
+                        //CPNJ
+                        if(isValidCNPJ(jTextFieldCnpj.getText().trim()) == false){
+                            listaErros.append("# CNPJ incorreto. \n");
+                            jTextFieldCnpj.setBackground(Color.orange);
+                        } else{
+                            if(this.fornecedor.getId() > 0){
+
+                            } else {
+                                boolean auxs = daoInterno.confirmaCnpjCPF(jTextFieldCnpj.getText().trim());
+                                if(auxs == true){
+                                    listaErros.append("# Cnpj já cadastrado. \n");
+                                    jTextFieldCnpj.setBackground(Color.orange);
+                                }
+                            }
+
+                        }
+
+                    } else {
+                        //CPF
+                        if(isValidCPF(jTextFieldCnpj.getText().trim()) == false){
+                           listaErros.append("# CPF incorreto. \n");
+                            jTextFieldCnpj.setBackground(Color.orange);
+                        } else{
+                            if(this.fornecedor.getId() > 0){
+
+                            } else {
+                                boolean auxs = daoInterno.confirmaCnpjCPF(jTextFieldCnpj.getText().trim());
+                                if(auxs == true){
+                                    listaErros.append("# Cpf já cadastrado. \n");
+                                    jTextFieldCnpj.setBackground(Color.orange);
+                                }
+                            }
+
+                        }
+                    }
+
+                } else {              
+                    jTextFieldCnpj.setBackground(Color.orange);
+                    listaErros.append("# O Campo 'Cpnj' possui a quantidade errada de caracteres (CPNJ : 14, CPF : 12). \n");
+                }
+
+            } else {
+                jTextFieldCnpj.setBackground(Color.white);
+            }
+        }
+        
+        
+        
+        
         //ENDERECO##############################################################
         if(jTextFieldEndereco.getText().length()<4){
             listaErros.append("# O Campo 'Endereço' é obrigatório. \n");
@@ -242,23 +344,27 @@ public class FornCad extends javax.swing.JDialog {
         
         
         //EMAIL#################################################################
-        Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$"); 
-        Matcher m = p.matcher(jTextFieldEmail.getText());
-                
-        if (m.find()){
-            jTextFieldEmail.setBackground(Color.white);
-            
-            if(jTextFieldEmail.getText().length()>200){
-                jTextFieldEmail.setBackground(Color.orange);
-                listaErros.append("# O Campo 'E-mail' excedeu a quantidade de caracteres (200). \n");
-            } else{
+        if(jTextFieldEmail.getText().trim().length() > 0){
+            Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$"); 
+            Matcher m = p.matcher(jTextFieldEmail.getText());
+
+            if (m.find()){
                 jTextFieldEmail.setBackground(Color.white);
-            }
-            
+
+                if(jTextFieldEmail.getText().length()>200){
+                    jTextFieldEmail.setBackground(Color.orange);
+                    listaErros.append("# O Campo 'E-mail' excedeu a quantidade de caracteres (200). \n");
+                } else{
+                    jTextFieldEmail.setBackground(Color.white);
+                }
+
+            } else {
+                jTextFieldEmail.setBackground(Color.orange);
+                listaErros.append("# O Campo 'E-mail' está incorreto, verifique. \n");
+            } 
         } else {
-            jTextFieldEmail.setBackground(Color.orange);
-            listaErros.append("# O Campo 'E-mail' está incorreto, verifique. \n");
-        }  
+            jTextFieldEmail.setBackground(Color.white);
+        }
         
         
         //FIM###################################################################
@@ -471,33 +577,37 @@ public class FornCad extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        // TODO add your handling code here:
-        if(validar()){
-            try {
-                this.fornecedor.setNome(jTextFieldNome.getText().trim());
-                this.fornecedor.setCnpj(jTextFieldCnpj.getText().trim());
-                this.fornecedor.setEndereco(jTextFieldEndereco.getText().trim());
-                this.fornecedor.setComentario(jTextFieldComentario.getText().trim());
+        try {
+            // TODO add your handling code here:
+            if(validar()){
+                try {
+                    this.fornecedor.setNome(jTextFieldNome.getText().trim());
+                    this.fornecedor.setCnpj(jTextFieldCnpj.getText().trim());
+                    this.fornecedor.setEndereco(jTextFieldEndereco.getText().trim());
+                    this.fornecedor.setComentario(jTextFieldComentario.getText().trim());
 
-                this.contato.setResponsavel(jTextFieldResponsavel.getText().trim());
-                this.contato.setTelefoneA(jTextFieldTelefoneA.getText().trim());
-                this.contato.setTelefoneB(jTextFieldTelefoneB.getText().trim());
-                this.contato.setTelefoneC(jTextFieldTelefoneC.getText().trim());
-                this.contato.seteMail(jTextFieldEmail.getText().trim());
+                    this.contato.setResponsavel(jTextFieldResponsavel.getText().trim());
+                    this.contato.setTelefoneA(jTextFieldTelefoneA.getText().trim());
+                    this.contato.setTelefoneB(jTextFieldTelefoneB.getText().trim());
+                    this.contato.setTelefoneC(jTextFieldTelefoneC.getText().trim());
+                    this.contato.seteMail(jTextFieldEmail.getText().trim());
 
-                this.fornecedor.setContato(this.contato);
+                    this.fornecedor.setContato(this.contato);
 
-                daoInterno.persist(this.fornecedor);
+                    daoInterno.persist(this.fornecedor);
 
-            } catch (SQLException ex) {
-               Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {            
-                JOptionPane.showMessageDialog(parent, "Fornecedor salvo com sucesso.", "Salvar", 1, null);                        
-                dispose();
+                } catch (SQLException ex) {
+                   Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {            
+                    JOptionPane.showMessageDialog(parent, "Fornecedor salvo com sucesso.", "Salvar", 1, null);                        
+                    dispose();
             
+                }
+            } else  {
+                JOptionPane.showMessageDialog(parent, this.listaErros, "Salvar",2,null);
             }
-        } else  {
-            JOptionPane.showMessageDialog(parent, this.listaErros, "Salvar",2,null);
+        } catch (SQLException ex) {
+            Logger.getLogger(FornCad.class.getName()).log(Level.SEVERE, null, ex);
         }
             
         

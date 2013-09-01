@@ -26,7 +26,7 @@ public class Fornecedor implements Serializable{
     @Column(name = "nome", length = 200, nullable = false)
     private String nome;
     
-    @Column(name = "cnpj", unique = true, length = 13, nullable = false)
+    @Column(name = "cnpj", unique = true, length = 14, nullable = false)
     private String cnpj;
     
     @Column(name = "endereco", length = 200, nullable = false)

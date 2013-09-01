@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.mapping.Collection;
+
 import sigmav.entity.Fornecedor;
 
 /**
@@ -87,5 +88,41 @@ public class HDaoFornecedor extends HibernateADAO<Fornecedor>{
         }        
         
         return list;
+    }
+    
+    public boolean confirmaCnpjCPF(String Chave) throws SQLException{
+        
+        SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        List <Fornecedor> list = null;
+        
+        if(session.beginTransaction() == null){
+            session.beginTransaction();
+        }
+        try{            
+            
+            list = session.createCriteria(Fornecedor.class).
+                    add(Restrictions.like("cnpj", Chave, MatchMode.ANYWHERE)).
+                    addOrder(Order.asc("id")).list();      
+            
+            session.beginTransaction().commit();
+            
+        }        
+        catch(Exception erro){
+            System.out.println("Falha na conexao com banco: .listAll"+erro);
+            session.getTransaction().rollback();
+            
+        }finally{            
+            //session.close();
+            sessionFactory.close();
+            
+        }        
+        
+        if(list.size() > 0){
+            return true;
+        } else{
+            return false;
+        }
+        
     }
 }
