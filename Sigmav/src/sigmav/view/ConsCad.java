@@ -10,7 +10,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import sigmav.entity.Consumo;
 import sigmav.entity.Fornecedor;
-import sigmav.hibernate.HDaoConsumo;
+import sigmav.entity.Veiculo;
+//import sigmav.hibernate.HDaoConsumo;
+import sigmav.hibernate.HDaoVeiculo;
 
 /**
  *
@@ -23,8 +25,10 @@ public class ConsCad extends javax.swing.JDialog {
      */
     java.awt.Frame parent;
     boolean modal;
-    HDaoConsumo daoInterno;
+    //HDaoConsumo daoInterno;
+    HDaoVeiculo daoInternoV;
     Consumo consumo;
+    Veiculo veiculoInterno;
     Fornecedor localAbasticento;
         
     public ConsCad(java.awt.Frame parent, boolean modal) {
@@ -36,9 +40,54 @@ public class ConsCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInterno = new HDaoConsumo();
+        this.daoInternoV = new HDaoVeiculo();
         this.consumo = new Consumo();
         this.localAbasticento = consumo.getLocal();
+    }
+    
+    // NOVO CONSUMO CADASTRADO
+    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Consumo:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.daoInternoV = new HDaoVeiculo();
+        this.veiculoInterno = veiculoExterno;
+       
+        
+        this.consumo = new Consumo();        
+        this.localAbasticento = consumo.getLocal();
+        
+        this.veiculoInterno.getConsumo().add(this.consumo);
+    }
+    
+    // Altera um consumo
+    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Consumo consumoExternoEscolhido) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Consumo:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.daoInternoV = new HDaoVeiculo();
+        
+        //Aponta pra fora        
+        this.veiculoInterno = veiculoExterno;
+        this.consumo = consumoExternoEscolhido;
+        this.localAbasticento = consumoExternoEscolhido.getLocal();
+        
+        jTextFieldCombustivel.setText(this.consumo.getCombustivel());
+        jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
+        jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
+        jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
+        jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
+        jTextFieldQuilometragem.setText(String.valueOf(this.consumo.getQuilometragem()));
     }
 
     /**
@@ -293,7 +342,8 @@ public class ConsCad extends javax.swing.JDialog {
             this.consumo.setPreco(Float.parseFloat(jTextFieldPrecoLitro.getText().trim()));
             this.consumo.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().toString()));
             
-            daoInterno.persist(consumo);
+            
+            daoInternoV.persist(this.veiculoInterno);
             
         } catch (SQLException ex) {
             Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
@@ -306,7 +356,7 @@ public class ConsCad extends javax.swing.JDialog {
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
-        this.consumo = null;
+        //this.consumo = null;
         dispose();
         
     }//GEN-LAST:event_jButtonCancelarActionPerformed
@@ -354,7 +404,7 @@ public class ConsCad extends javax.swing.JDialog {
     }
     
     private void ConsultarFornecedor(){
-        FornCons tFornCons = new FornCons(this.parent, this.modal,this.localAbasticento);
+        FornCons tFornCons = new FornCons(this.parent, this.modal,this.localAbasticento, true);
         tFornCons.setLocationRelativeTo(this);
         tFornCons.setResizable(false);
         tFornCons.setVisible(true);

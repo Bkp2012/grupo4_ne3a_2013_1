@@ -4,6 +4,18 @@
  */
 package sigmav.view;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import sigmav.entity.Consumo;
+
+import sigmav.entity.Veiculo;
+
+
+import sigmav.hibernate.HDaoVeiculo;
+
+
 /**
  *
  * @author meritor
@@ -13,14 +25,41 @@ public class ConsCons extends javax.swing.JDialog {
     /**
      * Creates new form ManCons
      */    
-    java.awt.Frame parent;
-    boolean modal;
+    private HDaoVeiculo daoInterno;
+    private Veiculo veiculo;
+    private Consumo consumo;    
+    private List<Consumo> listaAbastecimento;
+    private java.awt.Frame parent;
+    private boolean modal;
+    private int linha = 0;
     
     public ConsCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
         setLocationRelativeTo(null);
+        
+        this.daoInterno = new HDaoVeiculo();        
+        this.listaAbastecimento = new ArrayList<Consumo>();
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
+        tablesModelis.setRowCount(0);
+    }
+    
+    public ConsCons(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Consumo:");
+        setLocationRelativeTo(null);
+        
+        this.daoInterno = new HDaoVeiculo();
+        this.veiculo = veiculoExterno;
+        this.listaAbastecimento = new ArrayList<Consumo>();
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
+        //tablesModelis.setRowCount(0);
+        
+        atualizaTabela();
     }
 
     /**
@@ -43,18 +82,18 @@ public class ConsCons extends javax.swing.JDialog {
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
-        jLabel1.setText("Histórico manutenções:");
+        jLabel1.setText("Histórico abastecimentos:");
 
         jTableTabelaConsumo.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Data:", "Km:", "Litros:", "Preço litro:"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -70,12 +109,27 @@ public class ConsCons extends javax.swing.JDialog {
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
+        jButtonFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFecharActionPerformed(evt);
+            }
+        });
 
         jButtonVisualizar.setText("Visualizar");
         jButtonVisualizar.setToolTipText("Visualizar");
+        jButtonVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVisualizarActionPerformed(evt);
+            }
+        });
 
         jButtonAdicionar.setText("Adicionar");
         jButtonAdicionar.setToolTipText("Adicionar");
+        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -84,9 +138,9 @@ public class ConsCons extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 165, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -114,6 +168,31 @@ public class ConsCons extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonFecharActionPerformed
+
+    private void jButtonVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarActionPerformed
+        // TODO add your handling code here:
+        linha = jTableTabelaConsumo.getSelectedRow();
+        
+        if(linha < 0){
+            JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Consumo", 2, null);
+        } else{
+            this.consumo = this.veiculo.getConsumo().get(linha);
+            visualizarConsumo();
+            atualizaTabela();
+        }
+        
+    }//GEN-LAST:event_jButtonVisualizarActionPerformed
+
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+        // TODO add your handling code here:
+        adicionarConsumo();
+        atualizaTabela();
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,6 +235,41 @@ public class ConsCons extends javax.swing.JDialog {
             }
         });
     }
+    
+    private void atualizaTabela(){
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
+        this.listaAbastecimento = this.veiculo.getConsumo();
+        
+        if(this.listaAbastecimento.size() > 0){
+            for(Consumo cTemp: listaAbastecimento){
+                tablesModelis.addRow(new Object[]{cTemp.getDataAbastecimento(), cTemp.getQuilometragem(), cTemp.getLitros(), cTemp.getPreco()});
+            }
+            jTableTabelaConsumo.setRowSelectionInterval(0, 0);
+        }
+        
+        jTableTabelaConsumo.setModel(tablesModelis);
+        
+        if(tablesModelis.getRowCount() == 0){
+            JOptionPane.showMessageDialog(parent, "Não há abastecimentos cadastrados atualmente.", "Consumo", 2, null);
+        }
+        
+    }
+    
+     private void visualizarConsumo(){
+        ConsVis tConsVis = new ConsVis(this.parent, this.modal, this.consumo, this.veiculo);
+        tConsVis.setLocationRelativeTo(this);
+        tConsVis.setResizable(false);
+        tConsVis.setVisible(true);
+    }
+    
+    private void adicionarConsumo(){
+        ConsCad tConsVis = new ConsCad(this.parent, this.modal, this.veiculo);
+        tConsVis.setLocationRelativeTo(this);
+        tConsVis.setResizable(false);
+        tConsVis.setVisible(true);
+    }
+     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonFechar;

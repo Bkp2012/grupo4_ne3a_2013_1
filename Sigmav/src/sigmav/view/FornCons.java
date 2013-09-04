@@ -47,12 +47,33 @@ public class FornCons extends javax.swing.JDialog {
         
         this.daoInterno = new HDaoFornecedor();        
         this.listaFornecedores = new ArrayList<Fornecedor>();
+        jButtonSetLocAb.setVisible(false);
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
         tablesModelis.setRowCount(0);
     }
     
     public FornCons(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt) {
+        super(parent, modal);
+        initComponents();
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        setTitle("Sigmav - Fornecedores:");
+        setLocationRelativeTo(null);
+        
+        this.fornecedor = new Fornecedor();
+        this.fornAbas = fornecedorExt;
+        this.daoInterno = new HDaoFornecedor();        
+        this.listaFornecedores = new ArrayList<Fornecedor>();
+        jButtonSetLocAb.setVisible(false);
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
+        tablesModelis.setRowCount(0);
+    }
+    
+    public FornCons(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt, boolean pog) {
         super(parent, modal);
         initComponents();
         
@@ -261,7 +282,7 @@ public class FornCons extends javax.swing.JDialog {
         boolean auxsPog = true;
         
         for ( int i = 0; i < caux.length; i++ ){
-            System.out.println(caux[i]);
+            //System.out.println(caux[i]);
         // verifica se o char não é um dígito  
             
             if ( !Character.isDigit( caux[ i ] ) ){

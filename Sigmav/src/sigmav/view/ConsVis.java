@@ -4,10 +4,22 @@
  */
 package sigmav.view;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import sigmav.entity.Consumo;
+import sigmav.entity.Fornecedor;
+import sigmav.entity.Veiculo;
+//import sigmav.hibernate.HDaoConsumo;
+import sigmav.hibernate.HDaoVeiculo;
+
 /**
  *
  * @author meritor
  */
+
+
 public class ConsVis extends javax.swing.JDialog {
 
     /**
@@ -15,6 +27,10 @@ public class ConsVis extends javax.swing.JDialog {
      */
     java.awt.Frame parent;
     boolean modal;
+    HDaoVeiculo daoInternoV;
+    Veiculo veiculoInterno;
+    Consumo consumo;
+    Fornecedor localAbasticento;
     
     public ConsVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -23,6 +39,27 @@ public class ConsVis extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }
 
+    public ConsVis(java.awt.Frame parent, boolean modal, Consumo consumoExterno, Veiculo veiculoExterno) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Consumo:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.daoInternoV = new HDaoVeiculo();
+        this.consumo = consumoExterno;
+        this.localAbasticento = consumoExterno.getLocal();
+        this.veiculoInterno = veiculoExterno;
+        
+        jTextFieldCombustivel.setText(this.consumo.getCombustivel());
+        jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
+        jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
+        jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
+        jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
+        jTextFieldQuilometragem.setText(String.valueOf(this.consumo.getQuilometragem()));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -113,12 +150,27 @@ public class ConsVis extends javax.swing.JDialog {
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
+        jButtonFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFecharActionPerformed(evt);
+            }
+        });
 
         jButtonRemover.setText("Remover");
         jButtonRemover.setToolTipText("Remover");
+        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverActionPerformed(evt);
+            }
+        });
 
         jButtonEditar.setText("Editar");
         jButtonEditar.setToolTipText("Editar");
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -239,6 +291,51 @@ public class ConsVis extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCombustivelActionPerformed
 
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        // TODO add your handling code here:
+        int auxs = JOptionPane.showConfirmDialog(parent, "Deseja remover este abastecimento?", "Remover", 0, 3, null);
+        
+        if(auxs == 0){
+            try {
+                // TODO add your handling code here:
+                for(int i= 0; i == this.veiculoInterno.getConsumo().size() ;i++){
+                    Consumo tempo = this.veiculoInterno.getConsumo().get(i);
+                    if(tempo.getId() == this.consumo.getId()){
+                        this.veiculoInterno.getConsumo().remove(i);
+                    }
+                    
+                }               
+               daoInternoV.persist(this.veiculoInterno);
+            } catch (SQLException ex) {
+                Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                JOptionPane.showMessageDialog(null,"Abastecimento removido com sucesso.","Remover",1, null);
+                dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,"Operação cancelada.","Remover",1, null);
+        }
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
+
+    private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
+        // TODO add your handling code here:
+        //this.consumo = null;
+        dispose();
+    }//GEN-LAST:event_jButtonFecharActionPerformed
+
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        // TODO add your handling code here:
+        alteraConsumo();
+        
+        jTextFieldCombustivel.setText(this.consumo.getCombustivel());
+        jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
+        jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
+        jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
+        jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
+        jTextFieldQuilometragem.setText(String.valueOf(this.consumo.getQuilometragem()));
+        
+    }//GEN-LAST:event_jButtonEditarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -279,6 +376,14 @@ public class ConsVis extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    
+    private void alteraConsumo(){
+        ConsCad tConsCad = new ConsCad(this.parent, this.modal, this.veiculoInterno,this.consumo);
+        tConsCad.setLocationRelativeTo(this);
+        tConsCad.setResizable(false);
+        tConsCad.setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditar;
