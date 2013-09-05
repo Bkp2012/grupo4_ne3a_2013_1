@@ -6,6 +6,7 @@ package sigmav.hibernate;
 
 import java.sql.SQLException;
 import java.util.List;
+import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -14,38 +15,33 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author fernando
  */
-public abstract class HibernateADAO<T> {
+public abstract class HibernateADAOwEM<T> {
     
     private Class<T> classeEntidade;
     
-    public HibernateADAO(Class<T> classeExterna){
+    public HibernateADAOwEM(Class<T> classeExterna){
         this.classeEntidade = classeExterna;
     }
     
     //##########################################################################
     public void persist(T object) throws SQLException {
+        EntityManager em = HibernateFactoryEM.getEntityManager();
         
-        SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();        
-        Session session = sessionFactory.openSession();
-       
-        if(session.beginTransaction() == null){
-            session.beginTransaction();
-        }
         try{
-            persist(object, session);
-            session.getTransaction().commit();
-            session.flush();
+            em.getTransaction();
+            em.persist(object);
+            em.getTransaction().commit();            
         }        
         catch(Exception erro){
             System.out.println("Falha Falha na conexao com banco: .persist"+erro);
-            session.getTransaction().rollback();
+            em.getTransaction().rollback();
         }finally{            
             //Porque?
             //http://docs.jboss.org/hibernate/orm/3.5/javadoc/org/hibernate/Session.html#flush%28%29
             //http://docs.jboss.org/hibernate/orm/3.5/api/org/hibernate/SessionFactory.html
             //session.close();
             //sessionFactory.close();
-            //session.close();
+            em.
         }    
     }
     
@@ -73,7 +69,7 @@ public abstract class HibernateADAO<T> {
             session.getTransaction().rollback();
         }finally{            
             //session.close();
-            //sessionFactory.close();
+            sessionFactory.close();
             //session.close();
         }        
     }
@@ -91,7 +87,7 @@ public abstract class HibernateADAO<T> {
         session.beginTransaction().begin();
         Object aux = session.createCriteria(classeEntidade).add(Restrictions.idEq(id)).uniqueResult();
         //session.close();
-        //sessionFactory.close();
+        sessionFactory.close();
         //session.close();
         
         return aux;
@@ -116,7 +112,7 @@ public abstract class HibernateADAO<T> {
             session.getTransaction().rollback();
         }finally{            
             //session.close();
-            //sessionFactory.close();
+            sessionFactory.close();
             //session.close();
         }        
         

@@ -39,6 +39,9 @@ public class ConsCons extends javax.swing.JDialog {
         setTitle("Sigmav - Consumo:");
         setLocationRelativeTo(null);
         
+        this.parent = parent;
+        this.modal = modal;
+        
         this.daoInterno = new HDaoVeiculo();        
         this.listaAbastecimento = new ArrayList<Consumo>();
         
@@ -51,6 +54,10 @@ public class ConsCons extends javax.swing.JDialog {
         initComponents();
         setTitle("Sigmav - Consumo:");
         setLocationRelativeTo(null);
+        
+        
+        this.parent = parent;
+        this.modal = modal;
         
         this.daoInterno = new HDaoVeiculo();
         this.veiculo = veiculoExterno;
@@ -171,6 +178,7 @@ public class ConsCons extends javax.swing.JDialog {
 
     private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
         // TODO add your handling code here:
+        
         dispose();
     }//GEN-LAST:event_jButtonFecharActionPerformed
 

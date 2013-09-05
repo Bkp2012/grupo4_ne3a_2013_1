@@ -39,7 +39,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(rootPane, "Falta: \n"
                 //+ "Validar Busca por codigo com caractere invalido \n"
                 //+ "Validar preenchimento de peças \n"
-                + "Validar preenchimento de fornecedores \n"
+                
                 + "Implmentar regra de negocio em veiculo e validar forms ", "Pendencias! ", 2,null);
                 
     }
@@ -54,7 +54,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jButtonVeiculo = new javax.swing.JButton();
         jButtonFornecedores = new javax.swing.JButton();
         jButtonPecaTela = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
@@ -81,7 +81,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Georgia", 3, 48)); // NOI18N
         jLabel1.setText("Sigmav");
 
-        jButton1.setText("Veículos");
+        jButtonVeiculo.setText("Veículos");
+        jButtonVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVeiculoActionPerformed(evt);
+            }
+        });
 
         jButtonFornecedores.setText("Fornecedores");
         jButtonFornecedores.addActionListener(new java.awt.event.ActionListener() {
@@ -180,7 +185,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         .addGap(0, 43, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(jButtonVeiculo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonFornecedores)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -200,7 +205,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(jButtonVeiculo)
                     .addComponent(jButtonFornecedores)
                     .addComponent(jButtonPecaTela))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
@@ -213,6 +218,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jMenuItemVeiculosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemVeiculosActionPerformed
         // TODO add your handling code here:
+        GeraTelaVeiculo();
+        StatusBar();
     }//GEN-LAST:event_jMenuItemVeiculosActionPerformed
 
     private void jButtonPecaTelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPecaTelaActionPerformed
@@ -236,6 +243,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
         GeraTelaFornecedor();
         StatusBar();
     }//GEN-LAST:event_jMenuItemFornecedoresActionPerformed
+
+    private void jButtonVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVeiculoActionPerformed
+        // TODO add your handling code here:
+        GeraTelaVeiculo();
+        StatusBar();
+    }//GEN-LAST:event_jButtonVeiculoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,6 +303,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         
     }
     
+    private void GeraTelaVeiculo(){
+        VeicCons telaVei = new VeicCons(this, rootPaneCheckingEnabled);
+        telaVei.setLocationRelativeTo(this);
+        telaVei.setResizable(false);
+        telaVei.setVisible(true);
+        
+    }
+    
     //POG para preencher StatusBar
     private void StatusBar(){
         try {
@@ -324,9 +345,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu Cadastros;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonFornecedores;
     private javax.swing.JButton jButtonPecaTela;
+    private javax.swing.JButton jButtonVeiculo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelStatusBar;
     private javax.swing.JMenuBar jMenuBar1;

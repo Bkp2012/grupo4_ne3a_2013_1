@@ -37,6 +37,9 @@ public class ConsVis extends javax.swing.JDialog {
         initComponents();
         setTitle("Sigmav - Consumo:");
         setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
     }
 
     public ConsVis(java.awt.Frame parent, boolean modal, Consumo consumoExterno, Veiculo veiculoExterno) {
@@ -44,6 +47,7 @@ public class ConsVis extends javax.swing.JDialog {
         initComponents();
         setTitle("Sigmav - Consumo:");
         setLocationRelativeTo(null);
+        
         
         this.parent = parent;
         this.modal = modal;
@@ -96,12 +100,16 @@ public class ConsVis extends javax.swing.JDialog {
 
         jLabel2.setText("Quilometragem:");
 
+        jTextFieldQuilometragem.setEditable(false);
+        jTextFieldQuilometragem.setBackground(new java.awt.Color(192, 192, 192));
         jTextFieldQuilometragem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldQuilometragemActionPerformed(evt);
             }
         });
 
+        jTextFieldDataAbastecimento.setEditable(false);
+        jTextFieldDataAbastecimento.setBackground(new java.awt.Color(192, 192, 192));
         jTextFieldDataAbastecimento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldDataAbastecimentoActionPerformed(evt);
@@ -110,6 +118,8 @@ public class ConsVis extends javax.swing.JDialog {
 
         jLabel3.setText("Data abastecimento:");
 
+        jTextFieldLitros.setEditable(false);
+        jTextFieldLitros.setBackground(new java.awt.Color(192, 192, 192));
         jTextFieldLitros.setMaximumSize(new java.awt.Dimension(129, 27));
         jTextFieldLitros.setMinimumSize(new java.awt.Dimension(129, 27));
         jTextFieldLitros.setPreferredSize(new java.awt.Dimension(129, 27));
@@ -121,6 +131,8 @@ public class ConsVis extends javax.swing.JDialog {
 
         jLabel4.setText("Litros:");
 
+        jTextFieldPrecoLitro.setEditable(false);
+        jTextFieldPrecoLitro.setBackground(new java.awt.Color(192, 192, 192));
         jTextFieldPrecoLitro.setMaximumSize(new java.awt.Dimension(129, 27));
         jTextFieldPrecoLitro.setMinimumSize(new java.awt.Dimension(129, 27));
         jTextFieldPrecoLitro.setPreferredSize(new java.awt.Dimension(129, 27));
@@ -132,6 +144,8 @@ public class ConsVis extends javax.swing.JDialog {
 
         jLabel5.setText("Preço por litro:");
 
+        jTextFieldCombustivel.setEditable(false);
+        jTextFieldCombustivel.setBackground(new java.awt.Color(192, 192, 192));
         jTextFieldCombustivel.setMaximumSize(new java.awt.Dimension(129, 27));
         jTextFieldCombustivel.setMinimumSize(new java.awt.Dimension(129, 27));
         jTextFieldCombustivel.setPreferredSize(new java.awt.Dimension(129, 27));
@@ -147,6 +161,9 @@ public class ConsVis extends javax.swing.JDialog {
         jLabel7.setText("Local abastecimento:");
 
         jLabel8.setText("Nome:");
+
+        jTextFieldLocalAbastecimento.setEditable(false);
+        jTextFieldLocalAbastecimento.setBackground(new java.awt.Color(192, 192, 192));
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
