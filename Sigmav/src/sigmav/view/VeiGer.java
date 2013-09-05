@@ -4,6 +4,9 @@
  */
 package sigmav.view;
 
+import sigmav.entity.Veiculo;
+
+
 /**
  *
  * @author meritor
@@ -15,7 +18,8 @@ public class VeiGer extends javax.swing.JDialog {
      */
     
     java.awt.Frame parent;
-    boolean modal;
+    boolean modal;    
+    Veiculo veiculo;
     
     public VeiGer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -23,6 +27,32 @@ public class VeiGer extends javax.swing.JDialog {
         setTitle("Sigmav - Veiculos:");
         setLocationRelativeTo(null);
         
+        this.parent = parent;
+        this.modal = modal;
+    }
+    
+    public VeiGer(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Veiculos:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.veiculo = veiculoExterno;
+                
+        jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
+        jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
+        jTextFieldIdVeiculo.setText(String.valueOf(this.veiculo.getId()));
+        jTextFieldKmCompra.setText(this.veiculo.getKmCompra());        
+        jTextFieldMarca.setText(this.veiculo.getMarca());        
+        jTextFieldModelo.setText(this.veiculo.getModelo());
+        jTextFieldPlaca.setText(this.veiculo.getPlaca());
+        jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
+        jTextFieldVersao.setText(this.veiculo.getVersao());
+        jTextFieldMediaConsumo.setText("Implementar");
+                        
     }
 
     /**
@@ -76,16 +106,36 @@ public class VeiGer extends javax.swing.JDialog {
 
         jLabel2.setText("Código do veículo:");
 
+        jTextFieldIdVeiculo.setEditable(false);
+        jTextFieldIdVeiculo.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel4.setText("Marca:");
+
+        jTextFieldMarca.setEditable(false);
+        jTextFieldMarca.setBackground(new java.awt.Color(192, 192, 192));
+
+        jTextFieldVersao.setEditable(false);
+        jTextFieldVersao.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel5.setText("Versão:");
 
         jLabel8.setText("Ano/Modelo:");
 
+        jTextFieldAnoModelo.setEditable(false);
+        jTextFieldAnoModelo.setBackground(new java.awt.Color(192, 192, 192));
+
+        jTextFieldKmCompra.setEditable(false);
+        jTextFieldKmCompra.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel11.setText("Km compra:");
 
         jButtonManutencoes.setText("Manutenções");
         jButtonManutencoes.setToolTipText("Gerenciar manutenções");
+        jButtonManutencoes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonManutencoesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -139,14 +189,34 @@ public class VeiGer extends javax.swing.JDialog {
 
         jLabel3.setText("Placa:");
 
+        jTextFieldPlaca.setEditable(false);
+        jTextFieldPlaca.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel6.setText("Modelo:");
+
+        jTextFieldModelo.setEditable(false);
+        jTextFieldModelo.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel7.setText("Combustível:");
 
+        jTextFieldCombustivel.setEditable(false);
+        jTextFieldCombustivel.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel9.setText("Responsável:");
+
+        jTextFieldResponsavel.setEditable(false);
+        jTextFieldResponsavel.setBackground(new java.awt.Color(192, 192, 192));
 
         jButtonConsumo.setText("Consumo");
         jButtonConsumo.setToolTipText("Gerenciar consumo");
+        jButtonConsumo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConsumoActionPerformed(evt);
+            }
+        });
+
+        jTextFieldMediaConsumo.setEditable(false);
+        jTextFieldMediaConsumo.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel10.setText("Média consumo:");
 
@@ -239,6 +309,15 @@ public class VeiGer extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonManutencoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonManutencoesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonManutencoesActionPerformed
+
+    private void jButtonConsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsumoActionPerformed
+        // TODO add your handling code here:
+        gerenciarConsumo();
+    }//GEN-LAST:event_jButtonConsumoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -279,6 +358,13 @@ public class VeiGer extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    private void gerenciarConsumo(){
+        ConsCons telaCons = new ConsCons(this.parent, this.modal, this.veiculo);
+        telaCons.setLocationRelativeTo(this);
+        telaCons.setResizable(false);
+        telaCons.setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonConsumo;

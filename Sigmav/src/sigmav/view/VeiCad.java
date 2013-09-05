@@ -4,6 +4,17 @@
  */
 package sigmav.view;
 
+import java.sql.SQLException;
+
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import sigmav.entity.Consumo;
+import sigmav.entity.Manutencao;
+import sigmav.entity.Veiculo;
+import sigmav.hibernate.HDaoVeiculo;
+
 /**
  *
  * @author meritor
@@ -16,8 +27,58 @@ public class VeiCad extends javax.swing.JDialog {
     
     java.awt.Frame parent;
     boolean modal;
+    Veiculo veiculo;
+    HDaoVeiculo daoInterno;
     
     public VeiCad(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Veiculos:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+    }
+    
+    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Veiculos:");
+        setLocationRelativeTo(null);
+        
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.daoInterno = new HDaoVeiculo();
+        this.veiculo = veiculoExterno;
+        this.veiculo.setConsumo(new ArrayList<Consumo>());
+        this.veiculo.setManutencoes(new ArrayList<Manutencao>());
+        
+    }
+    
+    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, int pog) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Veiculos:");
+        setLocationRelativeTo(null);
+        
+        this.daoInterno = new HDaoVeiculo();
+        this.veiculo = veiculoExterno;
+        
+        jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
+        jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
+        jTextFieldIdVeiculo.setText(String.valueOf(this.veiculo.getId()));
+        jTextFieldKmCompra.setText(this.veiculo.getKmCompra());        
+        jTextFieldMarca.setText(this.veiculo.getMarca());        
+        jTextFieldModelo.setText(this.veiculo.getModelo());
+        jTextFieldPlaca.setText(this.veiculo.getPlaca());
+        jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
+        jTextFieldVersao.setText(this.veiculo.getVersao());
+        
+    }
+    
+    public VeiCad(java.awt.Frame parent, boolean modal, int x) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
@@ -73,6 +134,9 @@ public class VeiCad extends javax.swing.JDialog {
         jPanel1.setPreferredSize(new java.awt.Dimension(205, 289));
 
         jLabel2.setText("Código do veículo:");
+
+        jTextFieldIdVeiculo.setEditable(false);
+        jTextFieldIdVeiculo.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel4.setText("Marca:");
 
@@ -174,9 +238,19 @@ public class VeiCad extends javax.swing.JDialog {
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
+        jButtonFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFecharActionPerformed(evt);
+            }
+        });
 
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.setToolTipText("Salvar alterações");
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -221,6 +295,37 @@ public class VeiCad extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonFecharActionPerformed
+
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        // TODO add your handling code here:
+        
+        this.veiculo.setAnoModelo(jTextFieldAnoModelo.getText().trim());
+        this.veiculo.setCombustivel(jTextFieldCombustivel.getText().trim());
+        //this.veiculo.setConsumo(null);
+        this.veiculo.setKmCompra(jTextFieldKmCompra.getText().trim());
+        //this.veiculo.setManutencoes(null);
+        this.veiculo.setMarca(jTextFieldMarca.getText().trim());
+        //this.veiculo.setMediaConsumo();
+        this.veiculo.setModelo(jTextFieldModelo.getText().trim());
+        this.veiculo.setPlaca(jTextFieldPlaca.getText().trim());
+        this.veiculo.setResponsavel(jTextFieldResponsavel.getText().trim());
+        this.veiculo.setVersao(jTextFieldVersao.getText().trim());
+        
+        try {
+            this.daoInterno.persist(this.veiculo);
+        } catch (SQLException ex) {
+            Logger.getLogger(VeiCad.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {            
+                JOptionPane.showMessageDialog(parent, "Veiculo salvo com sucesso.", "Salvar", 1, null);                        
+                dispose();
+            
+        }
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     /**
      * @param args the command line arguments

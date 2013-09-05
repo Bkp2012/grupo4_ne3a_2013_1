@@ -16,47 +16,39 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import sigmav.entity.Peca;
-import sigmav.hibernate.HDaoPeca;
+
+import sigmav.entity.Veiculo;
+
+import sigmav.hibernate.HDaoVeiculo;
 
 public class VeicCons extends javax.swing.JDialog {
 
     /**
      * Creates new form PecaCons
      */
-    private HDaoPeca daoInterno;
-    private Peca peca;
-    private List<Peca> listaPecas;
+    private HDaoVeiculo daoInterno;
+    private Veiculo veiculo;
+    private List<Veiculo> listaVeiculos;
     private java.awt.Frame parent;
     private boolean modal;
     private int linha = 0;
     
     
-    public VeicCons(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
+    public VeicCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.parent = parent;
         this.modal = modal;
         setTitle("Sigmav - Veículos:");
         setLocationRelativeTo(null);
-        this.daoInterno = daopeca;
-        this.peca = peca;
-        this.listaPecas = new ArrayList<Peca>();
+        this.daoInterno = new HDaoVeiculo();
+        this.veiculo = new Veiculo();
+        this.listaVeiculos = new ArrayList<Veiculo>();
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
         tablesModelis.setRowCount(0);
     }
     
-    public VeicCons(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        setTitle("Sigmav - Peças:");
-        setLocationRelativeTo(null);
-        
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
-        tablesModelis.setRowCount(0);
-        this.listaPecas = new ArrayList<Peca>();
-    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -73,7 +65,7 @@ public class VeicCons extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jComboBoxTipoDePesquisa = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTablePecas = new javax.swing.JTable(){
+        jTableVeiculos = new javax.swing.JTable(){
 
             public boolean isCellEditable(int row, int col) {
 
@@ -104,10 +96,10 @@ public class VeicCons extends javax.swing.JDialog {
 
         jLabel3.setText("Pesquisar por:");
 
-        jComboBoxTipoDePesquisa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código peça", "Descrição", "Referencia industria"}));
+        jComboBoxTipoDePesquisa.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Código veículo", "Placa", "Responsavel"}));
         jComboBoxTipoDePesquisa.setToolTipText("Tipo de pesquisa");
 
-        jTablePecas.setModel(new javax.swing.table.DefaultTableModel(
+        jTableVeiculos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -115,7 +107,7 @@ public class VeicCons extends javax.swing.JDialog {
                 {null, null, null}
             },
             new String [] {
-                "Código peça:", "Descrição:", "Ref. industria:"
+                "Código veículo:", "Modelo:", "Km:"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -126,11 +118,11 @@ public class VeicCons extends javax.swing.JDialog {
                 return canEdit [columnIndex];
             }
         });
-        jTablePecas.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTablePecas);
-        jTablePecas.getColumnModel().getColumn(0).setResizable(false);
-        jTablePecas.getColumnModel().getColumn(1).setResizable(false);
-        jTablePecas.getColumnModel().getColumn(2).setResizable(false);
+        jTableVeiculos.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTableVeiculos);
+        jTableVeiculos.getColumnModel().getColumn(0).setResizable(false);
+        jTableVeiculos.getColumnModel().getColumn(1).setResizable(false);
+        jTableVeiculos.getColumnModel().getColumn(2).setResizable(false);
 
         jButtonNovo.setText("Adicionar");
         jButtonNovo.setToolTipText("Adicionar");
@@ -241,8 +233,8 @@ public class VeicCons extends javax.swing.JDialog {
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
-        this.listaPecas = new ArrayList<Peca>();
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
+        this.listaVeiculos = new ArrayList<Veiculo>();
         char[] caux = jTextFieldChaveDaPesquisa.getText().trim().toCharArray();
         boolean daxus = true;
         boolean auxsPog = true;
@@ -271,30 +263,30 @@ public class VeicCons extends javax.swing.JDialog {
                     auxsPog = false;
                     
                } else{
-                this.peca = (Peca) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
+                this.veiculo = (Veiculo) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
                 //System.out.println(peca.toString());
-                if(this.peca != null){
-                    this.listaPecas.add(this.peca);
+                if(this.veiculo != null){
+                    this.listaVeiculos.add(this.veiculo);
                 }
                }
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
-                this.listaPecas = daoInterno.retrieveDescricao(jTextFieldChaveDaPesquisa.getText());
+                this.listaVeiculos = daoInterno.retrievePlaca(jTextFieldChaveDaPesquisa.getText());
             }            
             else {
-                this.listaPecas = daoInterno.retrieveCodReferencia(jTextFieldChaveDaPesquisa.getText());
+                this.listaVeiculos = daoInterno.retrieveResponsavel(jTextFieldChaveDaPesquisa.getText());
             } 
             
             
             
-            if(listaPecas.size() > 0){
-                for(Peca pecaTemp : listaPecas){
-                    tablesModelis.addRow(new Object[]{pecaTemp.getId(),pecaTemp.getDescricao(),pecaTemp.getGrupo()});
+            if(listaVeiculos.size() > 0){
+                for(Veiculo vTemp : listaVeiculos){
+                    tablesModelis.addRow(new Object[]{vTemp.getId(),vTemp.getModelo(),vTemp.getKmCompra()});
                 }
-                jTablePecas.setRowSelectionInterval(0, 0);
+                jTableVeiculos.setRowSelectionInterval(0, 0);
             }
             
-            jTablePecas.setModel(tablesModelis);
+            jTableVeiculos.setModel(tablesModelis);
             
             //peca = listaPecas.get(jTextFieldChaveDaPesquisa.cocon)
             //tedBook = booksList.get(table.convertRowIndexToModel(selectedRow));
@@ -303,7 +295,7 @@ public class VeicCons extends javax.swing.JDialog {
             
             
             if(tablesModelis.getRowCount() == 0 && auxsPog == true){
-                JOptionPane.showMessageDialog(parent, "Nenhuma peça encontrada.", "Pesquisar", 2, null);
+                JOptionPane.showMessageDialog(parent, "Nenhuma veículo encontrado.", "Pesquisar", 2, null);
             }
                 
             
@@ -319,14 +311,14 @@ public class VeicCons extends javax.swing.JDialog {
 
     private void jButtonVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarActionPerformed
         // TODO add your handling code here:
-        linha = jTablePecas.getSelectedRow();
+        linha = jTableVeiculos.getSelectedRow();
         //System.out.println(linha+"################");
         if(linha < 0){
             // Alerta se nenhum item for selecionado
             JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
         } else{
-            this.peca = this.listaPecas.get(linha);
-            VisualizarPeca();
+            this.veiculo = this.listaVeiculos.get(linha);
+            VisualizarVeiculo();
             jButtonPesquisarActionPerformed(evt);
         }
                 
@@ -334,17 +326,27 @@ public class VeicCons extends javax.swing.JDialog {
 
     private void jButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoActionPerformed
         // TODO add your handling code here:
-        this.peca = new Peca();
-        GeraCadastrarPeca();
-        System.out.println(this.peca.getId());
-        if(this.peca.getId() >= 1){
-            VisualizarPeca();
+        this.veiculo = new Veiculo();
+        GeraCadastrarVeiculo();
+        
+        if(this.veiculo.getId() >= 1){
+            VisualizarVeiculo();
         }        
         
     }//GEN-LAST:event_jButtonNovoActionPerformed
 
     private void jButtonGerenciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarActionPerformed
         // TODO add your handling code here:
+        linha = jTableVeiculos.getSelectedRow();
+        //System.out.println(linha+"################");
+        if(linha < 0){
+            // Alerta se nenhum item for selecionado
+            JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
+        } else{
+            this.veiculo = this.listaVeiculos.get(linha);
+            GerenciarVeiculo();
+            jButtonPesquisarActionPerformed(evt);
+        }
     }//GEN-LAST:event_jButtonGerenciarActionPerformed
 
     /**
@@ -391,19 +393,27 @@ public class VeicCons extends javax.swing.JDialog {
     
     //##########################################################################
     
-    private void GeraCadastrarPeca(){
-        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, daoInterno, peca);
-        pecaCadastro.setLocationRelativeTo(this);
-        pecaCadastro.setResizable(false);
-        pecaCadastro.setVisible(true);
+    private void GeraCadastrarVeiculo(){
+        VeiCad VeiCadastro = new VeiCad(this.parent, this.modal, this.veiculo);
+        VeiCadastro.setLocationRelativeTo(this);
+        VeiCadastro.setResizable(false);
+        VeiCadastro.setVisible(true);
                
     }
     
-    private void VisualizarPeca(){
-        PecaVis pecaVisualizacao = new PecaVis(this.parent, this.modal, daoInterno, peca);
-        pecaVisualizacao.setLocationRelativeTo(this);
-        pecaVisualizacao.setResizable(false);
-        pecaVisualizacao.setVisible(true);
+    private void VisualizarVeiculo(){
+        VeiVis veiVisualizacao = new VeiVis(this.parent, this.modal, this.veiculo);
+        veiVisualizacao.setLocationRelativeTo(this);
+        veiVisualizacao.setResizable(false);
+        veiVisualizacao.setVisible(true);
+               
+    }
+    
+    private void GerenciarVeiculo(){
+        VeiGer veiGer = new VeiGer(this.parent, this.modal, this.veiculo);
+        veiGer.setLocationRelativeTo(this);
+        veiGer.setResizable(false);
+        veiGer.setVisible(true);
                
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -417,7 +427,7 @@ public class VeicCons extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTablePecas;
+    private javax.swing.JTable jTableVeiculos;
     private javax.swing.JTextField jTextFieldChaveDaPesquisa;
     // End of variables declaration//GEN-END:variables
 }

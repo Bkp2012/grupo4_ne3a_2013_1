@@ -4,6 +4,17 @@
  */
 package sigmav.view;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.hibernate.LockMode;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import sigmav.entity.Veiculo;
+import sigmav.hibernate.HDaoVeiculo;
+import sigmav.hibernate.HibernatePOG;
+
 /**
  *
  * @author meritor
@@ -16,6 +27,8 @@ public class VeiVis extends javax.swing.JDialog {
     
     java.awt.Frame parent;
     boolean modal;
+    HDaoVeiculo daoInterno;
+    Veiculo veiculo;
     
     public VeiVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -23,6 +36,33 @@ public class VeiVis extends javax.swing.JDialog {
         setTitle("Sigmav - Veiculos:");
         setLocationRelativeTo(null);
         
+        this.parent = parent;
+        this.modal = modal;
+        
+    }
+    
+    public VeiVis(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Veiculos:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.daoInterno = new HDaoVeiculo();
+        this.veiculo = veiculoExterno;
+        
+        jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
+        jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
+        jTextFieldIdVeiculo.setText(String.valueOf(this.veiculo.getId()));
+        jTextFieldKmCompra.setText(this.veiculo.getKmCompra());        
+        jTextFieldMarca.setText(this.veiculo.getMarca());        
+        jTextFieldModelo.setText(this.veiculo.getModelo());
+        jTextFieldPlaca.setText(this.veiculo.getPlaca());
+        jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
+        jTextFieldVersao.setText(this.veiculo.getVersao());
+                        
     }
 
     /**
@@ -74,11 +114,26 @@ public class VeiVis extends javax.swing.JDialog {
 
         jLabel2.setText("Código do veículo:");
 
+        jTextFieldIdVeiculo.setEditable(false);
+        jTextFieldIdVeiculo.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel4.setText("Marca:");
+
+        jTextFieldMarca.setEditable(false);
+        jTextFieldMarca.setBackground(new java.awt.Color(192, 192, 192));
+
+        jTextFieldVersao.setEditable(false);
+        jTextFieldVersao.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel5.setText("Versão:");
 
         jLabel8.setText("Ano/Modelo:");
+
+        jTextFieldAnoModelo.setEditable(false);
+        jTextFieldAnoModelo.setBackground(new java.awt.Color(192, 192, 192));
+
+        jTextFieldKmCompra.setEditable(false);
+        jTextFieldKmCompra.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel11.setText("Km compra:");
 
@@ -129,11 +184,23 @@ public class VeiVis extends javax.swing.JDialog {
 
         jLabel3.setText("Placa:");
 
+        jTextFieldPlaca.setEditable(false);
+        jTextFieldPlaca.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel6.setText("Modelo:");
+
+        jTextFieldModelo.setEditable(false);
+        jTextFieldModelo.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel7.setText("Combustível:");
 
+        jTextFieldCombustivel.setEditable(false);
+        jTextFieldCombustivel.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel9.setText("Responsável:");
+
+        jTextFieldResponsavel.setEditable(false);
+        jTextFieldResponsavel.setBackground(new java.awt.Color(192, 192, 192));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -174,12 +241,27 @@ public class VeiVis extends javax.swing.JDialog {
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
+        jButtonFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFecharActionPerformed(evt);
+            }
+        });
 
         jButtonRemover.setText("Remover");
         jButtonRemover.setToolTipText("Remover");
+        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverActionPerformed(evt);
+            }
+        });
 
         jButtonEditar.setText("Editar");
         jButtonEditar.setToolTipText("Editar");
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -228,6 +310,46 @@ public class VeiVis extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonFecharActionPerformed
+
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        // TODO add your handling code here:
+        int auxs = JOptionPane.showConfirmDialog(parent, "Deseja remover este veiculo?", "Remover", 0, 3, null);
+        
+        if(auxs == 0){
+            try {
+                // TODO add your handling code here:                
+                daoInterno.delete(this.veiculo);
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                JOptionPane.showMessageDialog(null,"Veiculo removido com sucesso.","Remover",1, null);
+                dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,"Operação cancelada.","Remover",1, null);
+        }
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
+
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        // TODO add your handling code here:
+        alteraVeiculo();
+        
+        jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
+        jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
+        jTextFieldIdVeiculo.setText(String.valueOf(this.veiculo.getId()));
+        jTextFieldKmCompra.setText(this.veiculo.getKmCompra());        
+        jTextFieldMarca.setText(this.veiculo.getMarca());        
+        jTextFieldModelo.setText(this.veiculo.getModelo());
+        jTextFieldPlaca.setText(this.veiculo.getPlaca());
+        jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
+        jTextFieldVersao.setText(this.veiculo.getVersao());
+    }//GEN-LAST:event_jButtonEditarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -268,6 +390,13 @@ public class VeiVis extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+     private void alteraVeiculo(){
+        VeiCad tVeiCad = new VeiCad(this.parent, this.modal, this.veiculo, 2);
+        tVeiCad.setLocationRelativeTo(this);
+        tVeiCad.setResizable(false);
+        tVeiCad.setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditar;

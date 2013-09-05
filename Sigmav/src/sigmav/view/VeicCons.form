@@ -121,7 +121,7 @@
     <Component class="javax.swing.JComboBox" name="jComboBoxTipoDePesquisa">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;C&#xf3;digo pe&#xe7;a&quot;, &quot;Descri&#xe7;&#xe3;o&quot;, &quot;Referencia industria&quot;})" type="code"/>
+          <Connection code="new javax.swing.DefaultComboBoxModel(new String[] { &quot;C&#xf3;digo ve&#xed;culo&quot;, &quot;Placa&quot;, &quot;Responsavel&quot;})" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -135,13 +135,13 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTablePecas">
+        <Component class="javax.swing.JTable" name="jTableVeiculos">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="3" rowCount="4">
-                <Column editable="false" title="C&#xf3;digo pe&#xe7;a:" type="java.lang.Object"/>
-                <Column editable="false" title="Descri&#xe7;&#xe3;o:" type="java.lang.Object"/>
-                <Column editable="false" title="Ref. industria:" type="java.lang.Object"/>
+                <Column editable="false" title="C&#xf3;digo ve&#xed;culo:" type="java.lang.Object"/>
+                <Column editable="false" title="Modelo:" type="java.lang.Object"/>
+                <Column editable="false" title="Km:" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
