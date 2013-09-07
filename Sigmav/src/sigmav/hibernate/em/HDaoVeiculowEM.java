@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.hibernate;
+package sigmav.hibernate.em;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -17,28 +17,25 @@ import sigmav.entity.Veiculo;
  *
  * @author fernando
  */
-public class HDaoVeiculo extends HibernateVeiculo<Veiculo>{
+public class HDaoVeiculowEM extends HibernateADAOwEM<Veiculo>{
 
-    public HDaoVeiculo() {
+    public HDaoVeiculowEM() {
         super (Veiculo.class);
     }
    
-    
-    public List<Veiculo> retrieveResponsavel(String ChaveNome, Session sessionExt) throws SQLException{
-        
+   
+    public List<Veiculo> retrieveResponsavel(String ChaveNome) throws SQLException{
+       /* 
         //SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
-        Session session = sessionExt;
+        //Session session = sessionFactory.openSession();
         List<Veiculo> list = null;
         
-        if(session.beginTransaction() == null){
-            session.beginTransaction();
-        }
         try{            
             list = session.createCriteria(Veiculo.class).
                     add(Restrictions.like("responsavel", "%"+ChaveNome+"%")).
                     addOrder(Order.asc("id")).list();      
             
-            //session.beginTransaction().commit();
+            session.beginTransaction().commit();
             
         }        
         catch(Exception erro){
@@ -52,12 +49,14 @@ public class HDaoVeiculo extends HibernateVeiculo<Veiculo>{
         }        
         
         return list;
+        */ 
+        return null;
     }
     
-    public List<Veiculo> retrievePlaca(String ChaveNome, Session sessionExt) throws SQLException{
-        
+    public List<Veiculo> retrievePlaca(String ChaveNome) throws SQLException{
+        /*
         //SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
-        Session session = sessionExt;
+        //Session session = sessionFactory.openSession();
         List<Veiculo> list = null;
         
         if(session.beginTransaction() == null){
@@ -68,7 +67,7 @@ public class HDaoVeiculo extends HibernateVeiculo<Veiculo>{
                     add(Restrictions.like("placa", "%"+ChaveNome+"%")).
                     addOrder(Order.asc("id")).list();      
             
-            //session.beginTransaction().commit();
+            session.beginTransaction().commit();
             
         }        
         catch(Exception erro){
@@ -78,8 +77,13 @@ public class HDaoVeiculo extends HibernateVeiculo<Veiculo>{
         }finally{            
             //session.close();
             //sessionFactory.close();
+            //session.close();
+            
         }        
         
         return list;
+        */
+        return null;
     }
+    
 }

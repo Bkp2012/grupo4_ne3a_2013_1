@@ -4,6 +4,7 @@
  */
 package sigmav.view;
 
+import org.hibernate.Session;
 import sigmav.entity.Veiculo;
 
 
@@ -20,6 +21,7 @@ public class VeiGer extends javax.swing.JDialog {
     java.awt.Frame parent;
     boolean modal;    
     Veiculo veiculo;
+    Session sessionInt;
     
     public VeiGer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -31,7 +33,7 @@ public class VeiGer extends javax.swing.JDialog {
         this.modal = modal;
     }
     
-    public VeiGer(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+    public VeiGer(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
@@ -40,6 +42,7 @@ public class VeiGer extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
+        this.sessionInt = sessionExt;
         this.veiculo = veiculoExterno;
                 
         jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
@@ -269,6 +272,11 @@ public class VeiGer extends javax.swing.JDialog {
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
+        jButtonFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFecharActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -318,6 +326,11 @@ public class VeiGer extends javax.swing.JDialog {
         gerenciarConsumo();
     }//GEN-LAST:event_jButtonConsumoActionPerformed
 
+    private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonFecharActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -361,7 +374,7 @@ public class VeiGer extends javax.swing.JDialog {
     }
     
     private void gerenciarConsumo(){
-        ConsCons telaCons = new ConsCons(this.parent, this.modal, this.veiculo);
+        ConsCons telaCons = new ConsCons(this.parent, this.modal, this.veiculo, sessionInt);
         telaCons.setLocationRelativeTo(this);
         telaCons.setResizable(false);
         telaCons.setVisible(true);

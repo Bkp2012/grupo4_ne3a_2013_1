@@ -16,10 +16,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import sigmav.entity.Veiculo;
 
 import sigmav.hibernate.HDaoVeiculo;
+import sigmav.hibernate.HibernatePOG;
+import sigmav.hibernate.em.HDaoVeiculowEM;
 
 public class VeicCons extends javax.swing.JDialog {
 
@@ -31,8 +35,9 @@ public class VeicCons extends javax.swing.JDialog {
     private List<Veiculo> listaVeiculos;
     private java.awt.Frame parent;
     private boolean modal;
-    private int linha = 0;
-    
+    private int linha = 0;    
+    private Session sessionVeic;
+    private SessionFactory sessionFactory;
     
     public VeicCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -44,6 +49,9 @@ public class VeicCons extends javax.swing.JDialog {
         this.daoInterno = new HDaoVeiculo();
         this.veiculo = new Veiculo();
         this.listaVeiculos = new ArrayList<Veiculo>();
+        
+        this.sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();        
+        this.sessionVeic = sessionFactory.openSession();        
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
         tablesModelis.setRowCount(0);
@@ -263,18 +271,23 @@ public class VeicCons extends javax.swing.JDialog {
                     auxsPog = false;
                     
                } else{
-                this.veiculo = (Veiculo) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
-                //System.out.println(peca.toString());
+                this.veiculo = (Veiculo) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()), sessionVeic);
+                this.sessionVeic.flush();
+                //sessionVeic.getTransaction().commit();
                 if(this.veiculo != null){
                     this.listaVeiculos.add(this.veiculo);
                 }
                }
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
-                this.listaVeiculos = daoInterno.retrievePlaca(jTextFieldChaveDaPesquisa.getText());
+                this.listaVeiculos = daoInterno.retrievePlaca(jTextFieldChaveDaPesquisa.getText(),sessionVeic);
+                this.sessionVeic.flush();
+                //sessionVeic.getTransaction().commit();
             }            
             else {
-                this.listaVeiculos = daoInterno.retrieveResponsavel(jTextFieldChaveDaPesquisa.getText());
+                this.listaVeiculos = daoInterno.retrieveResponsavel(jTextFieldChaveDaPesquisa.getText(),sessionVeic);
+                this.sessionVeic.flush();
+                //sessionVeic.getTransaction().commit();
             } 
             
             
@@ -394,7 +407,7 @@ public class VeicCons extends javax.swing.JDialog {
     //##########################################################################
     
     private void GeraCadastrarVeiculo(){
-        VeiCad VeiCadastro = new VeiCad(this.parent, this.modal, this.veiculo);
+        VeiCad VeiCadastro = new VeiCad(this.parent, this.modal, this.veiculo, sessionVeic);
         VeiCadastro.setLocationRelativeTo(this);
         VeiCadastro.setResizable(false);
         VeiCadastro.setVisible(true);
@@ -402,7 +415,7 @@ public class VeicCons extends javax.swing.JDialog {
     }
     
     private void VisualizarVeiculo(){
-        VeiVis veiVisualizacao = new VeiVis(this.parent, this.modal, this.veiculo);
+        VeiVis veiVisualizacao = new VeiVis(this.parent, this.modal, this.veiculo, sessionVeic);
         veiVisualizacao.setLocationRelativeTo(this);
         veiVisualizacao.setResizable(false);
         veiVisualizacao.setVisible(true);
@@ -410,7 +423,7 @@ public class VeicCons extends javax.swing.JDialog {
     }
     
     private void GerenciarVeiculo(){
-        VeiGer veiGer = new VeiGer(this.parent, this.modal, this.veiculo);
+        VeiGer veiGer = new VeiGer(this.parent, this.modal, this.veiculo, sessionVeic);
         veiGer.setLocationRelativeTo(this);
         veiGer.setResizable(false);
         veiGer.setVisible(true);

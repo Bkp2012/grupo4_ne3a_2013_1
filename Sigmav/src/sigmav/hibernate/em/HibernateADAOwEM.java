@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.hibernate;
+package sigmav.hibernate.em;
 
 import java.sql.SQLException;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -25,8 +26,8 @@ public abstract class HibernateADAOwEM<T> {
     
     //##########################################################################
     public void persist(T object) throws SQLException {
-        EntityManager em = HibernateFactoryEM.getEntityManager();
         
+        EntityManager em = HibernateFactoryEM.getEntityManager();        
         try{
             em.getTransaction();
             em.persist(object);
@@ -40,79 +41,59 @@ public abstract class HibernateADAOwEM<T> {
             //http://docs.jboss.org/hibernate/orm/3.5/javadoc/org/hibernate/Session.html#flush%28%29
             //http://docs.jboss.org/hibernate/orm/3.5/api/org/hibernate/SessionFactory.html
             //session.close();
-            //sessionFactory.close();
-            em.
+            //sessionFactory.close();            
         }    
     }
     
-    public void persist(T object, Session session) throws SQLException {
-        session.saveOrUpdate(object);           
-    }
-    
-  
     //##########################################################################
     public void delete(T object) throws SQLException {
         
-        SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();        
-        Session session = sessionFactory.openSession();
-       
-        if(session.beginTransaction() == null){
-            session.beginTransaction();
-        }
+        EntityManager em = HibernateFactoryEM.getEntityManager();       
         try{
-            delete(object, session);
-            session.getTransaction().commit();
-            session.flush();
+            em.getTransaction();
+            em.remove(object);
+            em.getTransaction().commit();
         }        
         catch(Exception erro){
             System.out.println("Falha na conexao com banco: .remove"+erro);
-            session.getTransaction().rollback();
+            em.getTransaction().rollback();
         }finally{            
             //session.close();
-            sessionFactory.close();
+            //sessionFactory.close();
             //session.close();
         }        
-    }
-    
-    public void delete(T object, Session session) throws SQLException {
-        session.delete(object);
     }
 
     //##########################################################################
     public Object retrieveID(long id) throws SQLException {
                 
-        SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
-        Session session = sessionFactory.openSession();
+        EntityManager em = HibernateFactoryEM.getEntityManager();       
 
-        session.beginTransaction().begin();
-        Object aux = session.createCriteria(classeEntidade).add(Restrictions.idEq(id)).uniqueResult();
-        //session.close();
-        sessionFactory.close();
-        //session.close();
+        em.getTransaction().begin();        
+        Object aux = em.find(classeEntidade, id);
         
+        //session.close();
+        //sessionFactory.close();
+        //session.close();        
         return aux;
     }
     
     //##########################################################################
     public List<T> listAll() throws SQLException {
         
-        SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
-        Session session = sessionFactory.openSession();
+        EntityManager em = HibernateFactoryEM.getEntityManager();    
         List<T> list = null;
-
-        if(session.beginTransaction() == null){
-            session.beginTransaction();
-        }
         try{
-            list = session.createCriteria(classeEntidade).list();
-            session.beginTransaction().commit();            
+            Query query = em.createQuery("SELECT ntemp from " +classeEntidade.getName()+" ntemp");
+            list = query.getResultList();
+            em.getTransaction().commit();
         }        
         catch(Exception erro){
             System.out.println("Falha na conexao com banco: .listAll"+erro);
-            session.getTransaction().rollback();
+            em.getTransaction().rollback();
         }finally{            
             //session.close();
-            sessionFactory.close();
+            //sessionFactory.close();
             //session.close();
         }        
         

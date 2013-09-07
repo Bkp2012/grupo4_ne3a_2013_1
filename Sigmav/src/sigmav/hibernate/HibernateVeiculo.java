@@ -14,18 +14,19 @@ import org.hibernate.criterion.Restrictions;
  *
  * @author fernando
  */
-public abstract class HibernateADAO<T> {
+public abstract class HibernateVeiculo<T> {
     
     private Class<T> classeEntidade;
     //SessionFactory sessionFactory;
     //Session session;
     
-    public HibernateADAO(Class<T> classeExterna){
+    public HibernateVeiculo(Class<T> classeExterna){
         this.classeEntidade = classeExterna;
         
         //sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();        
         //session = sessionFactory.openSession();
     }
+    
     
     //##########################################################################
     public void persist(T object) throws SQLException {
@@ -48,14 +49,26 @@ public abstract class HibernateADAO<T> {
             //Porque?
             //http://docs.jboss.org/hibernate/orm/3.5/javadoc/org/hibernate/Session.html#flush%28%29
             //http://docs.jboss.org/hibernate/orm/3.5/api/org/hibernate/SessionFactory.html
-            session.close();
-            //sessionFactory.close();
             //session.close();
+            //sessionFactory.close();
+            session.close();
         }    
     }
     
     public void persist(T object, Session session) throws SQLException {
-        session.saveOrUpdate(object);           
+        if(session.beginTransaction() == null){
+            session.beginTransaction();
+        } else {
+            try{
+                session.saveOrUpdate(object);           
+                session.getTransaction().commit();
+                //session.flush();
+            }        
+            catch(Exception erro){
+                System.out.println("Falha Falha na conexao com banco: .persist"+erro);
+                session.getTransaction().rollback();
+            }
+        }        
     }
     
   
@@ -71,38 +84,114 @@ public abstract class HibernateADAO<T> {
         try{
             delete(object, session);
             session.getTransaction().commit();
-            session.flush();
+            //session.flush();
         }        
         catch(Exception erro){
             System.out.println("Falha na conexao com banco: .remove"+erro);
             session.getTransaction().rollback();
         }finally{            
-            session.close();
-            //sessionFactory.close();
             //session.close();
+            //sessionFactory.close();
+            session.close();
         }        
     }
     
     public void delete(T object, Session session) throws SQLException {
-        session.delete(object);
+        
+        if(session.beginTransaction() == null){
+            session.beginTransaction();
+        }
+        try{
+            session.delete(object);
+            session.getTransaction().commit();
+            //session.flush();
+        }        
+        catch(Exception erro){
+            System.out.println("Falha na conexao com banco: .remove"+erro);
+            session.getTransaction().rollback();
+        }
     }
 
     //##########################################################################
-    public Object retrieveID(long id) throws SQLException {
-                
-        SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
-        Session session = sessionFactory.openSession();
-
-        session.beginTransaction().begin();
-        Object aux = session.createCriteria(classeEntidade).add(Restrictions.idEq(id)).uniqueResult();
+    public Object retrieveID(long id, Session sessionExt) throws SQLException {
+        Object aux = null;    
+        //SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
+        Session session = sessionExt;
+        
+        if(session.beginTransaction() == null){
+            session.beginTransaction();
+        }
+        try{
+            aux = session.createCriteria(classeEntidade).add(Restrictions.idEq(id)).uniqueResult();
+            
+            //session.flush();
+        }        
+        catch(Exception erro){
+            System.out.println("Falha na conexao com banco: .retrieveID"+erro);
+            session.getTransaction().rollback();
+        }
+        
+        
         //session.close();
         //sessionFactory.close();
+        //session.close();
+        
+        return aux;
+    }
+    
+    
+    public Object retrieveID(long id) throws SQLException {
+        Object aux = null;    
+        SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        
+        if(session.beginTransaction() == null){
+            session.beginTransaction();
+        }
+        try{
+            aux = session.createCriteria(classeEntidade).add(Restrictions.idEq(id)).uniqueResult();
+            
+            //session.flush();
+        }        
+        catch(Exception erro){
+            System.out.println("Falha na conexao com banco: .retrieveID"+erro);
+            session.getTransaction().rollback();
+        }
+        
+        
         session.close();
+        //sessionFactory.close();
+        //session.close();
         
         return aux;
     }
     
     //##########################################################################
+    public List<T> listAll(Session sessionExt) throws SQLException {
+        
+        //SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
+        Session session = sessionExt;
+        List<T> list = null;
+
+        if(session.beginTransaction() == null){
+            session.beginTransaction();
+        }
+        try{
+            list = session.createCriteria(classeEntidade).list();
+            //session.beginTransaction().commit();            
+        }        
+        catch(Exception erro){
+            System.out.println("Falha na conexao com banco: .listAll"+erro);
+            session.getTransaction().rollback();
+        }finally{            
+            //session.close();
+            //sessionFactory.close();
+            //session.close();
+        }        
+        
+        return list;
+    }
+    
     public List<T> listAll() throws SQLException {
         
         SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();
@@ -114,15 +203,15 @@ public abstract class HibernateADAO<T> {
         }
         try{
             list = session.createCriteria(classeEntidade).list();
-            session.beginTransaction().commit();            
+            //session.beginTransaction().commit();            
         }        
         catch(Exception erro){
             System.out.println("Falha na conexao com banco: .listAll"+erro);
             session.getTransaction().rollback();
         }finally{            
-            //session.close();
-            //sessionFactory.close();
             session.close();
+            //sessionFactory.close();
+            //session.close();
         }        
         
         return list;

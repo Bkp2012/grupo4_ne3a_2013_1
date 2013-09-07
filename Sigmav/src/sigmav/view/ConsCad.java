@@ -5,14 +5,20 @@
 package sigmav.view;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.hibernate.Session;
+import sigmav.dao.DaoFornecedor;
 import sigmav.entity.Consumo;
 import sigmav.entity.Fornecedor;
 import sigmav.entity.Veiculo;
+import sigmav.hibernate.HDaoFornecedor;
 //import sigmav.hibernate.HDaoConsumo;
 import sigmav.hibernate.HDaoVeiculo;
+import sigmav.hibernate.em.HDaoVeiculowEM;
 
 /**
  *
@@ -30,6 +36,8 @@ public class ConsCad extends javax.swing.JDialog {
     Consumo consumo;
     Veiculo veiculoInterno;
     Fornecedor localAbasticento;
+    Session sessionInt;
+    List<Fornecedor> listaPog;
         
     public ConsCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -46,7 +54,7 @@ public class ConsCad extends javax.swing.JDialog {
     }
     
     // NOVO CONSUMO CADASTRADO
-    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
@@ -55,18 +63,19 @@ public class ConsCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
+        this.sessionInt = sessionExt;
         this.daoInternoV = new HDaoVeiculo();
         this.veiculoInterno = veiculoExterno;
        
         
         this.consumo = new Consumo();        
-        this.localAbasticento = consumo.getLocal();
+        this.localAbasticento = new Fornecedor();
         
         this.veiculoInterno.getConsumo().add(this.consumo);
     }
     
     // Altera um consumo
-    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Consumo consumoExternoEscolhido) {
+    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Consumo consumoExternoEscolhido, Session sessionExt) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
@@ -76,7 +85,7 @@ public class ConsCad extends javax.swing.JDialog {
         this.modal = modal;
         
         this.daoInternoV = new HDaoVeiculo();
-        
+        this.sessionInt = sessionExt;
         //Aponta pra fora        
         this.veiculoInterno = veiculoExterno;
         this.consumo = consumoExternoEscolhido;
@@ -326,10 +335,15 @@ public class ConsCad extends javax.swing.JDialog {
 
     private void jButtonAlterarLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarLocalActionPerformed
         // TODO add your handling code here:
-        this.localAbasticento = new Fornecedor();
+        //this.localAbasticento; = new Fornecedor();
+        listaPog = new ArrayList();
+        
         ConsultarFornecedor();
-        jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());
-                
+        
+        this.consumo.setLocal(this.listaPog.get(0));
+        
+        jTextFieldLocalAbastecimento.setText(this.consumo.getLocal().getNome());
+        ///sessionInt.beginTransaction().commit();
     }//GEN-LAST:event_jButtonAlterarLocalActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
@@ -338,12 +352,17 @@ public class ConsCad extends javax.swing.JDialog {
             this.consumo.setCombustivel(jTextFieldCombustivel.getText().trim());
             this.consumo.setDataAbastecimento(null);
             this.consumo.setLitros(Float.parseFloat(jTextFieldLitros.getText().trim()));
-            this.consumo.setLocal(this.localAbasticento);
+            //this.consumo.setLocal(this.localAbasticento);
             this.consumo.setPreco(Float.parseFloat(jTextFieldPrecoLitro.getText().trim()));
             this.consumo.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().toString()));
             
+            HDaoFornecedor temp = new HDaoFornecedor();
+            temp.persist(this.consumo.getLocal(), sessionInt);
             
-            daoInternoV.persist(this.veiculoInterno);
+            
+            this.sessionInt.flush();
+            daoInternoV.persist(this.veiculoInterno, sessionInt);            
+            
             
         } catch (SQLException ex) {
             Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
@@ -404,7 +423,7 @@ public class ConsCad extends javax.swing.JDialog {
     }
     
     private void ConsultarFornecedor(){
-        FornCons tFornCons = new FornCons(this.parent, this.modal,this.localAbasticento, true);
+        FornCons tFornCons = new FornCons(this.parent, this.modal, (ArrayList<Fornecedor>) this.listaPog, true, sessionInt);
         tFornCons.setLocationRelativeTo(this);
         tFornCons.setResizable(false);
         tFornCons.setVisible(true);

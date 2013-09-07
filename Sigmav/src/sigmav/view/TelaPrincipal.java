@@ -334,6 +334,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             while(rs.next()){
                             tVeiculos = rs.getInt("COUNT(*)");                              
             }
+            st.close();
             
             jLabelStatusBar.setText("Veiculos: "+tVeiculos+" -- Fornecedores: "+tFornecedore+" -- Peças: "+ tPeca);
             

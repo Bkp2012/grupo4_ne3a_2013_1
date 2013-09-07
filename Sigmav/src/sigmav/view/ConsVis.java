@@ -8,11 +8,13 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.hibernate.Session;
 import sigmav.entity.Consumo;
 import sigmav.entity.Fornecedor;
 import sigmav.entity.Veiculo;
 //import sigmav.hibernate.HDaoConsumo;
 import sigmav.hibernate.HDaoVeiculo;
+import sigmav.hibernate.em.HDaoVeiculowEM;
 
 /**
  *
@@ -31,6 +33,7 @@ public class ConsVis extends javax.swing.JDialog {
     Veiculo veiculoInterno;
     Consumo consumo;
     Fornecedor localAbasticento;
+    Session sessionInt;
     
     public ConsVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -42,7 +45,7 @@ public class ConsVis extends javax.swing.JDialog {
         this.modal = modal;
     }
 
-    public ConsVis(java.awt.Frame parent, boolean modal, Consumo consumoExterno, Veiculo veiculoExterno) {
+    public ConsVis(java.awt.Frame parent, boolean modal, Consumo consumoExterno, Veiculo veiculoExterno, Session sessionExt) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
@@ -52,6 +55,7 @@ public class ConsVis extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
+        this.sessionInt = sessionExt;
         this.daoInternoV = new HDaoVeiculo();
         this.consumo = consumoExterno;
         this.localAbasticento = consumoExterno.getLocal();
@@ -321,8 +325,11 @@ public class ConsVis extends javax.swing.JDialog {
                         this.veiculoInterno.getConsumo().remove(i);
                     }
                     
-                }               
-               daoInternoV.persist(this.veiculoInterno);
+                } 
+               this.sessionInt.flush();
+               daoInternoV.persist(this.veiculoInterno, sessionInt);
+               
+               
             } catch (SQLException ex) {
                 Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
             } finally{
@@ -397,7 +404,7 @@ public class ConsVis extends javax.swing.JDialog {
     
     
     private void alteraConsumo(){
-        ConsCad tConsCad = new ConsCad(this.parent, this.modal, this.veiculoInterno,this.consumo);
+        ConsCad tConsCad = new ConsCad(this.parent, this.modal, this.veiculoInterno,this.consumo, sessionInt);
         tConsCad.setLocationRelativeTo(this);
         tConsCad.setResizable(false);
         tConsCad.setVisible(true);

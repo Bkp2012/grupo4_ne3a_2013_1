@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.hibernate;
+package sigmav.hibernate.em;
 
 import java.util.HashMap;
 import java.util.Map;

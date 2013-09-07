@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.hibernate.Session;
 import sigmav.entity.Consumo;
 import sigmav.entity.Manutencao;
 import sigmav.entity.Veiculo;
 import sigmav.hibernate.HDaoVeiculo;
+import sigmav.hibernate.em.HDaoVeiculowEM;
 
 /**
  *
@@ -29,6 +31,7 @@ public class VeiCad extends javax.swing.JDialog {
     boolean modal;
     Veiculo veiculo;
     HDaoVeiculo daoInterno;
+    Session sessionInt;
     
     public VeiCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -40,7 +43,7 @@ public class VeiCad extends javax.swing.JDialog {
         this.modal = modal;
     }
     
-    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
+    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
@@ -50,6 +53,7 @@ public class VeiCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
+        this.sessionInt = sessionExt;
         this.daoInterno = new HDaoVeiculo();
         this.veiculo = veiculoExterno;
         this.veiculo.setConsumo(new ArrayList<Consumo>());
@@ -57,12 +61,13 @@ public class VeiCad extends javax.swing.JDialog {
         
     }
     
-    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, int pog) {
+    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, int pog, Session sessionExt) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
         setLocationRelativeTo(null);
         
+        this.sessionInt = sessionExt;
         this.daoInterno = new HDaoVeiculo();
         this.veiculo = veiculoExterno;
         
@@ -78,12 +83,13 @@ public class VeiCad extends javax.swing.JDialog {
         
     }
     
-    public VeiCad(java.awt.Frame parent, boolean modal, int x) {
+    public VeiCad(java.awt.Frame parent, boolean modal, int x, Session sessionExt) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
         setLocationRelativeTo(null);
         
+        this.sessionInt = sessionExt;
     }
 
     /**
@@ -317,7 +323,10 @@ public class VeiCad extends javax.swing.JDialog {
         this.veiculo.setVersao(jTextFieldVersao.getText().trim());
         
         try {
-            this.daoInterno.persist(this.veiculo);
+            this.sessionInt.flush();
+            this.daoInterno.persist(this.veiculo, sessionInt);
+            
+            
         } catch (SQLException ex) {
             Logger.getLogger(VeiCad.class.getName()).log(Level.SEVERE, null, ex);
         } finally {            

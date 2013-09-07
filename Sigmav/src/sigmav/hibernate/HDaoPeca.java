@@ -48,8 +48,8 @@ public class HDaoPeca extends HibernateADAO<Peca>{
             System.out.println("Falha na conexao com banco: .listAll"+erro);
             session.getTransaction().rollback();
         }finally{            
-            //session.close();
-            sessionFactory.close();
+            session.close();
+            //sessionFactory.close();
         }        
         
         return list;
@@ -80,11 +80,10 @@ public class HDaoPeca extends HibernateADAO<Peca>{
             System.out.println("Falha na conexao com banco: .listAll"+erro);
             session.getTransaction().rollback();
         }finally{            
-            //session.close();
-            sessionFactory.close();
+            session.close();
+            //sessionFactory.close();
         }        
         
         return list;
-    }
-    
+    }    
 }
