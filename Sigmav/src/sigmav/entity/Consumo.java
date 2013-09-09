@@ -38,7 +38,7 @@ public class Consumo implements Serializable {
     @Column(name = "combustivel", nullable = false)
     private String combustivel;
     
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)    
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)    
     private Fornecedor local = new Fornecedor();
 
     //##########################################################################

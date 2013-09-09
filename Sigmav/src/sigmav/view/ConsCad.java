@@ -92,7 +92,7 @@ public class ConsCad extends javax.swing.JDialog {
         this.localAbasticento = consumoExternoEscolhido.getLocal();
         
         jTextFieldCombustivel.setText(this.consumo.getCombustivel());
-        jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
+        //jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
         jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
         jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
         jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
@@ -356,8 +356,8 @@ public class ConsCad extends javax.swing.JDialog {
             this.consumo.setPreco(Float.parseFloat(jTextFieldPrecoLitro.getText().trim()));
             this.consumo.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().toString()));
             
-            HDaoFornecedor temp = new HDaoFornecedor();
-            temp.persist(this.consumo.getLocal(), sessionInt);
+            //HDaoFornecedor temp = new HDaoFornecedor();
+            //temp.persist(this.consumo.getLocal());
             
             
             this.sessionInt.flush();
@@ -423,7 +423,7 @@ public class ConsCad extends javax.swing.JDialog {
     }
     
     private void ConsultarFornecedor(){
-        FornCons tFornCons = new FornCons(this.parent, this.modal, (ArrayList<Fornecedor>) this.listaPog, true, sessionInt);
+        FornCons tFornCons = new FornCons(this.parent, this.modal, (ArrayList<Fornecedor>) this.listaPog, true);
         tFornCons.setLocationRelativeTo(this);
         tFornCons.setResizable(false);
         tFornCons.setVisible(true);

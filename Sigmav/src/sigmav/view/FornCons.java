@@ -33,6 +33,7 @@ public class FornCons extends javax.swing.JDialog {
     private java.awt.Frame parent;
     private boolean modal;
     private int linha = 0;
+    ArrayList<Fornecedor> listaPog;
     
     
     public FornCons(java.awt.Frame parent, boolean modal) {
@@ -92,6 +93,27 @@ public class FornCons extends javax.swing.JDialog {
         tablesModelis.setRowCount(0);
     }
     
+    
+    //CONSULTA CHAMADA POR ABASTECIMENTO:
+    public FornCons(java.awt.Frame parent, boolean modal, ArrayList<Fornecedor> fornecedorExt, boolean pog) {
+        super(parent, modal);
+        initComponents();
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.listaPog = fornecedorExt;
+        setTitle("Sigmav - Fornecedores:");
+        setLocationRelativeTo(null);
+        
+        this.fornecedor = new Fornecedor();
+        
+        this.daoInterno = new HDaoFornecedor();        
+        this.listaFornecedores = new ArrayList<Fornecedor>();
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
+        tablesModelis.setRowCount(0);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -387,14 +409,8 @@ public class FornCons extends javax.swing.JDialog {
             this.fornecedor = this.listaFornecedores.get(linha);                      
         }
         
+        this.listaPog.add(this.fornecedor);
         
-        //POG!
-        this.fornAbas.setId(this.fornecedor.getId());
-        this.fornAbas.setNome(this.fornecedor.getNome());
-        this.fornAbas.setEndereco(this.fornecedor.getEndereco());
-        this.fornAbas.setContato(this.fornecedor.getContato());
-        this.fornAbas.setComentario(this.fornecedor.getComentario());
-        this.fornAbas.setCnpj(this.fornecedor.getCnpj());
         
         dispose();
     }//GEN-LAST:event_jButtonSetLocAbActionPerformed

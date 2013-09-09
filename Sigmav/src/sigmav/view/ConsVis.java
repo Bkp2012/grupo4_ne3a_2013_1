@@ -9,11 +9,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import sigmav.entity.Consumo;
 import sigmav.entity.Fornecedor;
 import sigmav.entity.Veiculo;
 //import sigmav.hibernate.HDaoConsumo;
 import sigmav.hibernate.HDaoVeiculo;
+import sigmav.hibernate.HibernatePOG;
 import sigmav.hibernate.em.HDaoVeiculowEM;
 
 /**
@@ -56,13 +58,20 @@ public class ConsVis extends javax.swing.JDialog {
         this.modal = modal;
         
         this.sessionInt = sessionExt;
+        
+        this.sessionInt.flush();
+        //this.sessionInt.close();
+        //SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();        
+        //this.sessionInt = sessionFactory.openSession();
+        //this.sessionInt.beginTransaction();
+        
         this.daoInternoV = new HDaoVeiculo();
         this.consumo = consumoExterno;
         this.localAbasticento = consumoExterno.getLocal();
         this.veiculoInterno = veiculoExterno;
         
         jTextFieldCombustivel.setText(this.consumo.getCombustivel());
-        jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
+        //jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
         jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
         jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
         jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
@@ -319,16 +328,19 @@ public class ConsVis extends javax.swing.JDialog {
         if(auxs == 0){
             try {
                 // TODO add your handling code here:
-                for(int i= 0; i == this.veiculoInterno.getConsumo().size() ;i++){
+                System.out.println("ID EXIBIDA:  "+consumo.getId());
+                for(int i= 0; i < this.veiculoInterno.getConsumo().size() ;i++){
                     Consumo tempo = this.veiculoInterno.getConsumo().get(i);
+                    System.out.println(this.veiculoInterno.getConsumo().get(i));
                     if(tempo.getId() == this.consumo.getId()){
+                        System.out.println("ID DELETADA: "+ this.veiculoInterno.getConsumo().get(i).getId());
                         this.veiculoInterno.getConsumo().remove(i);
                     }
                     
                 } 
-               this.sessionInt.flush();
-               daoInternoV.persist(this.veiculoInterno, sessionInt);
                
+               daoInternoV.persist(this.veiculoInterno, sessionInt);
+               this.sessionInt.flush();
                
             } catch (SQLException ex) {
                 Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
@@ -352,7 +364,7 @@ public class ConsVis extends javax.swing.JDialog {
         alteraConsumo();
         
         jTextFieldCombustivel.setText(this.consumo.getCombustivel());
-        jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
+        //jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
         jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
         jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
         jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));

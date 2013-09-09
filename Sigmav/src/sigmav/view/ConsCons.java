@@ -252,6 +252,7 @@ public class ConsCons extends javax.swing.JDialog {
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
         this.listaAbastecimento = this.veiculo.getConsumo();
+        tablesModelis.setRowCount(0);
         
         if(this.listaAbastecimento.size() > 0){
             for(Consumo cTemp: listaAbastecimento){
