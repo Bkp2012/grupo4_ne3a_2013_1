@@ -362,7 +362,7 @@ public class ConsCad extends javax.swing.JDialog {
             
             this.sessionInt.flush();
             daoInternoV.persist(this.veiculoInterno, sessionInt);            
-            
+            this.sessionInt.flush();
             
         } catch (SQLException ex) {
             Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);

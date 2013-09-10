@@ -4,6 +4,14 @@
  */
 package sigmav.view;
 
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.hibernate.Session;
+import sigmav.entity.Manutencao;
+import sigmav.entity.Veiculo;
+import sigmav.hibernate.HDaoVeiculo;
+
 /**
  *
  * @author meritor
@@ -15,14 +23,40 @@ public class ManCons extends javax.swing.JDialog {
      */    
     java.awt.Frame parent;
     boolean modal;
-    
+    private Manutencao manInt;
+    private Veiculo veiInt;
+    private HDaoVeiculo daoInterno;
+    private Session sessionInt;
+    private int linha = 0;
+    private List<Manutencao> listaMano;
+//------------------------------------------------------------------------------
+    // Construtor std:
     public ManCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Manutenções:");
         setLocationRelativeTo(null);
     }
-
+    
+    public ManCons(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Manutenções:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.sessionInt = sessionExt;
+        this.veiInt = veiculoExterno;
+        this.daoInterno = new HDaoVeiculo();
+        this.listaMano = this.veiInt.getManutencoes();
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaManutecoes.getModel();
+        
+        atualizaTabela();
+    }
+//------------------------------------------------------------------------------
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -50,11 +84,11 @@ public class ManCons extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Data:", "Km:", "Descrição:"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -66,16 +100,30 @@ public class ManCons extends javax.swing.JDialog {
         jTableTabelaManutecoes.getColumnModel().getColumn(0).setResizable(false);
         jTableTabelaManutecoes.getColumnModel().getColumn(1).setResizable(false);
         jTableTabelaManutecoes.getColumnModel().getColumn(2).setResizable(false);
-        jTableTabelaManutecoes.getColumnModel().getColumn(3).setResizable(false);
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
+        jButtonFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFecharActionPerformed(evt);
+            }
+        });
 
         jButtonVisualizar.setText("Visualizar");
         jButtonVisualizar.setToolTipText("Visualizar");
+        jButtonVisualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVisualizarActionPerformed(evt);
+            }
+        });
 
         jButtonAdicionar.setText("Adicionar");
         jButtonAdicionar.setToolTipText("Adicionar");
+        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -114,6 +162,19 @@ public class ManCons extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
+
+    private void jButtonVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonVisualizarActionPerformed
+
+    private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonFecharActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,6 +216,27 @@ public class ManCons extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    private void atualizaTabela(){
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaManutecoes.getModel();
+        this.listaMano = this.veiInt.getManutencoes();
+        tablesModelis.setRowCount(0);
+        
+        if(this.listaMano.size() > 0){
+            for(Manutencao mTemp: listaMano){
+                tablesModelis.addRow(new Object[]{mTemp.getDataManutencao(), mTemp.getQuilometragem(), mTemp.getDescriçao()});
+            }
+            jTableTabelaManutecoes.setRowSelectionInterval(0, 0);
+        }
+        
+        jTableTabelaManutecoes.setModel(tablesModelis);
+        
+        if(tablesModelis.getRowCount() == 0){
+            JOptionPane.showMessageDialog(parent, "Não há abastecimentos cadastrados atualmente.", "Consumo", 2, null);
+        }
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionar;

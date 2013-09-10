@@ -4,6 +4,15 @@
  */
 package sigmav.view;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.hibernate.Session;
+import sigmav.entity.Manutencao;
+import sigmav.entity.Veiculo;
+import sigmav.hibernate.HDaoVeiculo;
+
 /**
  *
  * @author meritor
@@ -15,14 +24,64 @@ public class ManCad extends javax.swing.JDialog {
      */
     java.awt.Frame parent;
     boolean modal;
+    private Manutencao manInt;
+    private Veiculo veiInt;
+    private HDaoVeiculo daoInterno;
+    private Session sessionInt;
     
+//------------------------------------------------------------------------------
+    // Adiciona nova manutencao:
+    public ManCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Manutenções:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.manInt = new Manutencao();
+        this.veiInt = veiculoExterno;
+        this.daoInterno = new HDaoVeiculo();
+        this.sessionInt = sessionExt;
+        
+    }
+    
+    
+    // Altera manutencao:
+    public ManCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Manutencao manExternaEscolhida, Session sessionExt) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Manutenções:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.manInt = manExternaEscolhida;
+        this.veiInt = veiculoExterno;
+        this.daoInterno = new HDaoVeiculo();
+        this.sessionInt = sessionExt;
+        
+        //----------------------------------------------------------------------
+        jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
+        //jTextFieldDataManutencao.setText(this.manInt.getDataManutencao());
+        jTextFieldDescricao.setText(this.manInt.getDescriçao());
+        jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
+        
+    }
+    
+    // Construtor std:
     public ManCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Manutenções:");
         setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
     }
-
+//------------------------------------------------------------------------------
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,9 +121,19 @@ public class ManCad extends javax.swing.JDialog {
 
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.setToolTipText("Salvar");
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
+            }
+        });
 
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.setToolTipText("Cancelar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,6 +201,33 @@ public class ManCad extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        // TODO add your handling code here:        
+        try{
+            this.manInt.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().trim()));
+            this.manInt.setDataManutencao(null);
+            this.manInt.setDescriçao(jTextFieldDescricao.getText().trim());
+            this.manInt.setCustoManutencao(Float.parseFloat(jTextFieldCusto.getText().trim()));
+            
+            this.veiInt.getManutencoes().add(this.manInt);
+            
+            this.sessionInt.flush();
+            this.daoInterno.persist(veiInt);
+            this.sessionInt.flush();
+        } catch (SQLException ex){
+            Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            JOptionPane.showMessageDialog(parent, "Manutenção salva com sucesso.", "Salvar", 1, null);                        
+            dispose();
+        }
+
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
+
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     /**
      * @param args the command line arguments

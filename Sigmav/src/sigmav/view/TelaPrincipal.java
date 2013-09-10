@@ -39,7 +39,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(rootPane, "Falta: \n"
                 //+ "Validar Busca por codigo com caractere invalido \n"
                 //+ "Validar preenchimento de peças \n"
-                
+                + "ACERTAR A PORRA DAS DATAS NO CONSUMO E MANUTENCAO! \n"
                 + "Implmentar regra de negocio em veiculo e validar forms ", "Pendencias! ", 2,null);
                 
     }

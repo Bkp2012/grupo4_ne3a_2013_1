@@ -4,6 +4,16 @@
  */
 package sigmav.view;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.hibernate.Session;
+import sigmav.dao.DaoVeiculo;
+import sigmav.entity.Manutencao;
+import sigmav.entity.Veiculo;
+import sigmav.hibernate.HDaoVeiculo;
+
 /**
  *
  * @author meritor
@@ -15,14 +25,40 @@ public class ManVis extends javax.swing.JDialog {
      */
     java.awt.Frame parent;
     boolean modal;
+    private Manutencao manInt;
+    private Veiculo veiInt;
+    private HDaoVeiculo daoInterno;
+    private Session sessionInt;
     
+//------------------------------------------------------------------------------
     public ManVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Manutenções:");
         setLocationRelativeTo(null);
     }
-
+    
+    public ManVis(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Manutencao manExternaEscolhida, Session sessionExt) {
+        super(parent, modal);
+        initComponents();
+        setTitle("Sigmav - Manutenções:");
+        setLocationRelativeTo(null);
+        
+        this.parent = parent;
+        this.modal = modal;
+        
+        this.manInt = manExternaEscolhida;
+        this.veiInt = veiculoExterno;
+        this.daoInterno = new HDaoVeiculo();
+        this.sessionInt = sessionExt;
+        
+        //----------------------------------------------------------------------
+        jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
+        //jTextFieldDataManutencao.setText(this.manInt.getDataManutencao());
+        jTextFieldDescricao.setText(this.manInt.getDescriçao());
+        jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
+    }
+//------------------------------------------------------------------------------
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,20 +90,47 @@ public class ManVis extends javax.swing.JDialog {
 
         jLabel2.setText("Quilometragem:");
 
+        jTextFieldQuilometragem.setEditable(false);
+        jTextFieldQuilometragem.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel3.setText("Data manutenção:");
 
+        jTextFieldDataManutencao.setEditable(false);
+        jTextFieldDataManutencao.setBackground(new java.awt.Color(192, 192, 192));
+
+        jTextFieldDescricao.setEditable(false);
+        jTextFieldDescricao.setBackground(new java.awt.Color(192, 192, 192));
+
         jLabel4.setText("Descrição:");
+
+        jTextFieldCusto.setEditable(false);
+        jTextFieldCusto.setBackground(new java.awt.Color(192, 192, 192));
 
         jLabel5.setText("Custo:");
 
         jButtonRemover.setText("Remover");
         jButtonRemover.setToolTipText("Remover");
+        jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoverActionPerformed(evt);
+            }
+        });
 
         jButtonFechar.setText("Fechar");
         jButtonFechar.setToolTipText("Fechar");
+        jButtonFechar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFecharActionPerformed(evt);
+            }
+        });
 
         jButtonEditar.setText("Editar");
         jButtonEditar.setToolTipText("Editar");
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,6 +202,49 @@ public class ManVis extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        // TODO add your handling code here:
+        alteraManutencao();
+        
+        jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
+        //jTextFieldDataManutencao.setText(this.manInt.getDataManutencao());
+        jTextFieldDescricao.setText(this.manInt.getDescriçao());
+        jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
+    }//GEN-LAST:event_jButtonEditarActionPerformed
+
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        // TODO add your handling code here:
+        int auxs = JOptionPane.showConfirmDialog(parent, "Deseja remover esta manutenção?", "Remover", 0, 3, null);
+        
+        if(auxs == 0){
+            try {
+                // TODO add your handling code here:                
+                for(int i= 0; i < this.veiInt.getManutencoes().size() ;i++){
+                    Manutencao tempo = this.veiInt.getManutencoes().get(i);                    
+                    if(tempo.getId() == this.manInt.getId()){                        
+                        this.veiInt.getManutencoes().remove(i);
+                    }                    
+                } 
+               
+               daoInterno.persist(this.veiInt, sessionInt);
+               this.sessionInt.flush();
+               
+            } catch (SQLException ex) {
+                Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
+            } finally{
+                JOptionPane.showMessageDialog(null,"Abastecimento removido com sucesso.","Remover",1, null);
+                dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,"Operação cancelada.","Remover",1, null);
+        }
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
+
+    private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButtonFecharActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -179,6 +285,13 @@ public class ManVis extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    private void alteraManutencao(){
+        ManCad tManCad = new ManCad(this.parent, this.modal, veiInt, manInt, sessionInt);
+        tManCad.setLocationRelativeTo(this);
+        tManCad.setResizable(false);
+        tManCad.setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditar;
