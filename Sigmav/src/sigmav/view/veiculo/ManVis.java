@@ -2,14 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
-import java.sql.SQLException;
+import sigmav.view.fornecedor.FornVis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.hibernate.Session;
-import sigmav.dao.DaoVeiculo;
 import sigmav.entity.Manutencao;
 import sigmav.entity.Veiculo;
 import sigmav.hibernate.HDaoVeiculo;
@@ -27,8 +25,6 @@ public class ManVis extends javax.swing.JDialog {
     boolean modal;
     private Manutencao manInt;
     private Veiculo veiInt;
-    private HDaoVeiculo daoInterno;
-    private Session sessionInt;
     
 //------------------------------------------------------------------------------
     public ManVis(java.awt.Frame parent, boolean modal) {
@@ -38,7 +34,7 @@ public class ManVis extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }
     
-    public ManVis(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Manutencao manExternaEscolhida, Session sessionExt) {
+    public ManVis(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Manutencao manExternaEscolhida) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Manutenções:");
@@ -49,8 +45,6 @@ public class ManVis extends javax.swing.JDialog {
         
         this.manInt = manExternaEscolhida;
         this.veiInt = veiculoExterno;
-        this.daoInterno = new HDaoVeiculo();
-        this.sessionInt = sessionExt;
         
         //----------------------------------------------------------------------
         jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
@@ -226,10 +220,9 @@ public class ManVis extends javax.swing.JDialog {
                     }                    
                 } 
                
-               daoInterno.persist(this.veiInt, sessionInt);
-               this.sessionInt.flush();
+                new HDaoVeiculo().persist(veiInt);
                
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
             } finally{
                 JOptionPane.showMessageDialog(null,"Abastecimento removido com sucesso.","Remover",1, null);
@@ -288,7 +281,7 @@ public class ManVis extends javax.swing.JDialog {
     }
     
     private void alteraManutencao(){
-        ManCad tManCad = new ManCad(this.parent, this.modal, veiInt, manInt, sessionInt);
+        ManCad tManCad = new ManCad(this.parent, this.modal, veiInt, manInt);
         tManCad.setLocationRelativeTo(this);
         tManCad.setResizable(false);
         tManCad.setVisible(true);

@@ -2,15 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.hibernate.Session;
 import sigmav.entity.Manutencao;
 import sigmav.entity.Veiculo;
-import sigmav.hibernate.HDaoVeiculo;
 
 /**
  *
@@ -25,8 +23,6 @@ public class ManCons extends javax.swing.JDialog {
     boolean modal;
     private Manutencao manInt;
     private Veiculo veiInt;
-    private HDaoVeiculo daoInterno;
-    private Session sessionInt;
     private int linha = 0;
     private List<Manutencao> listaMano;
 //------------------------------------------------------------------------------
@@ -38,7 +34,7 @@ public class ManCons extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }
     
-    public ManCons(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+    public ManCons(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Manutenções:");
@@ -47,9 +43,7 @@ public class ManCons extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.sessionInt = sessionExt;
         this.veiInt = veiculoExterno;
-        this.daoInterno = new HDaoVeiculo();
         this.listaMano = this.veiInt.getManutencoes();
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaManutecoes.getModel();
@@ -165,10 +159,22 @@ public class ManCons extends javax.swing.JDialog {
 
     private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
         // TODO add your handling code here:
+        adicionaManutencao();
+        atualizaTabela();
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
 
     private void jButtonVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarActionPerformed
         // TODO add your handling code here:
+        
+        linha = jTableTabelaManutecoes.getSelectedRow();
+        
+        if(linha < 0){
+            JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Consumo", 2, null);
+        } else{
+            this.manInt = this.veiInt.getManutencoes().get(linha);
+            visualizarManutencao();
+            atualizaTabela();
+        }
     }//GEN-LAST:event_jButtonVisualizarActionPerformed
 
     private void jButtonFecharActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFecharActionPerformed
@@ -218,6 +224,20 @@ public class ManCons extends javax.swing.JDialog {
         });
     }
     
+    private void visualizarManutencao(){
+        ManVis tManVis = new ManVis(this.parent, this.modal, this.veiInt, this.manInt);
+        tManVis.setLocationRelativeTo(this);
+        tManVis.setResizable(false);
+        tManVis.setVisible(true);    
+    }
+    
+    private void adicionaManutencao(){
+        ManCad tManCad = new ManCad(this.parent, this.modal, this.veiInt);
+        tManCad.setLocationRelativeTo(this);
+        tManCad.setResizable(false);
+        tManCad.setVisible(true);
+    }
+    
     private void atualizaTabela(){
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaManutecoes.getModel();
@@ -234,7 +254,7 @@ public class ManCons extends javax.swing.JDialog {
         jTableTabelaManutecoes.setModel(tablesModelis);
         
         if(tablesModelis.getRowCount() == 0){
-            JOptionPane.showMessageDialog(parent, "Não há abastecimentos cadastrados atualmente.", "Consumo", 2, null);
+            JOptionPane.showMessageDialog(parent, "Não há manutenções cadastrados atualmente.", "Consumo", 2, null);
         }
         
     }

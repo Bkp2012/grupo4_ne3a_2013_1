@@ -2,13 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
-import java.sql.SQLException;
+import sigmav.view.peca.PecaCad;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.hibernate.Session;
 import sigmav.entity.Manutencao;
 import sigmav.entity.Veiculo;
 import sigmav.hibernate.HDaoVeiculo;
@@ -26,12 +25,10 @@ public class ManCad extends javax.swing.JDialog {
     boolean modal;
     private Manutencao manInt;
     private Veiculo veiInt;
-    private HDaoVeiculo daoInterno;
-    private Session sessionInt;
     
 //------------------------------------------------------------------------------
     // Adiciona nova manutencao:
-    public ManCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+    public ManCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Manutenções:");
@@ -42,14 +39,12 @@ public class ManCad extends javax.swing.JDialog {
         
         this.manInt = new Manutencao();
         this.veiInt = veiculoExterno;
-        this.daoInterno = new HDaoVeiculo();
-        this.sessionInt = sessionExt;
         
     }
     
     
     // Altera manutencao:
-    public ManCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Manutencao manExternaEscolhida, Session sessionExt) {
+    public ManCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Manutencao manExternaEscolhida) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Manutenções:");
@@ -60,8 +55,6 @@ public class ManCad extends javax.swing.JDialog {
         
         this.manInt = manExternaEscolhida;
         this.veiInt = veiculoExterno;
-        this.daoInterno = new HDaoVeiculo();
-        this.sessionInt = sessionExt;
         
         //----------------------------------------------------------------------
         jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
@@ -104,7 +97,6 @@ public class ManCad extends javax.swing.JDialog {
         jButtonCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(300, 244));
         setMinimumSize(new java.awt.Dimension(300, 244));
         setResizable(false);
 
@@ -212,10 +204,9 @@ public class ManCad extends javax.swing.JDialog {
             
             this.veiInt.getManutencoes().add(this.manInt);
             
-            this.sessionInt.flush();
-            this.daoInterno.persist(veiInt);
-            this.sessionInt.flush();
-        } catch (SQLException ex){
+            new HDaoVeiculo().persist(veiInt);
+            
+        } catch (Exception ex){
             Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             JOptionPane.showMessageDialog(parent, "Manutenção salva com sucesso.", "Salvar", 1, null);                        
