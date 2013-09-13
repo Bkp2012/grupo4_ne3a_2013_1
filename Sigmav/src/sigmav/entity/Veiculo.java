@@ -15,6 +15,10 @@ import javax.persistence.*;
  * @author fernando
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "retrieveByPlaca", query = "select v from Veiculo v where v.placa like :placa"),  
+    @NamedQuery(name = "retrieveByPessResponsavel", query = "select v from Veiculo v where v.responsavel like :responsavel")  
+})
 @Table(name = "Veiculo")
 public class Veiculo implements Serializable {
     

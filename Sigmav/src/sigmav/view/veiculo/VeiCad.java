@@ -2,20 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
-
-import java.sql.SQLException;
-
+package sigmav.view.veiculo;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.hibernate.Session;
 import sigmav.entity.Consumo;
 import sigmav.entity.Manutencao;
 import sigmav.entity.Veiculo;
 import sigmav.hibernate.HDaoVeiculo;
-import sigmav.hibernate.em.HDaoVeiculowEM;
+
 
 /**
  *
@@ -30,8 +26,6 @@ public class VeiCad extends javax.swing.JDialog {
     java.awt.Frame parent;
     boolean modal;
     Veiculo veiculo;
-    HDaoVeiculo daoInterno;
-    Session sessionInt;
     
     public VeiCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -43,7 +37,7 @@ public class VeiCad extends javax.swing.JDialog {
         this.modal = modal;
     }
     
-    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
@@ -53,22 +47,18 @@ public class VeiCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.sessionInt = sessionExt;
-        this.daoInterno = new HDaoVeiculo();
         this.veiculo = veiculoExterno;
         this.veiculo.setConsumo(new ArrayList<Consumo>());
         this.veiculo.setManutencoes(new ArrayList<Manutencao>());
         
     }
     
-    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, int pog, Session sessionExt) {
+    public VeiCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, int pog) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
         setLocationRelativeTo(null);
         
-        this.sessionInt = sessionExt;
-        this.daoInterno = new HDaoVeiculo();
         this.veiculo = veiculoExterno;
         
         jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
@@ -83,13 +73,12 @@ public class VeiCad extends javax.swing.JDialog {
         
     }
     
-    public VeiCad(java.awt.Frame parent, boolean modal, int x, Session sessionExt) {
+    public VeiCad(java.awt.Frame parent, boolean modal, int x) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
         setLocationRelativeTo(null);
         
-        this.sessionInt = sessionExt;
     }
 
     /**
@@ -127,7 +116,6 @@ public class VeiCad extends javax.swing.JDialog {
         jButtonSalvar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(400, 300));
         setMinimumSize(new java.awt.Dimension(400, 300));
         setResizable(false);
 
@@ -323,11 +311,10 @@ public class VeiCad extends javax.swing.JDialog {
         this.veiculo.setVersao(jTextFieldVersao.getText().trim());
         
         try {
-            this.sessionInt.flush();
-            this.daoInterno.persist(this.veiculo, sessionInt);
+            new HDaoVeiculo().persist(this.veiculo);
             
             
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(VeiCad.class.getName()).log(Level.SEVERE, null, ex);
         } finally {            
                 JOptionPane.showMessageDialog(parent, "Veiculo salvo com sucesso.", "Salvar", 1, null);                        

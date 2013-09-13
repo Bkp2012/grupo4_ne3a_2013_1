@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
 /**
  *
@@ -16,28 +16,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 import sigmav.entity.Veiculo;
-
 import sigmav.hibernate.HDaoVeiculo;
-import sigmav.hibernate.HibernatePOG;
-import sigmav.hibernate.em.HDaoVeiculowEM;
 
 public class VeicCons extends javax.swing.JDialog {
 
     /**
      * Creates new form PecaCons
      */
-    private HDaoVeiculo daoInterno;
     private Veiculo veiculo;
     private List<Veiculo> listaVeiculos;
     private java.awt.Frame parent;
     private boolean modal;
     private int linha = 0;    
-    private Session sessionVeic;
-    private SessionFactory sessionFactory;
+    
     
     public VeicCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -46,12 +38,8 @@ public class VeicCons extends javax.swing.JDialog {
         this.modal = modal;
         setTitle("Sigmav - Veículos:");
         setLocationRelativeTo(null);
-        this.daoInterno = new HDaoVeiculo();
         this.veiculo = new Veiculo();
         this.listaVeiculos = new ArrayList<Veiculo>();
-        
-        this.sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();        
-        this.sessionVeic = sessionFactory.openSession();        
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
         tablesModelis.setRowCount(0);
@@ -271,23 +259,19 @@ public class VeicCons extends javax.swing.JDialog {
                     auxsPog = false;
                     
                } else{
-                this.veiculo = (Veiculo) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()), sessionVeic);
-                this.sessionVeic.flush();
-                //sessionVeic.getTransaction().commit();
+                    this.veiculo = new HDaoVeiculo().retrieve(Long.valueOf(jTextFieldChaveDaPesquisa.getText().trim()));
+                
                 if(this.veiculo != null){
                     this.listaVeiculos.add(this.veiculo);
                 }
                }
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
-                this.listaVeiculos = daoInterno.retrievePlaca(jTextFieldChaveDaPesquisa.getText(),sessionVeic);
-                this.sessionVeic.flush();
-                //sessionVeic.getTransaction().commit();
+                this.listaVeiculos = new HDaoVeiculo().retrieveByPlaca(jTextFieldChaveDaPesquisa.getText().trim());               
             }            
             else {
-                this.listaVeiculos = daoInterno.retrieveResponsavel(jTextFieldChaveDaPesquisa.getText(),sessionVeic);
-                this.sessionVeic.flush();
-                //sessionVeic.getTransaction().commit();
+                this.listaVeiculos = new HDaoVeiculo().retrieveByResponsavel(jTextFieldChaveDaPesquisa.getText().trim());                               
+                
             } 
             
             
@@ -310,9 +294,8 @@ public class VeicCons extends javax.swing.JDialog {
             if(tablesModelis.getRowCount() == 0 && auxsPog == true){
                 JOptionPane.showMessageDialog(parent, "Nenhuma veículo encontrado.", "Pesquisar", 2, null);
             }
-                
-            
-        } catch (SQLException ex) {
+        
+        } catch (Exception ex) {
             Logger.getLogger(VeicCons.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
@@ -407,7 +390,7 @@ public class VeicCons extends javax.swing.JDialog {
     //##########################################################################
     
     private void GeraCadastrarVeiculo(){
-        VeiCad VeiCadastro = new VeiCad(this.parent, this.modal, this.veiculo, sessionVeic);
+        VeiCad VeiCadastro = new VeiCad(this.parent, this.modal, this.veiculo);
         VeiCadastro.setLocationRelativeTo(this);
         VeiCadastro.setResizable(false);
         VeiCadastro.setVisible(true);
@@ -415,7 +398,7 @@ public class VeicCons extends javax.swing.JDialog {
     }
     
     private void VisualizarVeiculo(){
-        VeiVis veiVisualizacao = new VeiVis(this.parent, this.modal, this.veiculo, sessionVeic);
+        VeiVis veiVisualizacao = new VeiVis(this.parent, this.modal, this.veiculo);
         veiVisualizacao.setLocationRelativeTo(this);
         veiVisualizacao.setResizable(false);
         veiVisualizacao.setVisible(true);
@@ -423,7 +406,7 @@ public class VeicCons extends javax.swing.JDialog {
     }
     
     private void GerenciarVeiculo(){
-        VeiGer veiGer = new VeiGer(this.parent, this.modal, this.veiculo, sessionVeic);
+        VeiGer veiGer = new VeiGer(this.parent, this.modal, this.veiculo);
         veiGer.setLocationRelativeTo(this);
         veiGer.setResizable(false);
         veiGer.setVisible(true);
