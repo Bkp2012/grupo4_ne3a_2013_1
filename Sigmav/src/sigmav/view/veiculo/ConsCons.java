@@ -2,21 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.hibernate.Session;
 import sigmav.entity.Consumo;
-
 import sigmav.entity.Veiculo;
-
-
-import sigmav.hibernate.HDaoVeiculo;
-import sigmav.hibernate.em.HDaoVeiculowEM;
-
 
 /**
  *
@@ -27,14 +20,12 @@ public class ConsCons extends javax.swing.JDialog {
     /**
      * Creates new form ManCons
      */    
-    private HDaoVeiculo daoInterno;
     private Veiculo veiculo;
     private Consumo consumo;    
     private List<Consumo> listaAbastecimento;
     private java.awt.Frame parent;
     private boolean modal;
     private int linha = 0;
-    Session sessionInt;
     
     public ConsCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -45,14 +36,13 @@ public class ConsCons extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInterno = new HDaoVeiculo();        
         this.listaAbastecimento = new ArrayList<Consumo>();
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
         tablesModelis.setRowCount(0);
     }
     
-    public ConsCons(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+    public ConsCons(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
@@ -62,8 +52,6 @@ public class ConsCons extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.sessionInt = sessionExt;
-        this.daoInterno = new HDaoVeiculo();
         this.veiculo = veiculoExterno;
         this.listaAbastecimento = this.veiculo.getConsumo();
         
@@ -270,14 +258,14 @@ public class ConsCons extends javax.swing.JDialog {
     }
     
      private void visualizarConsumo(){
-        ConsVis tConsVis = new ConsVis(this.parent, this.modal, this.consumo, this.veiculo, this.sessionInt);
+        ConsVis tConsVis = new ConsVis(this.parent, this.modal, this.consumo, this.veiculo);
         tConsVis.setLocationRelativeTo(this);
         tConsVis.setResizable(false);
         tConsVis.setVisible(true);
     }
     
     private void adicionarConsumo(){
-        ConsCad tConsVis = new ConsCad(this.parent, this.modal, this.veiculo, this.sessionInt);
+        ConsCad tConsVis = new ConsCad(this.parent, this.modal, this.veiculo);
         tConsVis.setLocationRelativeTo(this);
         tConsVis.setResizable(false);
         tConsVis.setVisible(true);

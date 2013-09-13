@@ -13,6 +13,10 @@ import javax.persistence.*;
  * @author fernando
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "retrieveByDescricao", query = "select p from Peca p where p.descricao like :descricao"),
+    @NamedQuery(name = "retrieveByCodigoInd", query = "select p from Peca p where p.codigoReferencia like :codigoRef")
+})
 @Table(name = "Peca")
 public class Peca implements Serializable{
     

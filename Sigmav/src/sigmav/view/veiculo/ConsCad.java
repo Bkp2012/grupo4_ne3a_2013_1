@@ -2,23 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
-import java.sql.SQLException;
+import sigmav.view.fornecedor.FornCons;
+import sigmav.view.peca.PecaCad;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.hibernate.Session;
-import sigmav.dao.DaoFornecedor;
 import sigmav.entity.Consumo;
 import sigmav.entity.Fornecedor;
 import sigmav.entity.Veiculo;
-import sigmav.hibernate.HDaoFornecedor;
-//import sigmav.hibernate.HDaoConsumo;
 import sigmav.hibernate.HDaoVeiculo;
-import sigmav.hibernate.em.HDaoVeiculowEM;
 
 /**
  *
@@ -30,13 +26,10 @@ public class ConsCad extends javax.swing.JDialog {
      * Creates new form ConsCad
      */
     java.awt.Frame parent;
-    boolean modal;
-    //HDaoConsumo daoInterno;
-    HDaoVeiculo daoInternoV;
+    boolean modal;    
     Consumo consumo;
     Veiculo veiculoInterno;
     Fornecedor localAbasticento;
-    Session sessionInt;
     List<Fornecedor> listaPog;
         
     public ConsCad(java.awt.Frame parent, boolean modal) {
@@ -48,13 +41,12 @@ public class ConsCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInternoV = new HDaoVeiculo();
         this.consumo = new Consumo();
         this.localAbasticento = consumo.getLocal();
     }
     
     // NOVO CONSUMO CADASTRADO
-    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
@@ -63,10 +55,7 @@ public class ConsCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.sessionInt = sessionExt;
-        this.daoInternoV = new HDaoVeiculo();
         this.veiculoInterno = veiculoExterno;
-       
         
         this.consumo = new Consumo();        
         this.localAbasticento = new Fornecedor();
@@ -75,7 +64,7 @@ public class ConsCad extends javax.swing.JDialog {
     }
     
     // Altera um consumo
-    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Consumo consumoExternoEscolhido, Session sessionExt) {
+    public ConsCad(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Consumo consumoExternoEscolhido) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
@@ -84,8 +73,6 @@ public class ConsCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInternoV = new HDaoVeiculo();
-        this.sessionInt = sessionExt;
         //Aponta pra fora        
         this.veiculoInterno = veiculoExterno;
         this.consumo = consumoExternoEscolhido;
@@ -343,7 +330,6 @@ public class ConsCad extends javax.swing.JDialog {
         this.consumo.setLocal(this.listaPog.get(0));
         
         jTextFieldLocalAbastecimento.setText(this.consumo.getLocal().getNome());
-        ///sessionInt.beginTransaction().commit();
     }//GEN-LAST:event_jButtonAlterarLocalActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
@@ -356,15 +342,9 @@ public class ConsCad extends javax.swing.JDialog {
             this.consumo.setPreco(Float.parseFloat(jTextFieldPrecoLitro.getText().trim()));
             this.consumo.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().toString()));
             
-            //HDaoFornecedor temp = new HDaoFornecedor();
-            //temp.persist(this.consumo.getLocal());
+            new HDaoVeiculo().persist(this.veiculoInterno);
             
-            
-            this.sessionInt.flush();
-            daoInternoV.persist(this.veiculoInterno, sessionInt);            
-            this.sessionInt.flush();
-            
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             

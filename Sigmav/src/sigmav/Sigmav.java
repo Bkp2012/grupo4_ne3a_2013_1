@@ -17,10 +17,6 @@ public class Sigmav {
      * @param args the command line arguments
      */
     public static void main(String[] args){
-     
-        TelaPrincipal telaPrincipal = new TelaPrincipal();        
-        telaPrincipal.setResizable(false);
-        telaPrincipal.setVisible(true);
         
     }
 }

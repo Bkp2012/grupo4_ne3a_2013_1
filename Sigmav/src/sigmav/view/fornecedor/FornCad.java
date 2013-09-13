@@ -2,19 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.fornecedor;
 
+import sigmav.view.peca.PecaCad;
 import java.awt.Color;
 import java.util.regex.*; 
 import java.sql.SQLException;
-import java.util.InputMismatchException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import sigmav.entity.Fornecedor;
 import sigmav.entity.Contato;
-import sigmav.hibernate.HDaoFornecedor;
+import sigmav.hibernate_jpa_entityManager.HDaoFornecedor;
 
 
 /**
@@ -27,7 +26,7 @@ public class FornCad extends javax.swing.JDialog {
      * Creates new form FornCad
      */
     
-    private HDaoFornecedor daoInterno;
+    
     private Fornecedor fornecedor;
     private Contato contato;
     java.awt.Frame parent;
@@ -44,7 +43,7 @@ public class FornCad extends javax.swing.JDialog {
         this.modal = modal;
         
         this.contato = new Contato();
-        this.daoInterno = new HDaoFornecedor();
+    
         this.fornecedor = new Fornecedor();
         this.fornecedor.setContato(contato);
     }
@@ -59,7 +58,7 @@ public class FornCad extends javax.swing.JDialog {
         this.modal = modal;
         
         //this.contato = new Contato();
-        this.daoInterno = new HDaoFornecedor();
+    
         this.fornecedor = fornecedorExt;
         this.contato = fornecedorExt.getContato();
         //this.fornecedor.setContato(contato);
@@ -74,7 +73,7 @@ public class FornCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInterno = new HDaoFornecedor();
+    
         this.fornecedor = fornecedorExt;
         this.contato = fornecedorExt.getContato();
         
@@ -185,7 +184,8 @@ public class FornCad extends javax.swing.JDialog {
                             if(this.fornecedor.getId() > 0){
 
                             } else {
-                                boolean auxs = daoInterno.confirmaCnpjCPF(jTextFieldCnpj.getText().trim());
+                                boolean auxs = new HDaoFornecedor().confirmaCnpjCPF(jTextFieldCnpj.getText().trim());
+                                        
                                 if(auxs == true){
                                     listaErros.append("# Cnpj já cadastrado. \n");
                                     jTextFieldCnpj.setBackground(Color.orange);
@@ -203,7 +203,7 @@ public class FornCad extends javax.swing.JDialog {
                             if(this.fornecedor.getId() > 0){
 
                             } else {
-                                boolean auxs = daoInterno.confirmaCnpjCPF(jTextFieldCnpj.getText().trim());
+                                boolean auxs = new HDaoFornecedor().confirmaCnpjCPF(jTextFieldCnpj.getText().trim());
                                 if(auxs == true){
                                     listaErros.append("# Cpf já cadastrado. \n");
                                     jTextFieldCnpj.setBackground(Color.orange);
@@ -593,10 +593,11 @@ public class FornCad extends javax.swing.JDialog {
                     this.contato.seteMail(jTextFieldEmail.getText().trim());
 
                     this.fornecedor.setContato(this.contato);
+                    
+                    new HDaoFornecedor().persist(this.fornecedor);
+                    
 
-                    daoInterno.persist(this.fornecedor);
-
-                } catch (SQLException ex) {
+                } catch (Exception ex) {
                    Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {            
                     JOptionPane.showMessageDialog(parent, "Fornecedor salvo com sucesso.", "Salvar", 1, null);                        

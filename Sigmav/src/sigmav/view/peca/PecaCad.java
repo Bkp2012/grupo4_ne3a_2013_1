@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.peca;
 
 /**
  *
@@ -23,7 +23,7 @@ public class PecaCad extends javax.swing.JDialog {
     /**
      * Creates new form PPeca
      */
-    private HDaoPeca daoInterno;
+    
     private Peca peca;
     
     java.awt.Frame parent;
@@ -31,7 +31,7 @@ public class PecaCad extends javax.swing.JDialog {
     
     private StringBuilder listaErros;
     
-    public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
+    public PecaCad(java.awt.Frame parent, boolean modal, Peca peca) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Peças:");
@@ -40,12 +40,12 @@ public class PecaCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInterno = daopeca;
+        
         this.peca = peca;
         
     }
     
-    public PecaCad(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca, int flagPOG) {
+    public PecaCad(java.awt.Frame parent, boolean modal, Peca peca, int flagPOG) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Peças:");
@@ -54,7 +54,7 @@ public class PecaCad extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInterno = daopeca;
+        
         this.peca = peca;
         
         
@@ -226,10 +226,10 @@ public class PecaCad extends javax.swing.JDialog {
                 peca.setDescricao(jTextFieldDescricao.getText().trim());
                 peca.setGrupo((GrupoENUM)jComboBoxGrupoMotor.getSelectedItem());
                 peca.setCodigoReferencia(jTextFieldCodigoIndustria.getText().trim());
-                daoInterno.persist(peca);
+                new HDaoPeca().persist(peca);
 
 
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
 
@@ -251,7 +251,7 @@ public class PecaCad extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void GeraVisualisarPeca(){
-        PecaVis pecaVisalisao = new PecaVis(this.parent, this.modal, daoInterno, peca);
+        PecaVis pecaVisalisao = new PecaVis(this.parent, this.modal, peca);
         pecaVisalisao.setLocationRelativeTo(this);
         pecaVisalisao.setResizable(false);
         pecaVisalisao.setVisible(true);

@@ -2,19 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
-import java.sql.SQLException;
+import sigmav.view.fornecedor.FornVis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.hibernate.LockMode;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import sigmav.entity.Veiculo;
 import sigmav.hibernate.HDaoVeiculo;
-import sigmav.hibernate.em.HDaoVeiculowEM;
-import sigmav.hibernate.HibernatePOG;
 
 /**
  *
@@ -28,9 +23,7 @@ public class VeiVis extends javax.swing.JDialog {
     
     java.awt.Frame parent;
     boolean modal;
-    HDaoVeiculo daoInterno;
     Veiculo veiculo;
-    Session sessionInt;
     
     public VeiVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -43,7 +36,7 @@ public class VeiVis extends javax.swing.JDialog {
         
     }
     
-    public VeiVis(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+    public VeiVis(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
@@ -52,8 +45,6 @@ public class VeiVis extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.sessionInt = sessionExt;
-        this.daoInterno = new HDaoVeiculo();
         this.veiculo = veiculoExterno;
         
         jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
@@ -325,10 +316,9 @@ public class VeiVis extends javax.swing.JDialog {
         if(auxs == 0){
             try {
                 // TODO add your handling code here:                
-                daoInterno.delete(this.veiculo, sessionInt);
-                this.sessionInt.flush();                
-                
-            } catch (SQLException ex) {
+                new HDaoVeiculo().delete(this.veiculo);
+                                
+            } catch (Exception ex) {
                 Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
             } finally{
                 JOptionPane.showMessageDialog(null,"Veiculo removido com sucesso.","Remover",1, null);
@@ -397,7 +387,7 @@ public class VeiVis extends javax.swing.JDialog {
     }
     
      private void alteraVeiculo(){
-        VeiCad tVeiCad = new VeiCad(this.parent, this.modal, this.veiculo, 2, sessionInt);
+        VeiCad tVeiCad = new VeiCad(this.parent, this.modal, this.veiculo, 2);
         tVeiCad.setLocationRelativeTo(this);
         tVeiCad.setResizable(false);
         tVeiCad.setVisible(true);

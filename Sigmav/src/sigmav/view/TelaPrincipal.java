@@ -4,15 +4,18 @@
  */
 package sigmav.view;
 
+import sigmav.view.veiculo.VeicCons;
+import sigmav.view.fornecedor.FornCons;
+import sigmav.view.peca.PecaCons;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import sigmav.dao.ConnectionFactory;
 import sigmav.entity.Peca;
-import sigmav.hibernate.HDaoPeca;
+import sigmav.hibernate.ConnectionFactory;
+
 
 
 /**
@@ -24,7 +27,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form TelaPrincipal
      */
-    private HDaoPeca daoPecaMestre;
     private Peca pecaMestre;
     
     public TelaPrincipal() {
@@ -32,7 +34,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         setTitle("Sigmav");
         setLocationRelativeTo(null);
         
-        this.daoPecaMestre = new HDaoPeca();
         this.pecaMestre = new Peca();
         
         StatusBar();
@@ -288,7 +289,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
     
     private void GeraPecaConsulta(){
-        PecaCons pecaConsulta = new PecaCons(this, rootPaneCheckingEnabled, daoPecaMestre, pecaMestre );
+        PecaCons pecaConsulta = new PecaCons(this, rootPaneCheckingEnabled, pecaMestre );
         pecaConsulta.setLocationRelativeTo(this);
         pecaConsulta.setResizable(false);
         pecaConsulta.setVisible(true);

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.peca;
 
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -22,12 +22,12 @@ public class PecaVis extends javax.swing.JDialog {
      * Creates new form PPeca
      */
     
-    private HDaoPeca daoInterno;
+    
     private Peca peca;
     java.awt.Frame parent;
     boolean modal;
 
-    public PecaVis(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
+    public PecaVis(java.awt.Frame parent, boolean modal, Peca peca) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Peças:");
@@ -36,7 +36,7 @@ public class PecaVis extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.daoInterno = daopeca;
+        
         this.peca = peca;
         
         //jTextFieldID.setBackground(Color.GRAY);
@@ -210,8 +210,8 @@ public class PecaVis extends javax.swing.JDialog {
         if(auxs == 0){
             try {
                 // TODO add your handling code here:
-               daoInterno.delete(peca);
-            } catch (SQLException ex) {
+               new HDaoPeca().delete(peca);
+            } catch (Exception ex) {
                 Logger.getLogger(PecaVis.class.getName()).log(Level.SEVERE, null, ex);
             } finally{
                 JOptionPane.showMessageDialog(null,"Peça removida com sucesso.","Remover",1, null);
@@ -284,7 +284,8 @@ public class PecaVis extends javax.swing.JDialog {
         //######################################################################
     private void AlteraCadastroPeca(){
         int pog = 2;
-        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, daoInterno, peca, pog);
+        
+        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, peca, pog);
         pecaCadastro.setLocationRelativeTo(this);
         pecaCadastro.setResizable(false);
         pecaCadastro.setVisible(true);               

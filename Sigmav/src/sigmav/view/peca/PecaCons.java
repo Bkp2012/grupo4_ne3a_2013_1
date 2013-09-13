@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.peca;
 
 /**
  *
@@ -24,7 +24,7 @@ public class PecaCons extends javax.swing.JDialog {
     /**
      * Creates new form PecaCons
      */
-    private HDaoPeca daoInterno;
+    
     private Peca peca;
     private List<Peca> listaPecas;
     private java.awt.Frame parent;
@@ -32,14 +32,13 @@ public class PecaCons extends javax.swing.JDialog {
     private int linha = 0;
     
     
-    public PecaCons(java.awt.Frame parent, boolean modal, HDaoPeca daopeca, Peca peca) {
+    public PecaCons(java.awt.Frame parent, boolean modal, Peca peca) {
         super(parent, modal);
         initComponents();
         this.parent = parent;
         this.modal = modal;
         setTitle("Sigmav - Peças:");
         setLocationRelativeTo(null);
-        this.daoInterno = daopeca;
         this.peca = peca;
         this.listaPecas = new ArrayList<Peca>();
         
@@ -259,18 +258,20 @@ public class PecaCons extends javax.swing.JDialog {
                     auxsPog = false;
                     
                } else{
-                this.peca = (Peca) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
-                //System.out.println(peca.toString());
+                this.peca = (Peca) new HDaoPeca().retrieve(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
+
                 if(this.peca != null){
                     this.listaPecas.add(this.peca);
                 }
                }
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
-                this.listaPecas = daoInterno.retrieveDescricao(jTextFieldChaveDaPesquisa.getText());
+                this.listaPecas = new HDaoPeca().retrieveByDescricao(jTextFieldChaveDaPesquisa.getText());
+                
             }            
             else {
-                this.listaPecas = daoInterno.retrieveCodReferencia(jTextFieldChaveDaPesquisa.getText());
+                this.listaPecas = new HDaoPeca().retrieveByCodigoIndustria(jTextFieldChaveDaPesquisa.getText());
+                
             } 
             
             
@@ -295,7 +296,7 @@ public class PecaCons extends javax.swing.JDialog {
             }
                 
             
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PecaCons.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
@@ -376,7 +377,7 @@ public class PecaCons extends javax.swing.JDialog {
     //##########################################################################
     
     private void GeraCadastrarPeca(){
-        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, daoInterno, peca);
+        PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, peca);
         pecaCadastro.setLocationRelativeTo(this);
         pecaCadastro.setResizable(false);
         pecaCadastro.setVisible(true);
@@ -384,7 +385,7 @@ public class PecaCons extends javax.swing.JDialog {
     }
     
     private void VisualizarPeca(){
-        PecaVis pecaVisualizacao = new PecaVis(this.parent, this.modal, daoInterno, peca);
+        PecaVis pecaVisualizacao = new PecaVis(this.parent, this.modal, peca);
         pecaVisualizacao.setLocationRelativeTo(this);
         pecaVisualizacao.setResizable(false);
         pecaVisualizacao.setVisible(true);

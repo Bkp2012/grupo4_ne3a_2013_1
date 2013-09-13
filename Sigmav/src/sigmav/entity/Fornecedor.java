@@ -5,8 +5,6 @@
 package sigmav.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 
@@ -15,6 +13,11 @@ import javax.persistence.*;
  * @author fernando
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "retrieveByNome", query = "select f from Fornecedor f where f.nome like :nome"),
+    @NamedQuery(name = "retrieveByResponsavel", query = "select f from Fornecedor f where f.contato.responsavel like :responsavel"),
+    @NamedQuery(name = "confirmaCnpjCPF", query = "select f from Fornecedor f where f.cnpj = :cnpj")
+})
 @Table(name = "Fornecedor")
 public class Fornecedor implements Serializable{
 

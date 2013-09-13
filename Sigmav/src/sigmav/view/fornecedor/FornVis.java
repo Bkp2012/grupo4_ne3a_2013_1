@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.fornecedor;
 
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import sigmav.entity.Contato;
 import sigmav.entity.Fornecedor;
-import sigmav.hibernate.HDaoFornecedor;
+import sigmav.hibernate_jpa_entityManager.HDaoFornecedor;
 
 
 /**
@@ -23,7 +23,6 @@ public class FornVis extends javax.swing.JDialog {
      * Creates new form FornCad
      */
     
-    private HDaoFornecedor daoInterno;
     private Fornecedor fornecedor;
     private Contato contato;
     java.awt.Frame parent;
@@ -36,7 +35,6 @@ public class FornVis extends javax.swing.JDialog {
         setLocationRelativeTo(null);
         
         //this.contato = new Contato();
-        this.daoInterno = new HDaoFornecedor();
         this.parent = parent;
         this.modal = modal;
         
@@ -316,8 +314,9 @@ public class FornVis extends javax.swing.JDialog {
         if(auxs == 0){
             try {
                 // TODO add your handling code here:
-               daoInterno.delete(fornecedor);
-            } catch (SQLException ex) {
+               new HDaoFornecedor().delete(fornecedor);
+               
+            } catch (Exception ex) {
                 Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
             } finally{
                 JOptionPane.showMessageDialog(null,"Fornecedor removido com sucesso.","Remover",1, null);

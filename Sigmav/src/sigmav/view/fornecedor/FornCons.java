@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.fornecedor;
 
 /**
  *
@@ -18,14 +18,13 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import sigmav.entity.Contato;
 import sigmav.entity.Fornecedor;
-import sigmav.hibernate.HDaoFornecedor;
+import sigmav.hibernate_jpa_entityManager.HDaoFornecedor;
 
 public class FornCons extends javax.swing.JDialog {
 
     /**
      * Creates new form PecaCons
      */
-    private HDaoFornecedor daoInterno;
     private Fornecedor fornecedor;
     private Fornecedor fornAbas; 
     private Contato contato;
@@ -46,7 +45,6 @@ public class FornCons extends javax.swing.JDialog {
         setTitle("Sigmav - Fornecedores:");
         setLocationRelativeTo(null);
         
-        this.daoInterno = new HDaoFornecedor();        
         this.listaFornecedores = new ArrayList<Fornecedor>();
         jButtonSetLocAb.setVisible(false);
         
@@ -66,7 +64,6 @@ public class FornCons extends javax.swing.JDialog {
         
         this.fornecedor = new Fornecedor();
         this.fornAbas = fornecedorExt;
-        this.daoInterno = new HDaoFornecedor();        
         this.listaFornecedores = new ArrayList<Fornecedor>();
         jButtonSetLocAb.setVisible(false);
         
@@ -86,7 +83,6 @@ public class FornCons extends javax.swing.JDialog {
         
         this.fornecedor = new Fornecedor();
         this.fornAbas = fornecedorExt;
-        this.daoInterno = new HDaoFornecedor();        
         this.listaFornecedores = new ArrayList<Fornecedor>();
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
@@ -108,7 +104,6 @@ public class FornCons extends javax.swing.JDialog {
         
         this.fornecedor = new Fornecedor();
         
-        this.daoInterno = new HDaoFornecedor();        
         this.listaFornecedores = new ArrayList<Fornecedor>();
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
@@ -327,8 +322,8 @@ public class FornCons extends javax.swing.JDialog {
                     auxsPog = false;
                     
                 } else{
-                    this.fornecedor = (Fornecedor) daoInterno.retrieveID(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
-
+                    this.fornecedor = new HDaoFornecedor().retrieve(Long.valueOf(jTextFieldChaveDaPesquisa.getText()));
+                    
                     if(this.fornecedor != null){
                         this.listaFornecedores.add(this.fornecedor);
                     }
@@ -336,11 +331,12 @@ public class FornCons extends javax.swing.JDialog {
                }
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
-                this.listaFornecedores = daoInterno.retrieveNome(jTextFieldChaveDaPesquisa.getText());
+                this.listaFornecedores =  new HDaoFornecedor().retrieveByNome(jTextFieldChaveDaPesquisa.getText());
                 
             }            
             else {
-                this.listaFornecedores = daoInterno.retrieveResponsavel(jTextFieldChaveDaPesquisa.getText());
+                this.listaFornecedores = new HDaoFornecedor().retrieveByResponsavel(jTextFieldChaveDaPesquisa.getText());
+                        
             } 
             
             if(listaFornecedores.size() > 0){
@@ -363,7 +359,7 @@ public class FornCons extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(parent, "Nenhum fornecedor encontrado.", "Pesquisar", 2, null);
             }
             
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(FornCons.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonPesquisarActionPerformed

@@ -2,21 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
-import java.sql.SQLException;
+import sigmav.view.fornecedor.FornVis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import sigmav.entity.Consumo;
 import sigmav.entity.Fornecedor;
 import sigmav.entity.Veiculo;
-//import sigmav.hibernate.HDaoConsumo;
 import sigmav.hibernate.HDaoVeiculo;
-import sigmav.hibernate.HibernatePOG;
-import sigmav.hibernate.em.HDaoVeiculowEM;
 
 /**
  *
@@ -31,11 +26,9 @@ public class ConsVis extends javax.swing.JDialog {
      */
     java.awt.Frame parent;
     boolean modal;
-    HDaoVeiculo daoInternoV;
     Veiculo veiculoInterno;
     Consumo consumo;
     Fornecedor localAbasticento;
-    Session sessionInt;
     
     public ConsVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -47,25 +40,15 @@ public class ConsVis extends javax.swing.JDialog {
         this.modal = modal;
     }
 
-    public ConsVis(java.awt.Frame parent, boolean modal, Consumo consumoExterno, Veiculo veiculoExterno, Session sessionExt) {
+    public ConsVis(java.awt.Frame parent, boolean modal, Consumo consumoExterno, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Consumo:");
         setLocationRelativeTo(null);
         
-        
         this.parent = parent;
         this.modal = modal;
         
-        this.sessionInt = sessionExt;
-        
-        this.sessionInt.flush();
-        //this.sessionInt.close();
-        //SessionFactory sessionFactory = HibernatePOG.getHibernateConfig().buildSessionFactory();        
-        //this.sessionInt = sessionFactory.openSession();
-        //this.sessionInt.beginTransaction();
-        
-        this.daoInternoV = new HDaoVeiculo();
         this.consumo = consumoExterno;
         this.localAbasticento = consumoExterno.getLocal();
         this.veiculoInterno = veiculoExterno;
@@ -337,12 +320,10 @@ public class ConsVis extends javax.swing.JDialog {
                         this.veiculoInterno.getConsumo().remove(i);
                     }
                     
-                } 
-               
-               daoInternoV.persist(this.veiculoInterno, sessionInt);
-               this.sessionInt.flush();
-               
-            } catch (SQLException ex) {
+                }                
+                new HDaoVeiculo().persist(this.veiculoInterno);
+                              
+            } catch (Exception ex) {
                 Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
             } finally{
                 JOptionPane.showMessageDialog(null,"Abastecimento removido com sucesso.","Remover",1, null);
@@ -416,7 +397,7 @@ public class ConsVis extends javax.swing.JDialog {
     
     
     private void alteraConsumo(){
-        ConsCad tConsCad = new ConsCad(this.parent, this.modal, this.veiculoInterno,this.consumo, sessionInt);
+        ConsCad tConsCad = new ConsCad(this.parent, this.modal, this.veiculoInterno,this.consumo);
         tConsCad.setLocationRelativeTo(this);
         tConsCad.setResizable(false);
         tConsCad.setVisible(true);

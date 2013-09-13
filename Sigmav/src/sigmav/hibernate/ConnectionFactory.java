@@ -2,7 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.dao;
+package sigmav.hibernate;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;

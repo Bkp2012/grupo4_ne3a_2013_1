@@ -2,9 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package sigmav.view;
+package sigmav.view.veiculo;
 
-import org.hibernate.Session;
 import sigmav.entity.Veiculo;
 
 
@@ -21,7 +20,6 @@ public class VeiGer extends javax.swing.JDialog {
     java.awt.Frame parent;
     boolean modal;    
     Veiculo veiculo;
-    Session sessionInt;
     
     public VeiGer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -33,7 +31,7 @@ public class VeiGer extends javax.swing.JDialog {
         this.modal = modal;
     }
     
-    public VeiGer(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno, Session sessionExt) {
+    public VeiGer(java.awt.Frame parent, boolean modal, Veiculo veiculoExterno) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Veiculos:");
@@ -42,7 +40,6 @@ public class VeiGer extends javax.swing.JDialog {
         this.parent = parent;
         this.modal = modal;
         
-        this.sessionInt = sessionExt;
         this.veiculo = veiculoExterno;
                 
         jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
@@ -319,6 +316,7 @@ public class VeiGer extends javax.swing.JDialog {
 
     private void jButtonManutencoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonManutencoesActionPerformed
         // TODO add your handling code here:
+        gerenciarVeiculo();
     }//GEN-LAST:event_jButtonManutencoesActionPerformed
 
     private void jButtonConsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConsumoActionPerformed
@@ -373,8 +371,15 @@ public class VeiGer extends javax.swing.JDialog {
         });
     }
     
+    private void gerenciarVeiculo(){
+        ManCons tConsMan = new ManCons(this.parent, this.modal, this.veiculo);
+        tConsMan.setLocationRelativeTo(this);
+        tConsMan.setResizable(false);
+        tConsMan.setVisible(true);
+    }
+    
     private void gerenciarConsumo(){
-        ConsCons telaCons = new ConsCons(this.parent, this.modal, this.veiculo, sessionInt);
+        ConsCons telaCons = new ConsCons(this.parent, this.modal, this.veiculo);
         telaCons.setLocationRelativeTo(this);
         telaCons.setResizable(false);
         telaCons.setVisible(true);
