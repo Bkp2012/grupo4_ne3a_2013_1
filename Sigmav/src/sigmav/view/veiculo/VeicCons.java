@@ -9,7 +9,6 @@ package sigmav.view.veiculo;
  * @author meritor
  */
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -43,6 +42,8 @@ public class VeicCons extends javax.swing.JDialog {
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
         tablesModelis.setRowCount(0);
+        
+        AtualizarTabela();
     }
     
     
@@ -242,17 +243,9 @@ public class VeicCons extends javax.swing.JDialog {
                 break;  
             }
         }  
-    
-        //String axs = jTextFieldChaveDaPesquisa.getText().trim();
-        //System.out.println("###############################"+axs.length());
-        //System.out.println(jComboBoxTipoDePesquisa.getSelectedItem());
-        //System.out.println(jComboBoxTipoDePesquisa.getSelectedIndex());      
-        
         tablesModelis.setRowCount(0);
         
-        try {
-            // TODO add your handling code here:
-            //this.peca = new Peca();
+        try {           
             if(jComboBoxTipoDePesquisa.getSelectedIndex() == 0){
                if(daxus == false || caux.length == 0){
                     JOptionPane.showMessageDialog(parent, "Busca inválida, reconfigure.", "Pesquisar", 2, null);
@@ -261,9 +254,9 @@ public class VeicCons extends javax.swing.JDialog {
                } else{
                     this.veiculo = new HDaoVeiculo().retrieve(Long.valueOf(jTextFieldChaveDaPesquisa.getText().trim()));
                 
-                if(this.veiculo != null){
-                    this.listaVeiculos.add(this.veiculo);
-                }
+                    if(this.veiculo != null){
+                        this.listaVeiculos.add(this.veiculo);
+                    }
                }
                 
             } else if(jComboBoxTipoDePesquisa.getSelectedIndex() == 1){
@@ -284,12 +277,6 @@ public class VeicCons extends javax.swing.JDialog {
             }
             
             jTableVeiculos.setModel(tablesModelis);
-            
-            //peca = listaPecas.get(jTextFieldChaveDaPesquisa.cocon)
-            //tedBook = booksList.get(table.convertRowIndexToModel(selectedRow));
-            
-            //jTable1.getse
-            
             
             if(tablesModelis.getRowCount() == 0 && auxsPog == true){
                 JOptionPane.showMessageDialog(parent, "Nenhuma veículo encontrado.", "Pesquisar", 2, null);
@@ -315,7 +302,7 @@ public class VeicCons extends javax.swing.JDialog {
         } else{
             this.veiculo = this.listaVeiculos.get(linha);
             VisualizarVeiculo();
-            jButtonPesquisarActionPerformed(evt);
+            AtualizarTabela();
         }
                 
     }//GEN-LAST:event_jButtonVisualizarActionPerformed
@@ -329,6 +316,7 @@ public class VeicCons extends javax.swing.JDialog {
             VisualizarVeiculo();
         }        
         
+        AtualizarTabela();
     }//GEN-LAST:event_jButtonNovoActionPerformed
 
     private void jButtonGerenciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarActionPerformed
@@ -340,9 +328,10 @@ public class VeicCons extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
         } else{
             this.veiculo = this.listaVeiculos.get(linha);
-            GerenciarVeiculo();
-            jButtonPesquisarActionPerformed(evt);
+            GerenciarVeiculo();            
         }
+        
+        AtualizarTabela();
     }//GEN-LAST:event_jButtonGerenciarActionPerformed
 
     /**
@@ -388,6 +377,28 @@ public class VeicCons extends javax.swing.JDialog {
     }
     
     //##########################################################################
+    
+    private void AtualizarTabela(){
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
+        this.listaVeiculos = new ArrayList<Veiculo>();
+        
+        tablesModelis.setRowCount(0);
+            
+        this.listaVeiculos = new HDaoVeiculo().retrieveByResponsavel("");                               
+            
+        if(listaVeiculos.size() > 0){
+            for(Veiculo vTemp : listaVeiculos){
+                tablesModelis.addRow(new Object[]{vTemp.getId(),vTemp.getModelo(),vTemp.getKmCompra()});
+            }
+            jTableVeiculos.setRowSelectionInterval(0, 0);
+        } else {
+            JOptionPane.showMessageDialog(parent, "Não existem veiculos cadastrados atualmente.", "Veículos", 2, null);
+        }
+            
+        jTableVeiculos.setModel(tablesModelis);
+            
+    }
     
     private void GeraCadastrarVeiculo(){
         VeiCad VeiCadastro = new VeiCad(this.parent, this.modal, this.veiculo);

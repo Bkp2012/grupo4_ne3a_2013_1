@@ -15,6 +15,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import sigmav.entity.Peca;
 import sigmav.hibernate.ConnectionFactory;
+import sigmav.hibernate.HDaoPeca;
+import sigmav.hibernate.HDaoVeiculo;
+import sigmav.hibernate_jpa_entityManager.HDaoFornecedor;
 
 
 
@@ -314,6 +317,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     //POG para preencher StatusBar
     private void StatusBar(){
+        
+        new HDaoVeiculo().retrieveByPlaca("PogParaEvitarPauNoBanco");
+        new HDaoPeca().retrieveByDescricao("PogParaEvitarPauNoBanco");
+        new HDaoFornecedor().retrieveByResponsavel("PogParaEvitarPauNoBanco");
+
         try {
             Statement st = ConnectionFactory.preparedConnection().createStatement();
             
@@ -321,19 +329,20 @@ public class TelaPrincipal extends javax.swing.JFrame {
             int tFornecedore = 0;
             int tVeiculos = 0;
             
+            
             ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM Peca");
             while(rs.next()){
-                            tPeca = rs.getInt("COUNT(*)");                              
+                tPeca = rs.getInt("COUNT(*)");                              
             }
             
             rs = st.executeQuery("SELECT COUNT(*) FROM Fornecedor");
             while(rs.next()){
-                            tFornecedore = rs.getInt("COUNT(*)");                              
+                tFornecedore = rs.getInt("COUNT(*)");                              
             }
             
             rs = st.executeQuery("SELECT COUNT(*) FROM Veiculo");
             while(rs.next()){
-                            tVeiculos = rs.getInt("COUNT(*)");                              
+                tVeiculos = rs.getInt("COUNT(*)");                              
             }
             st.close();
             

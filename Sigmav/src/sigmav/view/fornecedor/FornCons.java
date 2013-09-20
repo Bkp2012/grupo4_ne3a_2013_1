@@ -50,6 +50,8 @@ public class FornCons extends javax.swing.JDialog {
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
         tablesModelis.setRowCount(0);
+        
+        AtualizarTabela();
     }
     
     public FornCons(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt) {
@@ -69,6 +71,8 @@ public class FornCons extends javax.swing.JDialog {
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
         tablesModelis.setRowCount(0);
+        
+        AtualizarTabela();
     }
     
     public FornCons(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt, boolean pog) {
@@ -87,6 +91,8 @@ public class FornCons extends javax.swing.JDialog {
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
         tablesModelis.setRowCount(0);
+        
+        AtualizarTabela();
     }
     
     
@@ -108,6 +114,8 @@ public class FornCons extends javax.swing.JDialog {
         
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
         tablesModelis.setRowCount(0);
+        
+        AtualizarTabela();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -379,7 +387,7 @@ public class FornCons extends javax.swing.JDialog {
         } else{
             this.fornecedor = this.listaFornecedores.get(linha);            
             VisualizarFornecedor();            
-            jButtonPesquisarActionPerformed(evt);
+            AtualizarTabela();
         }
                 
     }//GEN-LAST:event_jButtonVisualizarPecaActionPerformed
@@ -392,6 +400,7 @@ public class FornCons extends javax.swing.JDialog {
             VisualizarFornecedor();
         }        
         
+        AtualizarTabela();        
     }//GEN-LAST:event_jButtonNovaPecaActionPerformed
 
     private void jButtonSetLocAbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSetLocAbActionPerformed
@@ -455,11 +464,32 @@ public class FornCons extends javax.swing.JDialog {
     
     //##########################################################################
     
+    private void AtualizarTabela(){
+        
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTableFornecedores.getModel();
+        this.listaFornecedores = new ArrayList<Fornecedor>();
+    
+        tablesModelis.setRowCount(0);
+
+        this.listaFornecedores = new HDaoFornecedor().retrieveByResponsavel("");
+
+        if(listaFornecedores.size() > 0){
+            for(Fornecedor fTemp : listaFornecedores){                    
+                tablesModelis.addRow(new Object[]{fTemp.getId(),fTemp.getNome(),fTemp.getContato().getResponsavel()});
+                                    
+            }
+            jTableFornecedores.setRowSelectionInterval(0, 0);
+        } else {
+            JOptionPane.showMessageDialog(parent, "Não existem fornecedores cadastrados atualmente.", "Fornecedores", 2, null);
+        }
+        
+        jTableFornecedores.setModel(tablesModelis);
+         
+    }
+    
     private void NovoCadastroFornecedor(){
         this.fornecedor = new Fornecedor();
-        //this.contato = new Contato();
-        //this.fornecedor.setContato(this.contato);
-        
+    
         int flagPOG = 2;
         FornCad tFornCad = new FornCad(this.parent, this.modal, this.fornecedor, flagPOG);
         tFornCad.setLocationRelativeTo(this);

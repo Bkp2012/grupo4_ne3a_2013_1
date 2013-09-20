@@ -9,7 +9,6 @@ package sigmav.view.peca;
  * @author meritor
  */
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -41,20 +40,25 @@ public class PecaCons extends javax.swing.JDialog {
         setLocationRelativeTo(null);
         this.peca = peca;
         this.listaPecas = new ArrayList<Peca>();
-        
+                
         DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
         tablesModelis.setRowCount(0);
+        
+        AtualizaTabela();
     }
+    
     
     public PecaCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         setTitle("Sigmav - Peças:");
         setLocationRelativeTo(null);
-        
+                
         DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
         tablesModelis.setRowCount(0);
         this.listaPecas = new ArrayList<Peca>();
+        
+        AtualizaTabela();
     }
     
     /**
@@ -316,7 +320,7 @@ public class PecaCons extends javax.swing.JDialog {
         } else{
             this.peca = this.listaPecas.get(linha);
             VisualizarPeca();
-            jButtonPesquisarActionPerformed(evt);
+            AtualizaTabela();
         }
                 
     }//GEN-LAST:event_jButtonVisualizarPecaActionPerformed
@@ -330,6 +334,7 @@ public class PecaCons extends javax.swing.JDialog {
             VisualizarPeca();
         }        
         
+        AtualizaTabela();
     }//GEN-LAST:event_jButtonNovaPecaActionPerformed
 
     /**
@@ -375,6 +380,26 @@ public class PecaCons extends javax.swing.JDialog {
     }
     
     //##########################################################################
+    private void AtualizaTabela(){
+        DefaultTableModel tablesModelis = (DefaultTableModel) jTablePecas.getModel();
+        this.listaPecas = new ArrayList<Peca>();
+        
+        tablesModelis.setRowCount(0);
+                        
+        this.listaPecas = new HDaoPeca().retrieveByCodigoIndustria("");
+            
+        if(listaPecas.size() > 0){
+            for(Peca pecaTemp : listaPecas){
+                tablesModelis.addRow(new Object[]{pecaTemp.getId(),pecaTemp.getDescricao(),pecaTemp.getGrupo()});
+            }
+            jTablePecas.setRowSelectionInterval(0, 0);
+        } else {
+            JOptionPane.showMessageDialog(parent, "Não existem peças cadastradas atualmente.", "Peças", 2, null);
+        }
+            
+        jTablePecas.setModel(tablesModelis);
+          
+    }
     
     private void GeraCadastrarPeca(){
         PecaCad pecaCadastro = new PecaCad(this.parent, this.modal, peca);
