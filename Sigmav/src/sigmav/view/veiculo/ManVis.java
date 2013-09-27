@@ -4,6 +4,7 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.SimpleDateFormat;
 import sigmav.view.fornecedor.FornVis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +49,10 @@ public class ManVis extends javax.swing.JDialog {
         
         //----------------------------------------------------------------------
         jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
-        //jTextFieldDataManutencao.setText(this.manInt.getDataManutencao());
+        
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        jTextFieldDataManutencao.setText(formatador.format(this.manInt.getDataManutencao()));
+
         jTextFieldDescricao.setText(this.manInt.getDescriçao());
         jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
     }

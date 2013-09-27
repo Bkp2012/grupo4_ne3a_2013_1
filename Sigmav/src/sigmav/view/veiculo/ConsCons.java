@@ -4,7 +4,9 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +28,7 @@ public class ConsCons extends javax.swing.JDialog {
     private java.awt.Frame parent;
     private boolean modal;
     private int linha = 0;
+    DefaultTableModel tablesModelis;
     
     public ConsCons(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -38,7 +41,7 @@ public class ConsCons extends javax.swing.JDialog {
         
         this.listaAbastecimento = new ArrayList<Consumo>();
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
+        this.tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
         tablesModelis.setRowCount(0);
     }
     
@@ -55,7 +58,7 @@ public class ConsCons extends javax.swing.JDialog {
         this.veiculo = veiculoExterno;
         this.listaAbastecimento = this.veiculo.getConsumo();
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
+        this.tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
         //tablesModelis.setRowCount(0);
         
         atualizaTabela();
@@ -238,21 +241,28 @@ public class ConsCons extends javax.swing.JDialog {
     
     private void atualizaTabela(){
         
-        DefaultTableModel tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
+        this.tablesModelis = (DefaultTableModel) jTableTabelaConsumo.getModel();
         this.listaAbastecimento = this.veiculo.getConsumo();
         tablesModelis.setRowCount(0);
         
         if(this.listaAbastecimento.size() > 0){
             for(Consumo cTemp: listaAbastecimento){
-                tablesModelis.addRow(new Object[]{cTemp.getDataAbastecimento(), cTemp.getQuilometragem(), cTemp.getLitros(), cTemp.getPreco()});
+                if(cTemp.getId() > 0){
+                    SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");                    
+                    String tp = formatador.format(cTemp.getDataAbastecimento());
+                    
+                    tablesModelis.addRow(new Object[]{tp, cTemp.getQuilometragem(), cTemp.getLitros(), cTemp.getPreco()});
+                }
             }
-            jTableTabelaConsumo.setRowSelectionInterval(0, 0);
+            
         }
         
         jTableTabelaConsumo.setModel(tablesModelis);
         
         if(tablesModelis.getRowCount() == 0){
             JOptionPane.showMessageDialog(parent, "Não há abastecimentos cadastrados atualmente.", "Consumo", 2, null);
+        } else {
+            jTableTabelaConsumo.setRowSelectionInterval(0, 0);
         }
         
     }

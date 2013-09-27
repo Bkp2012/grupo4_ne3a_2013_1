@@ -4,6 +4,7 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -246,15 +247,20 @@ public class ManCons extends javax.swing.JDialog {
         
         if(this.listaMano.size() > 0){
             for(Manutencao mTemp: listaMano){
-                tablesModelis.addRow(new Object[]{mTemp.getDataManutencao(), mTemp.getQuilometragem(), mTemp.getDescriçao()});
+                SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");                    
+                String tp = formatador.format(mTemp.getDataManutencao());
+                
+                tablesModelis.addRow(new Object[]{tp, mTemp.getQuilometragem(), mTemp.getDescriçao()});
             }
-            jTableTabelaManutecoes.setRowSelectionInterval(0, 0);
+            
         }
         
         jTableTabelaManutecoes.setModel(tablesModelis);
         
         if(tablesModelis.getRowCount() == 0){
             JOptionPane.showMessageDialog(parent, "Não há manutenções cadastrados atualmente.", "Consumo", 2, null);
+        } else {
+            jTableTabelaManutecoes.setRowSelectionInterval(0, 0);
         }
         
     }

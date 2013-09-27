@@ -228,7 +228,7 @@ public class FornCad extends javax.swing.JDialog {
         
         //ENDERECO##############################################################
         if(jTextFieldEndereco.getText().length()<4){
-            listaErros.append("# O Campo 'Endereço' é obrigatório. \n");
+            listaErros.append("# O Campo 'Endereço' é obrigatório, minimo de 4 caracteres. \n");
             jTextFieldEndereco.setBackground(Color.orange);                
 
         }else {
@@ -594,7 +594,10 @@ public class FornCad extends javax.swing.JDialog {
 
                     this.fornecedor.setContato(this.contato);
                     
-                    new HDaoFornecedor().persist(this.fornecedor);
+                    if(this.fornecedor.getNome() != null){
+                        new HDaoFornecedor().persist(this.fornecedor);
+                    }
+                    
                     
 
                 } catch (Exception ex) {

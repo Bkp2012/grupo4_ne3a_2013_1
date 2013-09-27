@@ -19,21 +19,21 @@ import javax.persistence.*;
 public class Manutencao implements Serializable{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
     
-    @Column(name = "quilometragem", nullable = false)
+    @Column(name = "quilometragem", nullable = true)
     private int quilometragem;
     
     @Temporal(TemporalType.DATE)
-    @Column(name = "dataManutencao", length = 8, nullable = true)
+    @Column(name = "dataManutencao", length = 8, nullable = true, unique = false)
     private Date dataManutencao;
     
-    @Column(name = "descriçao", length = 300, nullable = false)
+    @Column(name = "descriçao", length = 300, nullable = true)
     private String descriçao;
     
-    @Column(name = "custoManutencao", nullable = false)
+    @Column(name = "custoManutencao", nullable = true)
     private float custoManutencao;
 
     

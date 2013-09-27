@@ -26,13 +26,13 @@ public class Fornecedor implements Serializable{
     @Column(name = "id")
     private long id;
     
-    @Column(name = "nome", length = 200, nullable = false)
+    @Column(name = "nome", length = 200, nullable = true)
     private String nome;
     
-    @Column(name = "cnpj", unique = false, length = 14, nullable = false)
+    @Column(name = "cnpj", unique = false, length = 14, nullable = true)
     private String cnpj;
     
-    @Column(name = "endereco", length = 200, nullable = false)
+    @Column(name = "endereco", length = 200, nullable = true)
     private String endereco;
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)    
@@ -43,7 +43,7 @@ public class Fornecedor implements Serializable{
     //@OneToMany(cascade= CascadeType.PERSIST, fetch = FetchType.EAGER)
     //private List<GrupoENUM> grupos = new ArrayList<>();    
     
-    @Column(name = "comentario", length = 200, nullable = false)
+    @Column(name = "comentario", length = 200, nullable = true)
     private String comentario;
 
 //------------------------------------------------------------------------------

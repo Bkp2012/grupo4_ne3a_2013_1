@@ -23,19 +23,19 @@ public class Consumo implements Serializable {
     private long id;
     
     @Temporal(TemporalType.DATE)
-    @Column(name = "dataAbastecimento", length = 8, nullable = true)
+    @Column(name = "dataAbastecimento", length = 8, nullable = true, unique = false)
     private Date dataAbastecimento;
     
-    @Column(name = "quilometragem", nullable = false)
+    @Column(name = "quilometragem", nullable = true)
     private int quilometragem;
     
-    @Column(name = "litros", nullable = false)
+    @Column(name = "litros", nullable = true)
     private float litros;
     
-    @Column(name = "preco", nullable = false)
+    @Column(name = "preco", nullable = true)
     private float preco;
     
-    @Column(name = "combustivel", nullable = false)
+    @Column(name = "combustivel", nullable = true)
     private String combustivel;
     
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)    

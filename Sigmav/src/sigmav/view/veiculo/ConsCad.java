@@ -4,9 +4,12 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import sigmav.view.fornecedor.FornCons;
 import sigmav.view.peca.PecaCad;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +45,7 @@ public class ConsCad extends javax.swing.JDialog {
         this.modal = modal;
         
         this.consumo = new Consumo();
-        this.localAbasticento = consumo.getLocal();
+        //this.localAbasticento = consumo.getLocal();
     }
     
     // NOVO CONSUMO CADASTRADO
@@ -57,8 +60,9 @@ public class ConsCad extends javax.swing.JDialog {
         
         this.veiculoInterno = veiculoExterno;
         
-        this.consumo = new Consumo();        
-        this.localAbasticento = new Fornecedor();
+        this.consumo = new Consumo();
+        this.consumo.setLocal(null);
+        //this.localAbasticento = new Fornecedor();
         
         this.veiculoInterno.getConsumo().add(this.consumo);
     }
@@ -79,7 +83,10 @@ public class ConsCad extends javax.swing.JDialog {
         this.localAbasticento = consumoExternoEscolhido.getLocal();
         
         jTextFieldCombustivel.setText(this.consumo.getCombustivel());
-        //jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
+        
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        jTextFieldDataAbastecimento.setText(formatador.format(this.consumo.getDataAbastecimento()));
+        
         jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
         jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
         jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
@@ -326,36 +333,40 @@ public class ConsCad extends javax.swing.JDialog {
         listaPog = new ArrayList();
         
         ConsultarFornecedor();
-        
-        this.consumo.setLocal(this.listaPog.get(0));
-        
+        if(this.listaPog.size() > 0){
+            this.consumo.setLocal(this.listaPog.get(0));
+        }
         jTextFieldLocalAbastecimento.setText(this.consumo.getLocal().getNome());
     }//GEN-LAST:event_jButtonAlterarLocalActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        // TODO add your handling code here:
-        try{
-            this.consumo.setCombustivel(jTextFieldCombustivel.getText().trim());
-            this.consumo.setDataAbastecimento(null);
-            this.consumo.setLitros(Float.parseFloat(jTextFieldLitros.getText().trim()));
-            //this.consumo.setLocal(this.localAbasticento);
-            this.consumo.setPreco(Float.parseFloat(jTextFieldPrecoLitro.getText().trim()));
-            this.consumo.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().toString()));
             
-            new HDaoVeiculo().persist(this.veiculoInterno);
-            
-        } catch (Exception ex) {
-            Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            
-            JOptionPane.showMessageDialog(parent, "Abastecimento salvo com sucesso.", "Salvar", 1, null);                        
-            dispose();
-        }
+            try{
+                Date dia = null;
+                dia = new SimpleDateFormat("dd/MM/yyyy").parse(jTextFieldDataAbastecimento.getText().trim());
+
+                this.consumo.setCombustivel(jTextFieldCombustivel.getText().trim());
+                this.consumo.setDataAbastecimento(dia);
+                this.consumo.setLitros(Float.parseFloat(jTextFieldLitros.getText().trim()));
+                //this.consumo.setLocal(this.localAbasticento);
+                this.consumo.setPreco(Float.parseFloat(jTextFieldPrecoLitro.getText().trim()));
+                this.consumo.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().toString()));
+                
+                
+                new HDaoVeiculo().persist(this.veiculoInterno);
+                
+            } catch (Exception ex) {
+                Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                
+                JOptionPane.showMessageDialog(parent, "Abastecimento salvo com sucesso.", "Salvar", 1, null);                        
+                dispose();
+            }
+
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
-        // TODO add your handling code here:
-        //this.consumo = null;
+        this.consumo = null;
         dispose();
         
     }//GEN-LAST:event_jButtonCancelarActionPerformed

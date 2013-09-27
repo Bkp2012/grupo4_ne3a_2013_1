@@ -9,7 +9,6 @@ package sigmav.view.fornecedor;
  * @author meritor
  */
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,7 +25,7 @@ public class FornCons extends javax.swing.JDialog {
      * Creates new form PecaCons
      */
     private Fornecedor fornecedor;
-    private Fornecedor fornAbas; 
+    //private Fornecedor fornAbas; 
     private Contato contato;
     private List<Fornecedor> listaFornecedores;
     private java.awt.Frame parent;
@@ -54,6 +53,7 @@ public class FornCons extends javax.swing.JDialog {
         AtualizarTabela();
     }
     
+    /*
     public FornCons(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt) {
         super(parent, modal);
         initComponents();
@@ -74,7 +74,8 @@ public class FornCons extends javax.swing.JDialog {
         
         AtualizarTabela();
     }
-    
+    */
+    /*
     public FornCons(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt, boolean pog) {
         super(parent, modal);
         initComponents();
@@ -94,7 +95,7 @@ public class FornCons extends javax.swing.JDialog {
         
         AtualizarTabela();
     }
-    
+    */
     
     //CONSULTA CHAMADA POR ABASTECIMENTO:
     public FornCons(java.awt.Frame parent, boolean modal, ArrayList<Fornecedor> fornecedorExt, boolean pog) {
@@ -109,6 +110,7 @@ public class FornCons extends javax.swing.JDialog {
         setLocationRelativeTo(null);
         
         this.fornecedor = new Fornecedor();
+        this.contato = this.fornecedor.getContato();
         
         this.listaFornecedores = new ArrayList<Fornecedor>();
         
@@ -415,7 +417,6 @@ public class FornCons extends javax.swing.JDialog {
         }
         
         this.listaPog.add(this.fornecedor);
-        
         
         dispose();
     }//GEN-LAST:event_jButtonSetLocAbActionPerformed

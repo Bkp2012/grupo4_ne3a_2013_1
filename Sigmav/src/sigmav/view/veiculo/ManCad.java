@@ -4,6 +4,9 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import sigmav.view.peca.PecaCad;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,7 +61,10 @@ public class ManCad extends javax.swing.JDialog {
         
         //----------------------------------------------------------------------
         jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
-        //jTextFieldDataManutencao.setText(this.manInt.getDataManutencao());
+        
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        jTextFieldDataManutencao.setText(formatador.format(this.manInt.getDataManutencao()));
+        
         jTextFieldDescricao.setText(this.manInt.getDescriçao());
         jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
         
@@ -196,13 +202,19 @@ public class ManCad extends javax.swing.JDialog {
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
         // TODO add your handling code here:        
+        
         try{
+            Date dia = null;
+            dia = new SimpleDateFormat("dd/MM/yyyy").parse(jTextFieldDataManutencao.getText().trim());
+            
             this.manInt.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().trim()));
-            this.manInt.setDataManutencao(null);
+            this.manInt.setDataManutencao(dia);
             this.manInt.setDescriçao(jTextFieldDescricao.getText().trim());
             this.manInt.setCustoManutencao(Float.parseFloat(jTextFieldCusto.getText().trim()));
             
-            this.veiInt.getManutencoes().add(this.manInt);
+            if(this.manInt.getId() == 0){
+                this.veiInt.getManutencoes().add(this.manInt);
+            }            
             
             new HDaoVeiculo().persist(veiInt);
             
