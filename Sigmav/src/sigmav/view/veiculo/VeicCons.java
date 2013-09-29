@@ -40,6 +40,8 @@ public class VeicCons extends javax.swing.JDialog {
         this.veiculo = new Veiculo();
         this.listaVeiculos = new ArrayList<Veiculo>();
         
+        this.jButtonGerenciar.setVisible(false);
+        
         DefaultTableModel tablesModelis = (DefaultTableModel) jTableVeiculos.getModel();
         tablesModelis.setRowCount(0);
         
@@ -71,7 +73,7 @@ public class VeicCons extends javax.swing.JDialog {
 
         };
         jButtonNovo = new javax.swing.JButton();
-        jButtonVisualizar = new javax.swing.JButton();
+        jButtonGerenciarV = new javax.swing.JButton();
         jButtonPesquisar = new javax.swing.JButton();
         jButtonFecharTela = new javax.swing.JButton();
         jButtonGerenciar = new javax.swing.JButton();
@@ -129,11 +131,11 @@ public class VeicCons extends javax.swing.JDialog {
             }
         });
 
-        jButtonVisualizar.setText("Visualizar");
-        jButtonVisualizar.setToolTipText("Visualizar");
-        jButtonVisualizar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonGerenciarV.setText("Gerenciar");
+        jButtonGerenciarV.setToolTipText("Gerenciar veiculo");
+        jButtonGerenciarV.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonVisualizarActionPerformed(evt);
+                jButtonGerenciarVActionPerformed(evt);
             }
         });
 
@@ -186,7 +188,7 @@ public class VeicCons extends javax.swing.JDialog {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jButtonNovo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonVisualizar)
+                                .addComponent(jButtonGerenciarV)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonFecharTela))
                             .addComponent(jButtonGerenciar, javax.swing.GroupLayout.Alignment.TRAILING))))
@@ -214,7 +216,7 @@ public class VeicCons extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonNovo)
-                    .addComponent(jButtonVisualizar)
+                    .addComponent(jButtonGerenciarV)
                     .addComponent(jButtonFecharTela))
                 .addContainerGap())
         );
@@ -292,20 +294,24 @@ public class VeicCons extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_jButtonFecharTelaActionPerformed
 
-    private void jButtonVisualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVisualizarActionPerformed
+    private void jButtonGerenciarVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerenciarVActionPerformed
         // TODO add your handling code here:
         linha = jTableVeiculos.getSelectedRow();
         //System.out.println(linha+"################");
         if(linha < 0){
             // Alerta se nenhum item for selecionado
-            JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
+            if(this.listaVeiculos.size() < 1){
+                JOptionPane.showMessageDialog(parent, "Não existem veiculos cadastrados atualmente.", "Veículos", 2, null);
+            } else {
+                JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
+            }
+            
         } else{
             this.veiculo = this.listaVeiculos.get(linha);
-            VisualizarVeiculo();
+            GerenciarVeiculo();
             AtualizarTabela();
-        }
-                
-    }//GEN-LAST:event_jButtonVisualizarActionPerformed
+        }    
+    }//GEN-LAST:event_jButtonGerenciarVActionPerformed
 
     private void jButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoActionPerformed
         // TODO add your handling code here:
@@ -325,13 +331,18 @@ public class VeicCons extends javax.swing.JDialog {
         //System.out.println(linha+"################");
         if(linha < 0){
             // Alerta se nenhum item for selecionado
-            JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
+            if(this.listaVeiculos.size() < 1){
+                JOptionPane.showMessageDialog(parent, "Não existem veiculos cadastrados atualmente.", "Veículos", 2, null);
+            } else {
+                JOptionPane.showMessageDialog(parent, "Selecione um item da lista.", "Visualizar", 2, null);
+            }
+            
         } else{
             this.veiculo = this.listaVeiculos.get(linha);
-            GerenciarVeiculo();            
-        }
+            GerenciarVeiculo();
+            AtualizarTabela();
+        }        
         
-        AtualizarTabela();
     }//GEN-LAST:event_jButtonGerenciarActionPerformed
 
     /**
@@ -426,9 +437,9 @@ public class VeicCons extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonFecharTela;
     private javax.swing.JButton jButtonGerenciar;
+    private javax.swing.JButton jButtonGerenciarV;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonPesquisar;
-    private javax.swing.JButton jButtonVisualizar;
     private javax.swing.JComboBox jComboBoxTipoDePesquisa;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -51,7 +51,7 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="jButtonNovo" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButtonVisualizar" min="-2" max="-2" attributes="0"/>
+                              <Component id="jButtonGerenciarV" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButtonFecharTela" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -86,7 +86,7 @@
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButtonNovo" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonVisualizar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonGerenciarV" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jButtonFecharTela" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -184,15 +184,15 @@
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jButtonNovo.setToolTipText(&quot;Adicionar&quot;);"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonVisualizar">
+    <Component class="javax.swing.JButton" name="jButtonGerenciarV">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Visualizar"/>
+        <Property name="text" type="java.lang.String" value="Gerenciar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonVisualizarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonGerenciarVActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jButtonVisualizar.setToolTipText(&quot;Visualizar&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jButtonGerenciarV.setToolTipText(&quot;Gerenciar veiculo&quot;);"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonPesquisar">

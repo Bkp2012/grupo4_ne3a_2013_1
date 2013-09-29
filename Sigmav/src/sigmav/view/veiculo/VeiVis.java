@@ -21,9 +21,9 @@ public class VeiVis extends javax.swing.JDialog {
      * Creates new form VeiCad
      */
     
-    java.awt.Frame parent;
-    boolean modal;
-    Veiculo veiculo;
+    private java.awt.Frame parent;
+    private boolean modal;
+    private Veiculo veiculo;
     
     public VeiVis(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -47,15 +47,7 @@ public class VeiVis extends javax.swing.JDialog {
         
         this.veiculo = veiculoExterno;
         
-        jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
-        jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
-        jTextFieldIdVeiculo.setText(String.valueOf(this.veiculo.getId()));
-        jTextFieldKmCompra.setText(this.veiculo.getKmCompra());        
-        jTextFieldMarca.setText(this.veiculo.getMarca());        
-        jTextFieldModelo.setText(this.veiculo.getModelo());
-        jTextFieldPlaca.setText(this.veiculo.getPlaca());
-        jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
-        jTextFieldVersao.setText(this.veiculo.getVersao());
+        atualizaCampos();      
                         
     }
 
@@ -89,19 +81,24 @@ public class VeiVis extends javax.swing.JDialog {
         jTextFieldCombustivel = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jTextFieldResponsavel = new javax.swing.JTextField();
+        jTextFieldMediaConsumo = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jButtonFechar = new javax.swing.JButton();
         jButtonRemover = new javax.swing.JButton();
         jButtonEditar = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jButtonGerCons = new javax.swing.JButton();
+        jButtonGerManu = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(400, 300));
+        setMaximumSize(new java.awt.Dimension(440, 400));
+        setMinimumSize(new java.awt.Dimension(440, 400));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         jLabel1.setText("Visualizar");
 
-        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setMaximumSize(new java.awt.Dimension(205, 289));
         jPanel1.setMinimumSize(new java.awt.Dimension(205, 289));
         jPanel1.setPreferredSize(new java.awt.Dimension(205, 289));
@@ -147,7 +144,7 @@ public class VeiVis extends javax.swing.JDialog {
                     .addComponent(jLabel5)
                     .addComponent(jLabel8)
                     .addComponent(jLabel11))
-                .addGap(0, 70, Short.MAX_VALUE))
+                .addGap(0, 76, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,8 +171,6 @@ public class VeiVis extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
         jLabel3.setText("Placa:");
 
         jTextFieldPlaca.setEditable(false);
@@ -196,6 +191,11 @@ public class VeiVis extends javax.swing.JDialog {
         jTextFieldResponsavel.setEditable(false);
         jTextFieldResponsavel.setBackground(new java.awt.Color(192, 192, 192));
 
+        jTextFieldMediaConsumo.setEditable(false);
+        jTextFieldMediaConsumo.setBackground(new java.awt.Color(192, 192, 192));
+
+        jLabel10.setText("Média consumo:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -204,13 +204,15 @@ public class VeiVis extends javax.swing.JDialog {
             .addComponent(jTextFieldModelo)
             .addComponent(jTextFieldCombustivel)
             .addComponent(jTextFieldResponsavel)
+            .addComponent(jTextFieldMediaConsumo)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel9))
-                .addGap(0, 104, Short.MAX_VALUE))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addGap(0, 99, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,7 +232,11 @@ public class VeiVis extends javax.swing.JDialog {
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldResponsavel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextFieldMediaConsumo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jButtonFechar.setText("Fechar");
@@ -257,6 +263,22 @@ public class VeiVis extends javax.swing.JDialog {
             }
         });
 
+        jButtonGerCons.setText("Ger. consumo");
+        jButtonRemover.setToolTipText("Remover");
+        jButtonGerCons.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGerConsActionPerformed(evt);
+            }
+        });
+
+        jButtonGerManu.setText("Ger. manutenções");
+        jButtonEditar.setToolTipText("Editar");
+        jButtonGerManu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGerManuActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,7 +301,12 @@ public class VeiVis extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonRemover)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonFechar)))))
+                                .addComponent(jButtonFechar))))
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonGerManu)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonGerCons)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -292,13 +319,19 @@ public class VeiVis extends javax.swing.JDialog {
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonGerCons)
+                    .addComponent(jButtonGerManu))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonFechar)
                     .addComponent(jButtonRemover)
                     .addComponent(jButtonEditar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -332,17 +365,20 @@ public class VeiVis extends javax.swing.JDialog {
     private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
         // TODO add your handling code here:
         alteraVeiculo();
-        
-        jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
-        jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
-        jTextFieldIdVeiculo.setText(String.valueOf(this.veiculo.getId()));
-        jTextFieldKmCompra.setText(this.veiculo.getKmCompra());        
-        jTextFieldMarca.setText(this.veiculo.getMarca());        
-        jTextFieldModelo.setText(this.veiculo.getModelo());
-        jTextFieldPlaca.setText(this.veiculo.getPlaca());
-        jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
-        jTextFieldVersao.setText(this.veiculo.getVersao());
+        atualizaCampos();
     }//GEN-LAST:event_jButtonEditarActionPerformed
+
+    private void jButtonGerConsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerConsActionPerformed
+        // TODO add your handling code here:
+        gerenciarConsumo();
+        atualizaCampos();
+    }//GEN-LAST:event_jButtonGerConsActionPerformed
+
+    private void jButtonGerManuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGerManuActionPerformed
+        // TODO add your handling code here:
+        gerenciarManutencao();
+        atualizaCampos();
+    }//GEN-LAST:event_jButtonGerManuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -392,11 +428,40 @@ public class VeiVis extends javax.swing.JDialog {
         tVeiCad.setResizable(false);
         tVeiCad.setVisible(true);
     }
+     
+     private void gerenciarManutencao(){
+        ManCons tConsMan = new ManCons(this.parent, this.modal, this.veiculo);
+        tConsMan.setLocationRelativeTo(this);
+        tConsMan.setResizable(false);
+        tConsMan.setVisible(true);
+    }
+    
+    private void gerenciarConsumo(){
+        ConsCons telaCons = new ConsCons(this.parent, this.modal, this.veiculo);
+        telaCons.setLocationRelativeTo(this);
+        telaCons.setResizable(false);
+        telaCons.setVisible(true);
+    }
+    
+    private void atualizaCampos(){
+        jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
+        jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
+        jTextFieldIdVeiculo.setText(String.valueOf(this.veiculo.getId()));
+        jTextFieldKmCompra.setText(this.veiculo.getKmCompra());        
+        jTextFieldMarca.setText(this.veiculo.getMarca());        
+        jTextFieldModelo.setText(this.veiculo.getModelo());
+        jTextFieldPlaca.setText(this.veiculo.getPlaca());
+        jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
+        jTextFieldVersao.setText(this.veiculo.getVersao());
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditar;
     private javax.swing.JButton jButtonFechar;
+    private javax.swing.JButton jButtonGerCons;
+    private javax.swing.JButton jButtonGerManu;
     private javax.swing.JButton jButtonRemover;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -409,11 +474,13 @@ public class VeiVis extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTextField jTextFieldAnoModelo;
     private javax.swing.JTextField jTextFieldCombustivel;
     private javax.swing.JTextField jTextFieldIdVeiculo;
     private javax.swing.JTextField jTextFieldKmCompra;
     private javax.swing.JTextField jTextFieldMarca;
+    private javax.swing.JTextField jTextFieldMediaConsumo;
     private javax.swing.JTextField jTextFieldModelo;
     private javax.swing.JTextField jTextFieldPlaca;
     private javax.swing.JTextField jTextFieldResponsavel;
