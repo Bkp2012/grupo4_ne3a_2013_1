@@ -46,6 +46,7 @@ public class FornCad extends javax.swing.JDialog {
     
         this.fornecedor = new Fornecedor();
         this.fornecedor.setContato(contato);
+        
     }
     
     public FornCad(java.awt.Frame parent, boolean modal,Fornecedor fornecedorExt, int flagPOG) {
@@ -62,6 +63,10 @@ public class FornCad extends javax.swing.JDialog {
         this.fornecedor = fornecedorExt;
         this.contato = fornecedorExt.getContato();
         //this.fornecedor.setContato(contato);
+        
+        if(this.fornecedor.getId()<= 0){
+            JOptionPane.showMessageDialog(parent, "Todos os campos do formulário com '*' são obrigatórios .", "Fornecedor", 1, null);
+        }
     }
     
     public FornCad(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt) {

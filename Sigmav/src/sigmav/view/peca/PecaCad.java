@@ -43,6 +43,8 @@ public class PecaCad extends javax.swing.JDialog {
         
         this.peca = peca;
         
+        JOptionPane.showMessageDialog(parent, "Todos os campos do formulário são obrigatórios.", "Peça", 1, null);
+        
     }
     
     public PecaCad(java.awt.Frame parent, boolean modal, Peca peca, int flagPOG) {
@@ -120,11 +122,11 @@ public class PecaCad extends javax.swing.JDialog {
             }
         });
 
-        jLabel3.setText("Desrição*:");
+        jLabel3.setText("Desrição:");
 
-        jLabel4.setText("Referencia de industria*:");
+        jLabel4.setText("Referencia de industria:");
 
-        jLabel5.setText("Grupo de aplicação*:");
+        jLabel5.setText("Grupo de aplicação:");
 
         jComboBoxGrupoMotor.setModel(new javax.swing.DefaultComboBoxModel(GrupoENUM.values()));
         jComboBoxGrupoMotor.setToolTipText("Grupo de aplicação");
@@ -169,7 +171,7 @@ public class PecaCad extends javax.swing.JDialog {
                                     .addComponent(jLabel5)
                                     .addComponent(jComboBoxGrupoMotor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 220, Short.MAX_VALUE))))
+                                .addGap(0, 226, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

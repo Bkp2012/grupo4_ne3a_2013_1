@@ -4,6 +4,7 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import sigmav.view.fornecedor.FornVis;
 import java.util.logging.Level;
@@ -59,9 +60,10 @@ public class ConsVis extends javax.swing.JDialog {
         SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         jTextFieldDataAbastecimento.setText(formatador.format(this.consumo.getDataAbastecimento()));
 
-        jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
+        DecimalFormat df = new DecimalFormat("#.00");
+        jTextFieldLitros.setText(df.format(this.consumo.getLitros()).replaceAll(",", "."));
         jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
-        jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
+        jTextFieldPrecoLitro.setText(df.format(this.consumo.getPreco()).replaceAll(",", "."));
         jTextFieldQuilometragem.setText(String.valueOf(this.consumo.getQuilometragem()));
     }
     /**

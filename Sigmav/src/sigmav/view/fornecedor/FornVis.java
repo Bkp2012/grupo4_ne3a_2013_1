@@ -4,7 +4,6 @@
  */
 package sigmav.view.fornecedor;
 
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -25,8 +24,9 @@ public class FornVis extends javax.swing.JDialog {
     
     private Fornecedor fornecedor;
     private Contato contato;
-    java.awt.Frame parent;
-    boolean modal;
+    private java.awt.Frame parent;
+    private boolean modal;
+    private StringBuilder listaErros;
     
     public FornVis(java.awt.Frame parent, boolean modal, Fornecedor fornecedorExt) {
         super(parent, modal);
@@ -312,16 +312,19 @@ public class FornVis extends javax.swing.JDialog {
         int auxs = JOptionPane.showConfirmDialog(parent, "Deseja remover este fornecedor?", "Remover", 0, 3, null);
         
         if(auxs == 0){
-            try {
-                // TODO add your handling code here:
-               new HDaoFornecedor().delete(fornecedor);
-               
-            } catch (Exception ex) {
-                Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
-            } finally{
-                JOptionPane.showMessageDialog(null,"Fornecedor removido com sucesso.","Remover",1, null);
-                dispose();
-            }
+            if(validar()){
+                try {
+                    new HDaoFornecedor().delete(fornecedor);
+
+                } catch (Exception ex) {
+                    Logger.getLogger(FornVis.class.getName()).log(Level.SEVERE, null, ex);
+                } finally{
+                    JOptionPane.showMessageDialog(null,"Fornecedor removido com sucesso.","Remover",1, null);
+                    dispose();
+                }
+            } else {
+                    JOptionPane.showMessageDialog(parent, this.listaErros, "Deletar",2,null);
+                }
         } else {
             JOptionPane.showMessageDialog(null,"Operação cancelada.","Remover",1, null);
         }
@@ -393,6 +396,23 @@ public class FornVis extends javax.swing.JDialog {
         tFornCad.setLocationRelativeTo(this);
         tFornCad.setResizable(false);
         tFornCad.setVisible(true);
+    }
+    
+    private boolean validar() {
+        boolean flag = false;
+        Fornecedor auxs = null;
+        this.listaErros = new StringBuilder();
+        
+        flag = new HDaoFornecedor().confirmaDelecaoFornecedor(this.fornecedor.getId());
+        if(flag == true){
+            listaErros.append("# O fornecedor selecionado não pode ser removido pois possui abastecimentos cadastrados com ele. \n");
+        }
+        
+        if(listaErros.length() == 0){
+                return true;
+        }
+                
+        return false;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditar;

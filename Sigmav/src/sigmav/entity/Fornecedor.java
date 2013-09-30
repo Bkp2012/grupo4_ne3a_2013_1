@@ -16,7 +16,8 @@ import javax.persistence.*;
 @NamedQueries({
     @NamedQuery(name = "retrieveByNome", query = "select f from Fornecedor f where f.nome like :nome"),
     @NamedQuery(name = "retrieveByResponsavel", query = "select f from Fornecedor f where f.contato.responsavel like :responsavel"),
-    @NamedQuery(name = "confirmaCnpjCPF", query = "select f from Fornecedor f where f.cnpj = :cnpj")
+    @NamedQuery(name = "confirmaCnpjCPF", query = "select f from Fornecedor f where f.cnpj = :cnpj"),
+    @NamedQuery(name = "confirmaDelecaoFornecedor", query = "select c.local from Consumo c where c.local.id = :idProc")
 })
 @Table(name = "Fornecedor")
 public class Fornecedor implements Serializable{

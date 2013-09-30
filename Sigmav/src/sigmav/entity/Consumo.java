@@ -29,13 +29,13 @@ public class Consumo implements Serializable {
     @Column(name = "quilometragem", nullable = true)
     private int quilometragem;
     
-    @Column(name = "litros", nullable = true)
+    @Column(name = "litros", nullable = true, precision = 10, scale = 2)
     private float litros;
     
-    @Column(name = "preco", nullable = true)
+    @Column(name = "preco", nullable = true, precision = 10, scale = 2)
     private float preco;
     
-    @Column(name = "combustivel", nullable = true, precision = 10, scale = 2)
+    @Column(name = "combustivel", nullable = true, length = 20)
     private String combustivel;
     
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)    

@@ -4,6 +4,7 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -250,8 +251,9 @@ public class ConsCons extends javax.swing.JDialog {
                 if(cTemp.getId() > 0){
                     SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");                    
                     String tp = formatador.format(cTemp.getDataAbastecimento());
+                    DecimalFormat df = new DecimalFormat("#.00");  
                     
-                    tablesModelis.addRow(new Object[]{tp, cTemp.getQuilometragem(), cTemp.getLitros(), cTemp.getPreco()});
+                    tablesModelis.addRow(new Object[]{tp, cTemp.getQuilometragem(), df.format(cTemp.getLitros()).replaceAll( ",", "." ), df.format(cTemp.getPreco()).replaceAll( ",", "." )});
                 }
             }
             

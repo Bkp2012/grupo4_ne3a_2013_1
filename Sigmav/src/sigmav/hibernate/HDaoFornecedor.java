@@ -45,4 +45,16 @@ public class HDaoFornecedor extends HibernateDaoJPA<Fornecedor>{
         }
         
     }
+    
+    public boolean confirmaDelecaoFornecedor(long chaveID) {
+        List <Fornecedor> list = null;
+            
+        list = createNamedQuery("confirmaDelecaoFornecedor").setParameter("idProc", chaveID).getResultList();          
+        
+        if(list.size() > 0){
+            return true;
+        } else{
+            return false;
+        }
+    }
 }

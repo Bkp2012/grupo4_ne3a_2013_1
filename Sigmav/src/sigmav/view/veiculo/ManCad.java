@@ -46,6 +46,7 @@ public class ManCad extends javax.swing.JDialog {
         this.manInt = new Manutencao();
         this.veiInt = veiculoExterno;
         
+        JOptionPane.showMessageDialog(parent, "Todos os campos do formulário são obrigatórios.", "Manutenção", 1, null);
     }
     
     
@@ -114,13 +115,13 @@ public class ManCad extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         jLabel1.setText("Cadastrar/Alterar");
 
-        jLabel2.setText("Quilometragem*:");
+        jLabel2.setText("Quilometragem:");
 
-        jLabel3.setText("Data manutenção*:");
+        jLabel3.setText("Data manutenção:");
 
-        jLabel4.setText("Descrição*:");
+        jLabel4.setText("Descrição:");
 
-        jLabel5.setText("Custo*:");
+        jLabel5.setText("Custo:");
 
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.setToolTipText("Salvar");
@@ -149,7 +150,7 @@ public class ManCad extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addGap(0, 17, Short.MAX_VALUE))
+                                .addGap(0, 29, Short.MAX_VALUE))
                             .addComponent(jTextFieldQuilometragem))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -330,7 +331,7 @@ public class ManCad extends javax.swing.JDialog {
                             jTextFieldDataManutencao.setBackground(Color.orange);
                             listaErros.append("# O Campo 'Data da manutenção' está incorreto, digite uma data válida menor ou igual o dia de hoje. \n");
                         } else {
-                            jTextFieldDescricao.setBackground(Color.white);                    
+                            jTextFieldDataManutencao.setBackground(Color.white);                    
                         }
                     } catch (ParseException ex) {
                         Logger.getLogger(ManCad.class.getName()).log(Level.SEVERE, null, ex);

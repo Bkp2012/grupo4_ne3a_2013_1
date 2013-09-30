@@ -4,6 +4,8 @@
  */
 package sigmav.view.veiculo;
 
+import java.awt.Color;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import sigmav.view.fornecedor.FornCons;
@@ -28,10 +30,11 @@ public class ConsCad extends javax.swing.JDialog {
     /**
      * Creates new form ConsCad
      */
-    java.awt.Frame parent;
-    boolean modal;    
-    Consumo consumo;
-    Veiculo veiculoInterno;
+    private java.awt.Frame parent;
+    private boolean modal;    
+    private Consumo consumo;
+    private Veiculo veiculoInterno;
+    private StringBuilder listaErros;
     Fornecedor localAbasticento;
     List<Fornecedor> listaPog;
         
@@ -65,6 +68,8 @@ public class ConsCad extends javax.swing.JDialog {
         //this.localAbasticento = new Fornecedor();
         
         this.veiculoInterno.getConsumo().add(this.consumo);
+        
+        JOptionPane.showMessageDialog(parent, "Todos os campos do formulário são obrigatórios.", "Consumo", 1, null);
     }
     
     // Altera um consumo
@@ -87,9 +92,10 @@ public class ConsCad extends javax.swing.JDialog {
         SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
         jTextFieldDataAbastecimento.setText(formatador.format(this.consumo.getDataAbastecimento()));
         
-        jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
+        DecimalFormat df = new DecimalFormat("#.00");  
+        jTextFieldLitros.setText(df.format(this.consumo.getLitros()).replaceAll( ",", "." ));
         jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
-        jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
+        jTextFieldPrecoLitro.setText(df.format(this.consumo.getPreco()).replaceAll( ",", "." ));
         jTextFieldQuilometragem.setText(String.valueOf(this.consumo.getQuilometragem()));
     }
 
@@ -341,6 +347,7 @@ public class ConsCad extends javax.swing.JDialog {
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
             
+        if(validar()){
             try{
                 Date dia = null;
                 dia = new SimpleDateFormat("dd/MM/yyyy").parse(jTextFieldDataAbastecimento.getText().trim());
@@ -362,6 +369,11 @@ public class ConsCad extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(parent, "Abastecimento salvo com sucesso.", "Salvar", 1, null);                        
                 dispose();
             }
+            
+        } else {
+            JOptionPane.showMessageDialog(parent, this.listaErros, "Salvar",2,null);
+        }
+            
 
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
@@ -420,6 +432,249 @@ public class ConsCad extends javax.swing.JDialog {
         tFornCons.setVisible(true);
                
     }
+    
+    //==========================================================================
+    private boolean validar(){
+        this.listaErros = new StringBuilder();
+        
+        //Validar quilometragem
+        if(jTextFieldQuilometragem.getText().trim().length() < 1){
+            jTextFieldQuilometragem.setBackground(Color.ORANGE);
+            listaErros.append("# O Campo 'Quilometragem' é obrigatório. \n");
+        } else {
+            if(isNumber(jTextFieldQuilometragem.getText().trim())){
+                jTextFieldQuilometragem.setBackground(Color.WHITE);
+            } else {
+                jTextFieldQuilometragem.setBackground(Color.ORANGE);
+                listaErros.append("# O Campo 'Quilometragem' permite apenas números inteiros positivos. \n");
+            }
+        }
+        
+        //----------------------------------------------------------------------
+        //VALIDAR Combustivel
+        if(jTextFieldCombustivel.getText().trim().length() < 4){
+            jTextFieldCombustivel.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Combustivel' é obrigatório, mínimo de 4 caracteres \n");
+        } else {
+            if(jTextFieldCombustivel.getText().trim().length() > 20){
+                jTextFieldCombustivel.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Combustivel' excedeu a quantidade máxima de caracteres (20). \n");
+            } else {
+                jTextFieldCombustivel.setBackground(Color.white);
+            }
+        }
+        
+        //----------------------------------------------------------------------
+        //VALIDAR DATA        
+        if(jTextFieldDataAbastecimento.getText().trim().length() < 1){
+            jTextFieldDataAbastecimento.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Data da manutenção' é obrigatório. \n");
+        } else {
+            if(!isdatta(jTextFieldDataAbastecimento.getText().trim()) || jTextFieldDataAbastecimento.getText().trim().length() != 10){
+                jTextFieldDataAbastecimento.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Data da manutenção' está incorreto, ex: dd/mm/aaaa. \n");
+            } else {
+                if(jTextFieldDataAbastecimento.getText().trim().charAt(2) != (char) 47 || jTextFieldDataAbastecimento.getText().trim().charAt(5) != (char) 47){
+                    jTextFieldDataAbastecimento.setBackground(Color.orange);
+                    listaErros.append("# O Campo 'Data da manutenção' está incorreto, ex: dd/mm/aaaa. \n");
+                } else {
+                    try {
+                        if(!isDattaVal(jTextFieldDataAbastecimento.getText().trim())){
+                            jTextFieldDataAbastecimento.setBackground(Color.orange);
+                            listaErros.append("# O Campo 'Data da manutenção' está incorreto, digite uma data válida menor ou igual o dia de hoje. \n");
+                        } else {
+                            jTextFieldDataAbastecimento.setBackground(Color.white);                    
+                        }
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ManCad.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }            
+        }
+        //----------------------------------------------------------------------
+        //Validar custo
+        if(jTextFieldPrecoLitro.getText().trim().length() < 1){
+            jTextFieldPrecoLitro.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Custo' é obrigatório. \n");
+            
+        } else {
+            if(!isCusto(jTextFieldPrecoLitro.getText().trim())){
+                jTextFieldPrecoLitro.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Custo' esta incorreto, ex: 0.00 \n");
+            } else {
+                jTextFieldPrecoLitro.setBackground(Color.white);
+            }
+        }
+        
+        //----------------------------------------------------------------------
+        //VALIDAR LITROS
+        if(jTextFieldLitros.getText().trim().length() < 1){
+            jTextFieldLitros.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Preco por litro' é obrigatório. \n");
+            
+        } else {
+            if(!isCusto(jTextFieldLitros.getText().trim())){
+                jTextFieldLitros.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Preco por litro' esta incorreto, ex: 0.00 \n");
+            } else {
+                jTextFieldLitros.setBackground(Color.white);
+            }
+        }
+        //----------------------------------------------------------------------
+        //VAlidar fornecedor
+        if(this.consumo.getLocal() == null){
+            jTextFieldLocalAbastecimento.setBackground(Color.orange);
+            listaErros.append("# É neessário adicionar um fornecedor para este abastecimento. \n");
+        } else {
+            jTextFieldLocalAbastecimento.setBackground(Color.LIGHT_GRAY);
+        }
+        //----------------------------------------------------------------------
+        
+            
+        if(listaErros.length() == 0){
+                return true;
+        }
+                
+        return false;
+    }
+    //VALIDACAO UTILS-----------------------------------------------------------
+    private boolean isCusto(String auxs){
+        char[] vauxs = auxs.toCharArray();
+        char[] pogs = new char[auxs.length()];
+        int poggs = 0;
+        boolean flag = true;
+        float aux2 = 0;
+        
+        for ( int i = vauxs.length - 1; i >= 0; i-- ){            
+            pogs[poggs] = vauxs[i];
+            poggs++;            
+        }
+        
+        for ( int i = 0; i < pogs.length; i++ ){            
+            if ( !Character.isDigit( pogs[ i ] ) ){
+                if(i == 2){                    
+                    flag = true;
+                    
+                    if(pogs[i] != (char) 46){
+                        flag = false;
+                        break;
+                    }
+                    
+                } else {
+                    flag = false;                    
+                    break;
+                    
+                }    
+            }       
+        }
+        /*
+        for(float tx : pogs){
+            System.out.println(tx);
+        }
+        */
+        
+        if(flag == true){
+            aux2 = Float.valueOf(auxs);
+            
+            if(aux2 < 0){
+                flag = false;
+            }
+        }
+        
+        return flag;
+    }
+    
+    private boolean isNumber(String axus){
+        char[] vauxs = axus.toCharArray();
+        boolean flag = true;
+        int aux2 = 0;
+            
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){
+                flag = false;                    
+                break;
+            }                
+        }
+        
+        if(flag == true){
+            aux2 = Integer.valueOf(axus);
+            
+            if(aux2 < 0){
+                flag = false;
+            }
+        }
+        
+        
+        return flag;
+    }
+    
+    private boolean isdatta(String axus){
+        char[] vauxs = axus.toCharArray();
+        boolean flag = true;
+        
+        //System.out.println("################################################### \n");
+        //System.out.println(axus);
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){                
+                if(i == 2 || i == 5){                    
+                    flag = true;
+                } else {
+                    flag = false;                    
+                    break;
+                }
+            }
+            //System.out.println(flag);
+        }
+        
+        return flag;
+    }
+    
+    private boolean isDattaVal(String axus) throws ParseException{
+        Date dia = null;
+        dia = new SimpleDateFormat("dd/MM/yyyy").parse(axus);
+        
+        Date dataAtual = new Date();
+        
+        int anDAt = dataAtual.getYear();
+        int meDAt = dataAtual.getMonth();
+        int diDAt = dataAtual.getDate();
+        
+        if(dia.getYear() > anDAt){
+        
+            return false;            
+        } else {
+            if(dia.getMonth() > 11) {               
+                return false;
+                
+            } else {
+                if(dia.getMonth() > meDAt && dia.getYear() == anDAt){
+                    return false;    
+                    
+                } else {
+                    if(dia.getDate()> 31){
+                        return false;
+                        
+                    } else {                        
+                        if(dia.getMonth() == 10 || dia.getMonth() == 8 || dia.getMonth() == 5 || dia.getMonth() == 3){
+                            if(dia.getDate() > 30){
+                                return false;
+
+                            }                         
+                        }               
+                        if(dia.getMonth() == meDAt && dia.getDate() > diDAt){
+                            return false;        
+                            
+                        } 
+                    }
+                }
+            }
+        }
+        
+        return true;
+        
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAlterarLocal;
     private javax.swing.JButton jButtonCancelar;
