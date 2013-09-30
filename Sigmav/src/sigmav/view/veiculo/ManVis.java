@@ -4,6 +4,7 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import sigmav.view.fornecedor.FornVis;
 import java.util.logging.Level;
@@ -54,7 +55,10 @@ public class ManVis extends javax.swing.JDialog {
         jTextFieldDataManutencao.setText(formatador.format(this.manInt.getDataManutencao()));
 
         jTextFieldDescricao.setText(this.manInt.getDescriçao());
-        jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
+        
+        DecimalFormat df = new DecimalFormat("#.00");  
+        jTextFieldCusto.setText(df.format(this.manInt.getCustoManutencao()).replaceAll(",", "."));
+        
     }
 //------------------------------------------------------------------------------
     /**
@@ -205,9 +209,13 @@ public class ManVis extends javax.swing.JDialog {
         alteraManutencao();
         
         jTextFieldQuilometragem.setText(String.valueOf(this.manInt.getQuilometragem()));
-        //jTextFieldDataManutencao.setText(this.manInt.getDataManutencao());
+        
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        jTextFieldDataManutencao.setText(formatador.format(this.manInt.getDataManutencao()));
+
         jTextFieldDescricao.setText(this.manInt.getDescriçao());
-        jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
+        jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()).replaceAll(",", "."));
+                
     }//GEN-LAST:event_jButtonEditarActionPerformed
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
@@ -289,6 +297,10 @@ public class ManVis extends javax.swing.JDialog {
         tManCad.setLocationRelativeTo(this);
         tManCad.setResizable(false);
         tManCad.setVisible(true);
+    }
+    
+    private void atualizaTela(){
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditar;

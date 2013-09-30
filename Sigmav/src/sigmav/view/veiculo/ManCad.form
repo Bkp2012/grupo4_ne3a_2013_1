@@ -34,13 +34,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="28" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="17" max="32767" attributes="0"/>
                           </Group>
                           <Component id="jTextFieldQuilometragem" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel3" pref="132" max="32767" attributes="0"/>
+                          <Component id="jLabel3" max="32767" attributes="0"/>
                           <Component id="jTextFieldDataManutencao" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -116,14 +116,14 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Quilometragem:"/>
+        <Property name="text" type="java.lang.String" value="Quilometragem*:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldQuilometragem">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Data manuten&#xe7;&#xe3;o:"/>
+        <Property name="text" type="java.lang.String" value="Data manuten&#xe7;&#xe3;o*:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldDataManutencao">
@@ -132,14 +132,14 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o:"/>
+        <Property name="text" type="java.lang.String" value="Descri&#xe7;&#xe3;o*:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldCusto">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Custo:"/>
+        <Property name="text" type="java.lang.String" value="Custo*:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonSalvar">

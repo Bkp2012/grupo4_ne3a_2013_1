@@ -308,7 +308,7 @@ public class VeicCons extends javax.swing.JDialog {
             
         } else{
             this.veiculo = this.listaVeiculos.get(linha);
-            GerenciarVeiculo();
+            VisualizarVeiculo();
             AtualizarTabela();
         }    
     }//GEN-LAST:event_jButtonGerenciarVActionPerformed

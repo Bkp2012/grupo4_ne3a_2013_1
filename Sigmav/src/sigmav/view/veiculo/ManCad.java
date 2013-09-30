@@ -4,6 +4,8 @@
  */
 package sigmav.view.veiculo;
 
+import java.awt.Color;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +30,7 @@ public class ManCad extends javax.swing.JDialog {
     boolean modal;
     private Manutencao manInt;
     private Veiculo veiInt;
+    private StringBuilder listaErros;
     
 //------------------------------------------------------------------------------
     // Adiciona nova manutencao:
@@ -66,7 +69,9 @@ public class ManCad extends javax.swing.JDialog {
         jTextFieldDataManutencao.setText(formatador.format(this.manInt.getDataManutencao()));
         
         jTextFieldDescricao.setText(this.manInt.getDescriçao());
-        jTextFieldCusto.setText(String.valueOf(this.manInt.getCustoManutencao()));
+        
+        DecimalFormat df = new DecimalFormat("#.00");  
+        jTextFieldCusto.setText(df.format(this.manInt.getCustoManutencao()).replaceAll( ",", "." ));
         
     }
     
@@ -109,13 +114,13 @@ public class ManCad extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         jLabel1.setText("Cadastrar/Alterar");
 
-        jLabel2.setText("Quilometragem:");
+        jLabel2.setText("Quilometragem*:");
 
-        jLabel3.setText("Data manutenção:");
+        jLabel3.setText("Data manutenção*:");
 
-        jLabel4.setText("Descrição:");
+        jLabel4.setText("Descrição*:");
 
-        jLabel5.setText("Custo:");
+        jLabel5.setText("Custo*:");
 
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.setToolTipText("Salvar");
@@ -144,11 +149,11 @@ public class ManCad extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addGap(0, 28, Short.MAX_VALUE))
+                                .addGap(0, 17, Short.MAX_VALUE))
                             .addComponent(jTextFieldQuilometragem))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextFieldDataManutencao)))
                     .addComponent(jTextFieldDescricao)
                     .addGroup(layout.createSequentialGroup()
@@ -201,30 +206,32 @@ public class ManCad extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        // TODO add your handling code here:        
-        
-        try{
-            Date dia = null;
-            dia = new SimpleDateFormat("dd/MM/yyyy").parse(jTextFieldDataManutencao.getText().trim());
-            
-            this.manInt.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().trim()));
-            this.manInt.setDataManutencao(dia);
-            this.manInt.setDescriçao(jTextFieldDescricao.getText().trim());
-            this.manInt.setCustoManutencao(Float.parseFloat(jTextFieldCusto.getText().trim()));
-            
-            if(this.manInt.getId() == 0){
-                this.veiInt.getManutencoes().add(this.manInt);
-            }            
-            
-            new HDaoVeiculo().persist(veiInt);
-            
-        } catch (Exception ex){
-            Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            JOptionPane.showMessageDialog(parent, "Manutenção salva com sucesso.", "Salvar", 1, null);                        
-            dispose();
-        }
+        if(validar()){
+            try{
+                Date dia = null;
+                dia = new SimpleDateFormat("dd/MM/yyyy").parse(jTextFieldDataManutencao.getText().trim());
 
+                this.manInt.setQuilometragem(Integer.parseInt(jTextFieldQuilometragem.getText().trim()));
+                this.manInt.setDataManutencao(dia);
+                this.manInt.setDescriçao(jTextFieldDescricao.getText().trim());
+                
+                this.manInt.setCustoManutencao(Float.parseFloat(jTextFieldCusto.getText().trim().replaceAll( "//.", "," )));
+                
+                if(this.manInt.getId() == 0){
+                    this.veiInt.getManutencoes().add(this.manInt);
+                }            
+
+                new HDaoVeiculo().persist(veiInt);
+            
+            } catch (Exception ex){
+                Logger.getLogger(PecaCad.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                JOptionPane.showMessageDialog(parent, "Manutenção salva com sucesso.", "Salvar", 1, null);                        
+                dispose();
+            }
+        } else {
+            JOptionPane.showMessageDialog(parent, this.listaErros, "Salvar",2,null);
+        }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
@@ -272,6 +279,224 @@ public class ManCad extends javax.swing.JDialog {
                 dialog.setVisible(true);
             }
         });
+    }
+    
+    private boolean validar(){
+        this.listaErros = new StringBuilder();
+        
+        //Validar quilometragem
+        if(jTextFieldQuilometragem.getText().trim().length() < 1){
+            jTextFieldQuilometragem.setBackground(Color.ORANGE);
+            listaErros.append("# O Campo 'Quilometragem' é obrigatório. \n");
+        } else {
+            if(isNumber(jTextFieldQuilometragem.getText().trim())){
+                jTextFieldQuilometragem.setBackground(Color.WHITE);
+            } else {
+                jTextFieldQuilometragem.setBackground(Color.ORANGE);
+                listaErros.append("# O Campo 'Quilometragem' permite apenas números inteiros positivos. \n");
+            }
+        }
+        
+        //----------------------------------------------------------------------
+        //VALIDAR DESCRIÇÃO
+        if(jTextFieldDescricao.getText().trim().length() < 4){
+            jTextFieldDescricao.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Descrição' é obrigatório, mínimo de 4 caracteres \n");
+        } else {
+            if(jTextFieldDescricao.getText().trim().length() > 100){
+                jTextFieldDescricao.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Descrição' excedeu a quantidade máxima de caracteres (100). \n");
+            } else {
+                jTextFieldDescricao.setBackground(Color.white);
+            }
+        }
+        
+        //----------------------------------------------------------------------
+        //VALIDAR DATA        
+        if(jTextFieldDataManutencao.getText().trim().length() < 1){
+            jTextFieldDataManutencao.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Data da manutenção' é obrigatório. \n");
+        } else {
+            if(!isdatta(jTextFieldDataManutencao.getText().trim()) || jTextFieldDataManutencao.getText().trim().length() != 10){
+                jTextFieldDataManutencao.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Data da manutenção' está incorreto, ex: dd/mm/aaaa. \n");
+            } else {
+                if(jTextFieldDataManutencao.getText().trim().charAt(2) != (char) 47 || jTextFieldDataManutencao.getText().trim().charAt(5) != (char) 47){
+                    jTextFieldDataManutencao.setBackground(Color.orange);
+                    listaErros.append("# O Campo 'Data da manutenção' está incorreto, ex: dd/mm/aaaa. \n");
+                } else {
+                    try {
+                        if(!isDattaVal(jTextFieldDataManutencao.getText().trim())){
+                            jTextFieldDataManutencao.setBackground(Color.orange);
+                            listaErros.append("# O Campo 'Data da manutenção' está incorreto, digite uma data válida menor ou igual o dia de hoje. \n");
+                        } else {
+                            jTextFieldDescricao.setBackground(Color.white);                    
+                        }
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ManCad.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }            
+        }
+        //----------------------------------------------------------------------
+        //Validar custo
+        if(jTextFieldCusto.getText().trim().length() < 1){
+            jTextFieldCusto.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Custo' é obrigatório. \n");
+            
+        } else {
+            if(!isCusto(jTextFieldCusto.getText().trim())){
+                jTextFieldCusto.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Custo' esta incorreto, ex: 0.00 \n");
+            } else {
+                jTextFieldCusto.setBackground(Color.white);
+            }
+        }
+        
+        //----------------------------------------------------------------------
+        
+            
+        if(listaErros.length() == 0){
+                return true;
+        }
+                
+        return false;
+    }
+    
+    private boolean isCusto(String auxs){
+        char[] vauxs = auxs.toCharArray();
+        char[] pogs = new char[auxs.length()];
+        int poggs = 0;
+        boolean flag = true;
+        float aux2 = 0;
+        
+        for ( int i = vauxs.length - 1; i >= 0; i-- ){            
+            pogs[poggs] = vauxs[i];
+            poggs++;            
+        }
+        
+        for ( int i = 0; i < pogs.length; i++ ){            
+            if ( !Character.isDigit( pogs[ i ] ) ){
+                if(i == 2){                    
+                    flag = true;
+                    
+                    if(pogs[i] != (char) 46){
+                        flag = false;
+                        break;
+                    }
+                    
+                } else {
+                    flag = false;                    
+                    break;
+                    
+                }    
+            }       
+        }
+        /*
+        for(float tx : pogs){
+            System.out.println(tx);
+        }
+        */
+        
+        if(flag == true){
+            aux2 = Float.valueOf(auxs);
+            
+            if(aux2 < 0){
+                flag = false;
+            }
+        }
+        
+        return flag;
+    }
+    
+    private boolean isNumber(String axus){
+        char[] vauxs = axus.toCharArray();
+        boolean flag = true;
+        int aux2 = 0;
+            
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){
+                flag = false;                    
+                break;
+            }                
+        }
+        
+        if(flag == true){
+            aux2 = Integer.valueOf(axus);
+            
+            if(aux2 < 0){
+                flag = false;
+            }
+        }
+        
+        
+        return flag;
+    }
+    
+    private boolean isdatta(String axus){
+        char[] vauxs = axus.toCharArray();
+        boolean flag = true;
+        
+        //System.out.println("################################################### \n");
+        //System.out.println(axus);
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){                
+                if(i == 2 || i == 5){                    
+                    flag = true;
+                } else {
+                    flag = false;                    
+                    break;
+                }
+            }
+            //System.out.println(flag);
+        }
+        
+        return flag;
+    }
+    
+    private boolean isDattaVal(String axus) throws ParseException{
+        Date dia = null;
+        dia = new SimpleDateFormat("dd/MM/yyyy").parse(axus);
+        
+        Date dataAtual = new Date();
+        
+        int anDAt = dataAtual.getYear();
+        int meDAt = dataAtual.getMonth();
+        int diDAt = dataAtual.getDate();
+        
+        if(dia.getYear() > anDAt){
+        
+            return false;            
+        } else {
+            if(dia.getMonth() > 11) {               
+                return false;
+                
+            } else {
+                if(dia.getMonth() > meDAt && dia.getYear() == anDAt){
+                    return false;    
+                    
+                } else {
+                    if(dia.getDate()> 31){
+                        return false;
+                        
+                    } else {                        
+                        if(dia.getMonth() == 10 || dia.getMonth() == 8 || dia.getMonth() == 5 || dia.getMonth() == 3){
+                            if(dia.getDate() > 30){
+                                return false;
+
+                            }                         
+                        }               
+                        if(dia.getMonth() == meDAt && dia.getDate() > diDAt){
+                            return false;        
+                            
+                        } 
+                    }
+                }
+            }
+        }
+        
+        return true;
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelar;

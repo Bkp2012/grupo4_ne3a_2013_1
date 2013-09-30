@@ -35,7 +35,7 @@ public class Consumo implements Serializable {
     @Column(name = "preco", nullable = true)
     private float preco;
     
-    @Column(name = "combustivel", nullable = true)
+    @Column(name = "combustivel", nullable = true, precision = 10, scale = 2)
     private String combustivel;
     
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)    

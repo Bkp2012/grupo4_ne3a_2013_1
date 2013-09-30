@@ -30,10 +30,10 @@ public class Manutencao implements Serializable{
     @Column(name = "dataManutencao", length = 8, nullable = true, unique = false)
     private Date dataManutencao;
     
-    @Column(name = "descriçao", length = 300, nullable = true)
+    @Column(name = "descriçao", length = 100, nullable = true)
     private String descriçao;
     
-    @Column(name = "custoManutencao", nullable = true)
+    @Column(name = "custoManutencao", nullable = true, precision = 10, scale = 2)
     private float custoManutencao;
 
     
