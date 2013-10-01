@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import sigmav.entity.Consumo;
 import sigmav.entity.Manutencao;
@@ -501,12 +502,18 @@ public class VeiCad extends javax.swing.JDialog {
         }
         //######################################################################
         //Validar placa
-        if(!isPlaca(jTextFieldPlaca.getText().trim()) || jTextFieldPlaca.getText().trim().length() != 8){
+        if(jTextFieldPlaca.getText().trim().length() < 1){
             jTextFieldPlaca.setBackground(Color.orange);
-            listaErros.append("# O Campo 'placa' é obrigatório, ex: aaa-0000. \n");
+            listaErros.append("# O Campo 'placa' é obrigatório. \n");
         } else {
-            jTextFieldPlaca.setBackground(Color.white);
+                if(!ispC(jTextFieldPlaca.getText().trim())){
+                jTextFieldPlaca.setBackground(Color.orange);
+                listaErros.append("# O Campo 'placa' está incorreto, ex: aaa-0000. \n");
+            } else {
+                jTextFieldPlaca.setBackground(Color.white);
+            }
         }
+        
         
         //######################################################################
         
@@ -524,34 +531,8 @@ public class VeiCad extends javax.swing.JDialog {
     //##########################################################################
     private boolean ispC(String auxs){
         boolean flag = true;
-        char[] pogs = auxs.toCharArray();
-        String entrada;
         
-        
-        if(pogs[3] != (char)45 ){
-            flag = false;            
-            return flag;
-            
-        } else {
-          entrada = pogs.toString();
-          entrada = entrada.substring(3, 3);
-          
-          if (entrada.length() == 7){
-                entrada = entrada.toLowerCase();
-                if (entrada.codePointAt(0) >= 97 && entrada.codePointAt(0) <= 122 && entrada.codePointAt(1) >= 97 && entrada.codePointAt(1) <= 122 && entrada.codePointAt(2) >= 97 && entrada.codePointAt(2) <= 122 && entrada.codePointAt(3) >= 48 && entrada.codePointAt(3) <= 57 && entrada.codePointAt(4) >= 48 && entrada.codePointAt(4) <= 57 && entrada.codePointAt(5) >= 48 && entrada.codePointAt(5) <= 57 && entrada.codePointAt(6) >= 48 && entrada.codePointAt(6) <= 57) {
-                    flag = true;
-                } else {
-                    flag = false;
-                }
-            }
-        }
-        
-        
-
- 
-        
- 
-        
+        flag = Pattern.matches("[a-zA-Z]{3}[0-9]{4}", auxs);
         return flag;
     }
     
