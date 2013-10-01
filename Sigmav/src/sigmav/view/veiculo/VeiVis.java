@@ -4,10 +4,13 @@
  */
 package sigmav.view.veiculo;
 
+import java.text.DecimalFormat;
+import java.util.List;
 import sigmav.view.fornecedor.FornVis;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import sigmav.entity.Consumo;
 import sigmav.entity.Veiculo;
 import sigmav.hibernate.HDaoVeiculo;
 
@@ -443,6 +446,7 @@ public class VeiVis extends javax.swing.JDialog {
         telaCons.setVisible(true);
     }
     
+    
     private void atualizaCampos(){
         jTextFieldAnoModelo.setText(this.veiculo.getAnoModelo());
         jTextFieldCombustivel.setText(this.veiculo.getCombustivel());
@@ -453,6 +457,27 @@ public class VeiVis extends javax.swing.JDialog {
         jTextFieldPlaca.setText(this.veiculo.getPlaca());
         jTextFieldResponsavel.setText(this.veiculo.getResponsavel());
         jTextFieldVersao.setText(this.veiculo.getVersao());
+        
+        float auxsLt = 0;
+        int axusKM = 0;
+        List<Consumo> axs = this.veiculo.getConsumo();
+        
+        
+        if(axs.size() <1 ){
+            
+        } else {
+            for(Consumo x : axs){
+                auxsLt =+ x.getLitros();
+                axusKM =+ x.getQuilometragem();
+            }
+        
+            auxsLt = auxsLt / axusKM;
+        }
+        
+        
+        DecimalFormat df = new DecimalFormat("#.00");  
+        jTextFieldMediaConsumo.setText(df.format(auxsLt).replaceAll( ",", "." ));
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEditar;

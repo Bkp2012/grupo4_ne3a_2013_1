@@ -20,14 +20,15 @@
    <properties>
   <!-- dados da conexao -->
   <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
-  <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/Sigmav" />
-  <property name="javax.persistence.jdbc.user" value="root" />
-  <property name="javax.persistence.jdbc.password" value="root" />
+  <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/aluno" />
+  <property name="javax.persistence.jdbc.user" value="aluno" />
+  <property name="javax.persistence.jdbc.password" value="aluno" />
 
    <!--  propriedades do hibernate -->
   <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
   <property name="hibernate.show_sql" value="true" />
   <property name="hibernate.format_sql" value="true" />
+  
 
   <!--  atualiza o banco, gera as tableas se for preciso -->
   <property name="hibernate.hbm2ddl.auto" value="update" />
