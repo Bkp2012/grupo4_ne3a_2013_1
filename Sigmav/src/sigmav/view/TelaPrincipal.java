@@ -45,7 +45,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
         
         JOptionPane.showMessageDialog(rootPane, "Professor: \n"
                 + "# O campo CPF/CNPJ aceita entrada em BRANCO \n"
-                , "Pendencias! ", 2,null);
+                + "# Banco de dados: aluno \n"
+                + "# Usuário: aluno \n"
+                + "# Senha: aluno \n"
+                , "Requisitos LP ", 2,null);
         
     }
 
