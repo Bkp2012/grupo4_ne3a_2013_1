@@ -40,12 +40,13 @@ public class TelaPrincipal extends javax.swing.JFrame {
         this.pecaMestre = new Peca();
         
         StatusBar();
+        /*
         JOptionPane.showMessageDialog(rootPane, "Falta: \n"
                 //+ "Validar Busca por codigo com caractere invalido \n"
                 //+ "Validar preenchimento de peças \n"
                 + "ACERTAR AS DATAS NO CONSUMO E MANUTENCAO! \n"
                 + "validar forms ", "Pendencias! ", 2,null);
-                
+         */       
     }
 
     /**

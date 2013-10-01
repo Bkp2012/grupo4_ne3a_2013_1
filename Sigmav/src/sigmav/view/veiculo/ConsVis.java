@@ -352,9 +352,12 @@ public class ConsVis extends javax.swing.JDialog {
         
         jTextFieldCombustivel.setText(this.consumo.getCombustivel());
         //jTextFieldDataAbastecimento.setText(this.consumo.getDataAbastecimento().toString());
-        jTextFieldLitros.setText(String.valueOf(this.consumo.getLitros()));
+        
+        DecimalFormat df = new DecimalFormat("#.00");
+        jTextFieldLitros.setText(df.format(this.consumo.getLitros()).replaceAll(",", "."));
+        
         jTextFieldLocalAbastecimento.setText(this.localAbasticento.getNome());            
-        jTextFieldPrecoLitro.setText(String.valueOf(this.consumo.getPreco()));
+        jTextFieldPrecoLitro.setText(df.format(this.consumo.getPreco()).replaceAll(",", "."));
         jTextFieldQuilometragem.setText(String.valueOf(this.consumo.getQuilometragem()));
         
     }//GEN-LAST:event_jButtonEditarActionPerformed

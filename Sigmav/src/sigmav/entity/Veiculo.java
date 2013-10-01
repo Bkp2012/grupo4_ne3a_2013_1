@@ -51,13 +51,13 @@ public class Veiculo implements Serializable {
     @Column(name = "combustivel", length = 20, nullable = false)
     private String combustivel;
     
-    @Column(name = "anoModelo", length = 4, nullable = false)
+    @Column(name = "anoModelo", length = 5, nullable = false)
     private String anoModelo;
     
     @Column(name = "responsavel", length = 30, nullable = false)
     private String responsavel;
 
-    @Column(name = "placa", length = 7, nullable = false, unique = true)
+    @Column(name = "placa", length = 9, nullable = false, unique = true)
     private String placa;
 
     @Column(name = "kmCompra", length = 10, nullable = false)

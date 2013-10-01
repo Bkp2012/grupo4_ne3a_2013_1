@@ -3,7 +3,11 @@
  * and open the template in the editor.
  */
 package sigmav.view.veiculo;
+import java.awt.Color;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -26,6 +30,7 @@ public class VeiCad extends javax.swing.JDialog {
     java.awt.Frame parent;
     boolean modal;
     Veiculo veiculo;
+    private StringBuilder listaErros;
     
     public VeiCad(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -50,6 +55,8 @@ public class VeiCad extends javax.swing.JDialog {
         this.veiculo = veiculoExterno;
         this.veiculo.setConsumo(new ArrayList<Consumo>());
         this.veiculo.setManutencoes(new ArrayList<Manutencao>());
+        
+        JOptionPane.showMessageDialog(parent, "Todos os campos do formulário com são obrigatórios .", "Veiculo", 1, null);
         
     }
     
@@ -298,6 +305,34 @@ public class VeiCad extends javax.swing.JDialog {
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
         // TODO add your handling code here:
         
+        if(validar()){
+            this.veiculo.setAnoModelo(jTextFieldAnoModelo.getText().trim());
+           this.veiculo.setCombustivel(jTextFieldCombustivel.getText().trim());
+           //this.veiculo.setConsumo(null);
+           this.veiculo.setKmCompra(jTextFieldKmCompra.getText().trim());
+           //this.veiculo.setManutencoes(null);
+           this.veiculo.setMarca(jTextFieldMarca.getText().trim());
+           //this.veiculo.setMediaConsumo();
+           this.veiculo.setModelo(jTextFieldModelo.getText().trim());
+           this.veiculo.setPlaca(jTextFieldPlaca.getText().trim());
+           this.veiculo.setResponsavel(jTextFieldResponsavel.getText().trim());
+           this.veiculo.setVersao(jTextFieldVersao.getText().trim());
+
+           try {
+               new HDaoVeiculo().persist(this.veiculo);
+
+
+           } catch (Exception ex) {
+               Logger.getLogger(VeiCad.class.getName()).log(Level.SEVERE, null, ex);
+           } finally {            
+                   JOptionPane.showMessageDialog(parent, "Veiculo salvo com sucesso.", "Salvar", 1, null);                        
+                   dispose();
+
+           }   
+        } else {
+            JOptionPane.showMessageDialog(parent, this.listaErros, "Salvar",2,null);
+        }
+        /*
         this.veiculo.setAnoModelo(jTextFieldAnoModelo.getText().trim());
         this.veiculo.setCombustivel(jTextFieldCombustivel.getText().trim());
         //this.veiculo.setConsumo(null);
@@ -321,6 +356,7 @@ public class VeiCad extends javax.swing.JDialog {
                 dispose();
             
         }
+        */
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     /**
@@ -364,6 +400,257 @@ public class VeiCad extends javax.swing.JDialog {
             }
         });
     }
+    //##########################################################################
+    //##########################################################################
+    
+    
+    public boolean validar(){
+        this.listaErros = new StringBuilder();
+        
+        //######################################################################
+        //Validar quilometragem
+        if(jTextFieldKmCompra.getText().trim().length() < 1){
+            jTextFieldKmCompra.setBackground(Color.ORANGE);
+            listaErros.append("# O Campo 'Quilometragem' é obrigatório. \n");
+        } else {
+            if(isNumber(jTextFieldKmCompra.getText().trim())){
+                jTextFieldKmCompra.setBackground(Color.WHITE);
+            } else {
+                jTextFieldKmCompra.setBackground(Color.ORANGE);
+                listaErros.append("# O Campo 'Quilometragem' permite apenas números inteiros positivos. \n");
+            }
+        }
+        //######################################################################
+        //VALIDAR Combustivel
+        if(jTextFieldCombustivel.getText().trim().length() < 4){
+            jTextFieldCombustivel.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Combustivel' é obrigatório, mínimo de 4 caracteres \n");
+        } else {
+            if(jTextFieldCombustivel.getText().trim().length() > 20){
+                jTextFieldCombustivel.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Combustivel' excedeu a quantidade máxima de caracteres (20). \n");
+            } else {
+                jTextFieldCombustivel.setBackground(Color.white);
+            }
+        }
+        //######################################################################
+        //Validar Marca
+        if(jTextFieldMarca.getText().trim().length() < 4){
+            jTextFieldMarca.setBackground(Color.orange);
+            listaErros.append("# O campo 'Marca' é obrigatório, mínimo de 4 caracteres \n");
+        } else {
+            if(jTextFieldMarca.getText().trim().length() > 20){
+                jTextFieldMarca.setBackground(Color.orange);
+                listaErros.append("# O campo 'Marca' excedeu a quantidade máxima de caracteres (20). \n");
+            } else {
+                jTextFieldMarca.setBackground(Color.white);
+            }
+        }
+        //######################################################################
+        //Validar Modelo
+        if(jTextFieldModelo.getText().trim().length() < 4){
+            jTextFieldModelo.setBackground(Color.orange);
+            listaErros.append("# O campo 'Modelo' é obrigatório, mínimo de 4 caracteres \n");
+        } else {
+            if(jTextFieldModelo.getText().trim().length() > 30){
+                jTextFieldModelo.setBackground(Color.orange);
+                listaErros.append("# O campo 'Modelo' excedeu a quantidade máxima de caracteres (30). \n");
+            } else {
+                jTextFieldModelo.setBackground(Color.white);
+            }
+        }
+        //######################################################################
+        //Validar Responsavel
+        if(jTextFieldResponsavel.getText().trim().length() < 4){
+            jTextFieldResponsavel.setBackground(Color.orange);
+            listaErros.append("# O campo 'Responsavel' é obrigatório, mínimo de 4 caracteres \n");
+        } else {
+            if(jTextFieldResponsavel.getText().trim().length() > 30){
+                jTextFieldResponsavel.setBackground(Color.orange);
+                listaErros.append("# O campo 'Responsavel' excedeu a quantidade máxima de caracteres (30). \n");
+            } else {
+                jTextFieldResponsavel.setBackground(Color.white);
+            }
+        }
+        //######################################################################
+        //Validar versao
+        if(jTextFieldVersao.getText().trim().length() < 1){
+            jTextFieldVersao.setBackground(Color.orange);
+            listaErros.append("# O campo 'Versão' é obrigatório. \n");
+        } else {
+            if(jTextFieldVersao.getText().trim().length() > 30){
+                jTextFieldVersao.setBackground(Color.orange);
+                listaErros.append("# O campo 'Versão' excedeu a quantidade máxima de caracteres (30). \n");
+            } else {
+                jTextFieldVersao.setBackground(Color.white);
+            }
+        }
+        //######################################################################
+        //Validar anoModelo
+        if(jTextFieldAnoModelo.getText().trim().length() < 1){
+            jTextFieldAnoModelo.setBackground(Color.orange);
+            listaErros.append("# O Campo 'Ano' é obrigatório. \n");
+            
+        } else {
+            if(!isAno(jTextFieldAnoModelo.getText().trim()) || jTextFieldAnoModelo.getText().trim().length() != 5){
+                jTextFieldAnoModelo.setBackground(Color.orange);
+                listaErros.append("# O Campo 'Ano' esta incorreto, ex: aF/aM \n");
+            } else {
+                jTextFieldAnoModelo.setBackground(Color.white);
+            }
+        }
+        //######################################################################
+        //Validar placa
+        if(!isPlaca(jTextFieldPlaca.getText().trim()) || jTextFieldPlaca.getText().trim().length() != 8){
+            jTextFieldPlaca.setBackground(Color.orange);
+            listaErros.append("# O Campo 'placa' é obrigatório, ex: aaa-0000. \n");
+        } else {
+            jTextFieldPlaca.setBackground(Color.white);
+        }
+        
+        //######################################################################
+        
+        
+        
+        if(listaErros.length() == 0){
+                return true;
+        }
+                
+        return false;
+    }
+    
+    
+    //##########################################################################
+    //##########################################################################
+    private boolean ispC(String auxs){
+        boolean flag = true;
+        char[] pogs = auxs.toCharArray();
+        String entrada;
+        
+        
+        if(pogs[3] != (char)45 ){
+            flag = false;            
+            return flag;
+            
+        } else {
+          entrada = pogs.toString();
+          entrada = entrada.substring(3, 3);
+          
+          if (entrada.length() == 7){
+                entrada = entrada.toLowerCase();
+                if (entrada.codePointAt(0) >= 97 && entrada.codePointAt(0) <= 122 && entrada.codePointAt(1) >= 97 && entrada.codePointAt(1) <= 122 && entrada.codePointAt(2) >= 97 && entrada.codePointAt(2) <= 122 && entrada.codePointAt(3) >= 48 && entrada.codePointAt(3) <= 57 && entrada.codePointAt(4) >= 48 && entrada.codePointAt(4) <= 57 && entrada.codePointAt(5) >= 48 && entrada.codePointAt(5) <= 57 && entrada.codePointAt(6) >= 48 && entrada.codePointAt(6) <= 57) {
+                    flag = true;
+                } else {
+                    flag = false;
+                }
+            }
+        }
+        
+        
+
+ 
+        
+ 
+        
+        return flag;
+    }
+    
+    
+    
+    
+    private boolean isPlaca(String auxs){
+        char[] pogs = auxs.toCharArray();
+        boolean flag = true;
+        
+        
+        for ( int i = 4; i < pogs.length; i++ ){
+            //System.out.println(pogs[i]);
+            if ( !Character.isDigit( pogs[ i ] ) ){
+                flag = false;                    
+                break;
+                    
+            }       
+        }
+        
+        if(pogs[3] != (char)45 ){
+            flag = false;
+            
+        }
+        
+        
+        
+        for ( int i = 4; i < pogs.length; i++ ){            
+            if ( Character.isLetter(pogs[ i ] ) ){
+                flag = false;                    
+                break;
+                    
+            }       
+        }
+        /*
+        for(float tx : pogs){
+            System.out.println(tx);
+        }
+        */
+        
+        return flag;
+    }
+    
+    
+    private boolean isAno(String auxs){
+        char[] pogs = auxs.toCharArray();
+        boolean flag = true;
+                
+        for ( int i = 0; i < pogs.length; i++ ){            
+            if ( !Character.isDigit( pogs[ i ] ) ){
+                if(i == 2){                    
+                    flag = true;
+                    
+                    if(pogs[i] != (char) 47){
+                        flag = false;
+                        break;
+                    }
+                    
+                } else {
+                    flag = false;                    
+                    break;
+                    
+                }    
+            }       
+        }
+        /*
+        for(float tx : pogs){
+            System.out.println(tx);
+        }
+        */
+        
+        return flag;
+    }
+    
+    
+    private boolean isNumber(String axus){
+        char[] vauxs = axus.toCharArray();
+        boolean flag = true;
+        int aux2 = 0;
+            
+        for ( int i = 0; i < vauxs.length; i++ ){            
+            if ( !Character.isDigit( vauxs[ i ] ) ){
+                flag = false;                    
+                break;
+            }                
+        }
+        
+        if(flag == true){
+            aux2 = Integer.valueOf(axus);
+            
+            if(aux2 < 0){
+                flag = false;
+            }
+        }
+        
+        
+        return flag;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonFechar;
     private javax.swing.JButton jButtonSalvar;
